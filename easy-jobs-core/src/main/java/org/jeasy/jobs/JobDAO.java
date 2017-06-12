@@ -1,26 +1,21 @@
 package org.jeasy.jobs;
 
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.hibernate.SessionFactory;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.sql.DataSource;
-import java.sql.Types;
+@Repository
+@Transactional
+class JobDAO { // todo rename all dao to repository
 
-class JobDAO {
+    private SessionFactory sessionFactory;
 
-    private JdbcTemplate jdbcTemplate;
-
-    public JobDAO(DataSource dataSource) {
-        jdbcTemplate = new JdbcTemplate(dataSource);
+    public JobDAO(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
     public void save(Job job) {
-        String insert = "INSERT INTO job (ID, NAME) VALUES (?,?)";
-        Object[] params = new Object[]{
-                job.getId(),
-                job.getName(),
-        };
-        int[] types = new int[]{Types.INTEGER, Types.VARCHAR};
-        jdbcTemplate.update(insert, params, types);
+        sessionFactory.getCurrentSession().saveOrUpdate(job);
     }
 
 }

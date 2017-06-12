@@ -1,17 +1,16 @@
 package org.jeasy.jobs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -54,46 +53,35 @@ public class JobServer implements Runnable {
         }
         File file = new File(jobsDescriptors);
         LOGGER.info("Loading job definitions from " + file.getAbsolutePath());
-        List<JobDefinition> jobDefinitions = null;
+        Map<Integer, JobDefinition> jobDefinitions = null;
         try {
             jobDefinitions = getJobDefinitions(file);
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Unable to load job definitions from " + file.getAbsolutePath(), e);
             System.exit(1);
         }
-        for (JobDefinition jobDefinition : jobDefinitions) {
+        for (JobDefinition jobDefinition : jobDefinitions.values()) {
             LOGGER.info("Registering " + jobDefinition);
         }
-        JobFactory jobFactory = new JobFactory(jobDefinitions);
 
-        int workers = 10;
-        if (System.getProperty("easy.jobs.workers.number") != null) {
-            workers = Integer.parseInt(System.getProperty("easy.jobs.workers.number"));
-        }
-        LOGGER.info("I will use " + workers + " workers to run jobs");
-        int polling = 30;
-        if (System.getProperty("easy.jobs.polling.interval") != null) {
-            polling = Integer.parseInt(System.getProperty("easy.jobs.polling.interval"));
-        }
-        LOGGER.info("I will poll pending job requests every " + polling + "s");
-
-        DataSource dataSource = ConfigUtils.getDataSource();
+        ApplicationContext ctx = new AnnotationConfigApplicationContext(Configuration.class);
+        Properties properties = (Properties) ctx.getBean("configurationProperties");
+        DataSource dataSource = ctx.getBean(DataSource.class);
         if (System.getProperty("easy.jobs.database.init") != null) {
             boolean initDatabase = Boolean.parseBoolean(System.getProperty("easy.jobs.database.init"));
             if (initDatabase) {
-                LOGGER.info("Initializing database in " + ConfigUtils.getProperties().getProperty("easy.jobs.database.url"));
-                init(dataSource, jobDefinitions);
+                LOGGER.info("Initializing database in " + properties.getProperty("easy.jobs.database.url"));
+                init(dataSource, jobDefinitions, ctx);
             }
         }
 
-        ExecutorService executorService = Executors.newFixedThreadPool(workers, new WorkerThreadFactory());
-        JobRequestDAO jobRequestDAO = new JobRequestDAO(dataSource);
-        JobExecutionDAO jobExecutionDAO = new JobExecutionDAO(dataSource);
-        DataSourceTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
-        TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
-        JobService jobService = new JobService(executorService, jobExecutionDAO, jobRequestDAO, transactionTemplate, jobFactory);
+        JobFactory jobFactory = ctx.getBean(JobFactory.class);
+        jobFactory.setJobs(jobDefinitions);
+        JobService jobService = ctx.getBean(JobService.class);
         jobFactory.setJobService(jobService);
         JobServer jobServer = new JobServer(jobService);
+        int polling = (Integer)ctx.getBean("pollingInterval");
+        System.out.println("polling = " + polling);
 
         SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(jobServer, 0, polling, TimeUnit.SECONDS);
         LOGGER.info("Job manager started.");
@@ -104,12 +92,12 @@ public class JobServer implements Runnable {
         // TODO banner with ascii art and version number
     }
 
-    private static void init(DataSource dataSource, List<JobDefinition> jobDefinitions) {
+    private static void init(DataSource dataSource, Map<Integer, JobDefinition> jobDefinitions, ApplicationContext ctx) {
         Resource resource = new ClassPathResource("schema.sql");
         ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator(resource);
         databasePopulator.execute(dataSource);
-        JobDAO jobDAO = new JobDAO(dataSource);
-        for (JobDefinition jobDefinition : jobDefinitions) {
+        JobDAO jobDAO = ctx.getBean(JobDAO.class);
+        for (JobDefinition jobDefinition : jobDefinitions.values()) {
             String name = jobDefinition.getName();
             if (name == null) {
                 name = jobDefinition.getClazz(); // todo get simple class name from fully qualified name
@@ -124,9 +112,14 @@ public class JobServer implements Runnable {
             LOGGER.info("Job manager stopped."); }));
     }
 
-    private static List<JobDefinition> getJobDefinitions(File file) throws IOException {
+    private static Map<Integer, JobDefinition> getJobDefinitions(File file) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        return Arrays.asList(mapper.readValue(file, JobDefinition[].class));
+        List<JobDefinition> jobDefinitionList = Arrays.asList(mapper.readValue(file, JobDefinition[].class));
+        Map<Integer, JobDefinition> jobDefinitionMap = new HashMap<>();
+        for (JobDefinition jobDefinition : jobDefinitionList) {
+            jobDefinitionMap.put(jobDefinition.getId(), jobDefinition);
+        }
+        return jobDefinitionMap;
     }
 
 }

@@ -11,6 +11,9 @@ class JobExecution {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
+    public JobExecution() {
+    }
+
     public JobExecution(int requestId, JobExecutionStatus jobExecutionStatus, JobExitStatus jobExitStatus, LocalDateTime startDate, LocalDateTime endDate) {
         this.requestId = requestId;
         this.jobExecutionStatus = jobExecutionStatus;
@@ -41,5 +44,29 @@ class JobExecution {
 
     public LocalDateTime getEndDate() {
         return endDate;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setRequestId(int requestId) {
+        this.requestId = requestId;
+    }
+
+    public void setJobExecutionStatus(JobExecutionStatus jobExecutionStatus) {
+        this.jobExecutionStatus = jobExecutionStatus;
+    }
+
+    public void setJobExitStatus(JobExitStatus jobExitStatus) {
+        this.jobExitStatus = jobExitStatus;
+    }
+
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
     }
 }

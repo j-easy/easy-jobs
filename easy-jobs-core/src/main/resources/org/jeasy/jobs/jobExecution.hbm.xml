@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="org.jeasy.jobs">
+
+    <class name="JobExecution" table="job_execution">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="requestId" column="request_id" type="integer"/>
+        <property name="jobExecutionStatus" column="status">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">org.jeasy.jobs.JobExecutionStatus</param>
+            </type>
+        </property>
+        <property name="jobExitStatus" column="job_status">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">org.jeasy.jobs.JobExitStatus</param>
+            </type>
+        </property>
+        <property name="startDate" column="start_date" type="java.time.LocalDateTime"/>
+        <property name="endDate" column="end_date" type="java.time.LocalDateTime"/>
+    </class>
+
+</hibernate-mapping>

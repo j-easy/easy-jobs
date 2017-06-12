@@ -1,11 +1,13 @@
 package org.jeasy.jobs;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.logging.Logger;
 
+@Component
 class JobFactory {
 
     private static final Logger LOGGER = Logger.getLogger(JobFactory.class.getName());
@@ -14,10 +16,7 @@ class JobFactory {
 
     private JobService jobService;
 
-    JobFactory(List<JobDefinition> jobDefinitions) {
-        for (JobDefinition jobDefinition : jobDefinitions) {
-            jobs.put(jobDefinition.getId(), jobDefinition);
-        }
+    JobFactory() {
     }
 
     DefaultJob createJob(int id, int requestId, String parameters) throws Exception {
@@ -57,5 +56,9 @@ class JobFactory {
 
     void setJobService(JobService jobService) {
         this.jobService = jobService;
+    }
+
+    public void setJobs(Map<Integer, JobDefinition> jobs) {
+        this.jobs = jobs;
     }
 }

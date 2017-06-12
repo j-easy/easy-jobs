@@ -1,67 +1,49 @@
 package org.jeasy.jobs;
 
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.sql.DataSource;
-import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Repository
+@Transactional
 class JobRequestDAO {
 
-    private JdbcTemplate jdbcTemplate;
+    private SessionFactory sessionFactory;
 
-    public JobRequestDAO(DataSource dataSource) {
-        jdbcTemplate = new JdbcTemplate(dataSource);
+    public JobRequestDAO(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
     public void save(JobRequest jobRequest) {
-        String insert = "INSERT INTO job_request (JOB_ID, PARAMETERS, STATUS, CREATION_DATE) VALUES (?,?,?,?)";
-        Object[] params = new Object[]{
-                jobRequest.getJobId(),
-                jobRequest.getParameters(),
-                JobRequestStatus.PENDING,
-                LocalDateTime.now()
-        };
-        int[] types = new int[]{Types.INTEGER,Types.VARCHAR,Types.VARCHAR, Types.TIMESTAMP};
-        jdbcTemplate.update(insert, params, types);
+        sessionFactory.getCurrentSession().saveOrUpdate(jobRequest);
     }
 
     public void updateStatusAndProcessingDate(int jobRequestId, JobRequestStatus status, LocalDateTime processingDate) {
-        String insert = "UPDATE job_request SET STATUS = ?, PROCESSING_DATE = ? WHERE ID = ?";
-        Object[] params = new Object[]{
-                status,
-                processingDate,
-                jobRequestId
-        };
-        int[] types = new int[]{Types.VARCHAR,Types.TIMESTAMP, Types.INTEGER};
-        jdbcTemplate.update(insert, params, types);
+        Session session = sessionFactory.getCurrentSession();
+        JobRequest jobRequest = session.get(JobRequest.class, jobRequestId);
+        jobRequest.setStatus(status);
+        jobRequest.setProcessingDate(processingDate);
+        session.update(jobRequest);
     }
 
     public void updateStatus(int jobRequestId, JobRequestStatus status) {
-        String insert = "UPDATE job_request SET STATUS = ? WHERE ID = ?";
-        Object[] params = new Object[]{
-                status,
-                jobRequestId
-        };
-        int[] types = new int[]{Types.VARCHAR, Types.INTEGER};
-        jdbcTemplate.update(insert, params, types);
+        Session session = sessionFactory.getCurrentSession();
+        JobRequest jobRequest = session.get(JobRequest.class, jobRequestId);
+        jobRequest.setStatus(status);
+        session.update(jobRequest);
     }
 
-    List<JobRequest> getPendingJobRequests() {
+    public List<JobRequest> getPendingJobRequests() {
         // TODO order by priority (keep something for v2)
-        String select = "SELECT id, job_id, parameters from job_request where STATUS = ?";
-        Object[] params = new Object[]{
-                JobRequestStatus.PENDING
-        };
-        int[] types = new int[]{Types.VARCHAR};
-
-        return jdbcTemplate.query(select, params, types, (rs, rowNum) -> {
-            int id = rs.getInt("id");
-            int jobId = rs.getInt("job_id");
-            String parameters = rs.getString("parameters");
-            return new JobRequest(id, jobId, parameters, null, null, null); // No need for other fields for now
-        });
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("from JobRequest where status = :status ");
+        query.setParameter("status", JobRequestStatus.PENDING);
+        return query.list(); // todo argh untyped APIs.. use TypedQuery
     }
 
 }
