@@ -1,6 +1,5 @@
 package org.jeasy.jobs;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.io.ClassPathResource;
@@ -8,9 +7,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 import javax.sql.DataSource;
-import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.*;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -47,59 +46,48 @@ public class JobServer implements Runnable {
         registerShutdownHook();
         printBanner();
 
-        String jobsDescriptors = "jobs.json";
-        if(args.length >= 1 ) {
-            jobsDescriptors = args[0];
-        }
-        File file = new File(jobsDescriptors);
-        LOGGER.info("Loading job definitions from " + file.getAbsolutePath());
-        Map<Integer, JobDefinition> jobDefinitions = null;
-        try {
-            jobDefinitions = getJobDefinitions(file);
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Unable to load job definitions from " + file.getAbsolutePath(), e);
-            System.exit(1);
-        }
-        for (JobDefinition jobDefinition : jobDefinitions.values()) {
-            LOGGER.info("Registering " + jobDefinition);
-        }
-
-        ApplicationContext ctx = new AnnotationConfigApplicationContext(Configuration.class);
-        DataSource dataSource = ctx.getBean(DataSource.class);
-        if (System.getProperty("easy.jobs.database.init") != null) {
-            boolean initDatabase = Boolean.parseBoolean(System.getProperty("easy.jobs.database.init"));
-            if (initDatabase) {
-                init(dataSource, jobDefinitions, ctx);
-            }
+        ApplicationContext ctx = new AnnotationConfigApplicationContext(ContextConfiguration.class);
+        JobServerConfiguration jobServerConfiguration = ctx.getBean(JobServerConfiguration.class);
+        if (jobServerConfiguration.isDatabaseInit()) {
+            DataSource dataSource = ctx.getBean(DataSource.class);
+            init(dataSource, jobServerConfiguration, ctx);
         }
 
         JobFactory jobFactory = ctx.getBean(JobFactory.class);
+        Map<Integer, JobServerConfiguration.JobDefinition> jobDefinitions = getJobDefinitions(jobServerConfiguration);
         jobFactory.setJobs(jobDefinitions);
         JobService jobService = ctx.getBean(JobService.class);
         jobFactory.setJobService(jobService);
         JobServer jobServer = new JobServer(jobService);
-        int polling = (Integer)ctx.getBean("pollingInterval");
-        System.out.println("polling = " + polling);
 
-        SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(jobServer, 0, polling, TimeUnit.SECONDS);
+        SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(jobServer, 0, jobServerConfiguration.getPollingInterval(), TimeUnit.SECONDS);
         LOGGER.info("Job manager started.");
 
+    }
+
+    private static Map<Integer, JobServerConfiguration.JobDefinition> getJobDefinitions(JobServerConfiguration jobServerConfiguration) {
+        Map<Integer, JobServerConfiguration.JobDefinition> jobDefinitions = new HashMap<>();
+        for (JobServerConfiguration.JobDefinition jobDefinition : jobServerConfiguration.getJobDefinitions()) {
+            jobDefinitions.put(jobDefinition.getId(), jobDefinition);
+        }
+        return jobDefinitions;
     }
 
     private static void printBanner() {
         // TODO banner with ascii art and version number
     }
 
-    private static void init(DataSource dataSource, Map<Integer, JobDefinition> jobDefinitions, ApplicationContext ctx) {
+    private static void init(DataSource dataSource, JobServerConfiguration jobServerConfiguration, ApplicationContext ctx) {
         Resource resource = new ClassPathResource("schema.sql");
         ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator(resource);
         databasePopulator.execute(dataSource);
         JobDAO jobDAO = ctx.getBean(JobDAO.class);
-        for (JobDefinition jobDefinition : jobDefinitions.values()) {
+        for (JobServerConfiguration.JobDefinition jobDefinition : jobServerConfiguration.getJobDefinitions()) {
             String name = jobDefinition.getName();
             if (name == null) {
                 name = jobDefinition.getClazz(); // todo get simple class name from fully qualified name
             }
+            LOGGER.info("Registering " + jobDefinition);
             jobDAO.save(new Job(jobDefinition.getId(), name));
         }
     }
@@ -108,16 +96,6 @@ public class JobServer implements Runnable {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             SCHEDULED_EXECUTOR_SERVICE.shutdownNow();
             LOGGER.info("Job manager stopped."); }));
-    }
-
-    private static Map<Integer, JobDefinition> getJobDefinitions(File file) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        List<JobDefinition> jobDefinitionList = Arrays.asList(mapper.readValue(file, JobDefinition[].class));
-        Map<Integer, JobDefinition> jobDefinitionMap = new HashMap<>();
-        for (JobDefinition jobDefinition : jobDefinitionList) {
-            jobDefinitionMap.put(jobDefinition.getId(), jobDefinition);
-        }
-        return jobDefinitionMap;
     }
 
 }

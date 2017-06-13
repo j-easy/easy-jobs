@@ -49,7 +49,6 @@ class JobService {
     // TODO 2. what if new job request comes in in between? Well don't worry, it will be processed in the next run
     @Transactional
     void pollRequestsAndSubmitJobs() {
-        System.out.println("JobService.pollRequestsAndSubmitJobs");
         List<JobRequest> pendingJobRequests = jobRequestDAO.getPendingJobRequests(); // add limit 10 (nb workers) and you have throttling/back pressure for free!
         if (pendingJobRequests.isEmpty()) {
             return;

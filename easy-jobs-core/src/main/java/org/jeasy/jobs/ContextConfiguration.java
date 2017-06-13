@@ -10,9 +10,7 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.File;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,9 +20,9 @@ import java.util.logging.Logger;
 @org.springframework.context.annotation.Configuration
 @EnableTransactionManagement
 @ImportResource("classpath:data-source-config.xml")
-public class Configuration {
+public class ContextConfiguration {
 
-    private static final Logger LOGGER = Logger.getLogger(Configuration.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ContextConfiguration.class.getName());
 
     @Autowired
     private DataSource dataSource;
@@ -74,7 +72,7 @@ public class Configuration {
 
     @Bean
     public ExecutorService executorService() {
-        return Executors.newFixedThreadPool(workers(), workerThreadFactory());
+        return Executors.newFixedThreadPool(serverConfiguration().getWorkersNumber(), workerThreadFactory());
     }
 
     @Bean
@@ -92,23 +90,23 @@ public class Configuration {
         return new WorkerThreadFactory();
     }
 
-    public int workers() {
-        int workers = 10;
-        if (System.getProperty("easy.jobs.workers.number") != null) {
-            workers = Integer.parseInt(System.getProperty("easy.jobs.workers.number"));
-        }
-        LOGGER.info("I will use " + workers + " workers to run jobs");
-        return workers;
+    @Bean
+    public JobServerConfigurationReader configurationReader() {
+        return new JobServerConfigurationReader();
     }
 
     @Bean
-    public int pollingInterval() {
-        int polling = 30;
-        if (System.getProperty("easy.jobs.polling.interval") != null) {
-            polling = Integer.parseInt(System.getProperty("easy.jobs.polling.interval"));
+    public JobServerConfiguration serverConfiguration() {
+        String configurationPath = System.getProperty(JobServerConfiguration.CONFIGURATION_PATH_PARAMETER_NAME);
+        try {
+            return configurationReader().read(new File(configurationPath));
+        } catch (Exception e) {
+           LOGGER.log(Level.WARNING, "Unable to read configuration from file " + configurationPath, e);
+           // FIXME may be fail fast is better? Should easy jobs introspect and validate job definitions (existing method, etc). I guess yes
+            JobServerConfiguration defaultJobServerConfiguration = JobServerConfiguration.defaultJobServerConfiguration;
+            LOGGER.log(Level.WARNING, "Using default configuration: " + defaultJobServerConfiguration);
+            return defaultJobServerConfiguration;
         }
-        LOGGER.info("I will poll pending job requests every " + polling + "s");
-        return polling;
     }
 
 }

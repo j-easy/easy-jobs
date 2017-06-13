@@ -12,7 +12,7 @@ class JobFactory {
 
     private static final Logger LOGGER = Logger.getLogger(JobFactory.class.getName());
 
-    Map<Integer, JobDefinition> jobs = new HashMap<>();
+    Map<Integer, JobServerConfiguration.JobDefinition> jobs = new HashMap<>();
 
     private JobService jobService;
 
@@ -20,7 +20,7 @@ class JobFactory {
     }
 
     DefaultJob createJob(int id, int requestId, String parameters) throws Exception {
-        JobDefinition jobDefinition = jobs.get(id);
+        JobServerConfiguration.JobDefinition jobDefinition = jobs.get(id);
         String jobClass = jobDefinition.getClazz();
         String jobMethod = jobDefinition.getMethod();
         return createJob(requestId, jobClass, jobMethod, parameters);
@@ -58,7 +58,7 @@ class JobFactory {
         this.jobService = jobService;
     }
 
-    public void setJobs(Map<Integer, JobDefinition> jobs) {
+    public void setJobs(Map<Integer, JobServerConfiguration.JobDefinition> jobs) {
         this.jobs = jobs;
     }
 }
