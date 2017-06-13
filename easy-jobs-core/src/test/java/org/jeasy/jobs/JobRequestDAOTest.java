@@ -23,6 +23,8 @@ public class JobRequestDAOTest {
     @Autowired
     private DataSource dataSource;
     @Autowired
+    private JobDAO jobDAO;
+    @Autowired
     private JobRequestDAO jobRequestDAO;
 
     private JdbcTemplate jdbcTemplate;
@@ -37,7 +39,13 @@ public class JobRequestDAOTest {
 
     @Test
     public void testJobRequestPersistence() throws Exception {
+        // given
+        jobDAO.save(new Job(1, "MyJob"));
+
+        // when
         jobRequestDAO.save(new JobRequest(1, "", JobRequestStatus.PENDING, LocalDateTime.now(), null));
+
+        // then
         Integer nbJobRequests = jdbcTemplate.queryForObject("select count(*) from job_request", Integer.class);
         assertThat(nbJobRequests).isEqualTo(1);
     }

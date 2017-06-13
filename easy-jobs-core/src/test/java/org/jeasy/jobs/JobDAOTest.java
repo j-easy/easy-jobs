@@ -35,7 +35,13 @@ public class JobDAOTest {
 
     @Test
     public void testJobPersistence() throws Exception {
-        jobDAO.save(new Job(1, "MyJob"));
+        // given
+        Job job = new Job(1, "MyJob");
+
+        // when
+        jobDAO.save(job);
+
+        // then
         Integer nbJobs = jdbcTemplate.queryForObject("select count(*) from job", Integer.class);
         assertThat(nbJobs).isEqualTo(1);
     }

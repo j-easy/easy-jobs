@@ -39,7 +39,7 @@ public class JobExecutionDAOTest {
     }
 
     @Test
-    public void testJobRequestPersistence() throws Exception {
+    public void testJobExecutionPersistence() throws Exception {
         // given
         jobDAO.save(new Job(1, "MyJob"));
         jobRequestDAO.save(new JobRequest(1, "", JobRequestStatus.PENDING, LocalDateTime.now(), null));
