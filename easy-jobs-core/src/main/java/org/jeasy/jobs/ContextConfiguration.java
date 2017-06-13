@@ -97,13 +97,18 @@ public class ContextConfiguration {
 
     @Bean
     public JobServerConfiguration serverConfiguration() {
+        JobServerConfiguration defaultJobServerConfiguration = JobServerConfiguration.defaultJobServerConfiguration;
         String configurationPath = System.getProperty(JobServerConfiguration.CONFIGURATION_PATH_PARAMETER_NAME);
         try {
-            return configurationReader().read(new File(configurationPath));
+            if (configurationPath != null) {
+                return configurationReader().read(new File(configurationPath));
+            } else {
+                LOGGER.log(Level.INFO, "No configuration file specified, using default configuration: " + defaultJobServerConfiguration);
+                return defaultJobServerConfiguration;
+            }
         } catch (Exception e) {
            LOGGER.log(Level.WARNING, "Unable to read configuration from file " + configurationPath, e);
            // FIXME may be fail fast is better? Should easy jobs introspect and validate job definitions (existing method, etc). I guess yes
-            JobServerConfiguration defaultJobServerConfiguration = JobServerConfiguration.defaultJobServerConfiguration;
             LOGGER.log(Level.WARNING, "Using default configuration: " + defaultJobServerConfiguration);
             return defaultJobServerConfiguration;
         }
