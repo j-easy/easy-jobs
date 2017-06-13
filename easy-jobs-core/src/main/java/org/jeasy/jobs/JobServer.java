@@ -78,7 +78,7 @@ public class JobServer implements Runnable {
     }
 
     private static void init(DataSource dataSource, JobServerConfiguration jobServerConfiguration, ApplicationContext ctx) {
-        Resource resource = new ClassPathResource("schema.sql");
+        Resource resource = new ClassPathResource("database-schema.sql");
         ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator(resource);
         databasePopulator.execute(dataSource);
         JobDAO jobDAO = ctx.getBean(JobDAO.class);
