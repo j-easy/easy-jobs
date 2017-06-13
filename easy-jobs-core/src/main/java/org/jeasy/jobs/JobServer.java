@@ -65,12 +65,10 @@ public class JobServer implements Runnable {
         }
 
         ApplicationContext ctx = new AnnotationConfigApplicationContext(Configuration.class);
-        Properties properties = (Properties) ctx.getBean("configurationProperties");
         DataSource dataSource = ctx.getBean(DataSource.class);
         if (System.getProperty("easy.jobs.database.init") != null) {
             boolean initDatabase = Boolean.parseBoolean(System.getProperty("easy.jobs.database.init"));
             if (initDatabase) {
-                LOGGER.info("Initializing database in " + properties.getProperty("easy.jobs.database.url"));
                 init(dataSource, jobDefinitions, ctx);
             }
         }

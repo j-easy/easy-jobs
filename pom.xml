@@ -14,6 +14,7 @@
 
     <modules>
         <module>easy-jobs-core</module>
+        <module>easy-jobs-h2</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -30,7 +31,6 @@
         <mockito.version>2.7.1</mockito.version>
         <spring-jdbc.version>4.3.3.RELEASE</spring-jdbc.version>
         <junit.version>4.12</junit.version>
-        <h2.version>1.4.194</h2.version>
         <jackson-databind.version>2.8.7</jackson-databind.version>
         <maven-cobertura-plugin.version>2.7</maven-cobertura-plugin.version>
         <maven-coveralls-plugin.version>4.3.0</maven-coveralls-plugin.version>

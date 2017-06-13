@@ -1,8 +1,9 @@
 package org.jeasy.jobs;
 
-import org.h2.jdbcx.JdbcDataSource;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
@@ -20,17 +21,23 @@ import java.util.logging.Logger;
 
 @org.springframework.context.annotation.Configuration
 @EnableTransactionManagement
+@ImportResource("classpath:data-source-config.xml")
 public class Configuration {
 
     private static final Logger LOGGER = Logger.getLogger(Configuration.class.getName());
+
+    @Autowired
+    private DataSource dataSource;
+    @Autowired
+    private String hibernateDialect;
 
     @Bean
     public LocalSessionFactoryBean localSessionFactoryBean() {
         Properties hibernateProperties = new Properties();
         // todo change according to user choice
-        hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+        hibernateProperties.setProperty("hibernate.dialect", hibernateDialect);
         LocalSessionFactoryBean localSessionFactoryBean = new LocalSessionFactoryBean();
-        localSessionFactoryBean.setDataSource(datasource());
+        localSessionFactoryBean.setDataSource(dataSource);
         localSessionFactoryBean.setHibernateProperties(hibernateProperties);
         localSessionFactoryBean.setMappingLocations(
                 new ClassPathResource("org/jeasy/jobs/job.hbm.xml"),
@@ -43,16 +50,6 @@ public class Configuration {
     @Bean
     public SessionFactory sessionFactory() {
         return localSessionFactoryBean().getObject();
-    }
-
-    @Bean
-    public DataSource datasource() {
-        // todo change according to user choice
-        JdbcDataSource dataSource = new JdbcDataSource();
-        dataSource.setURL("jdbc:h2:.;DATABASE_TO_UPPER=false");
-        dataSource.setUser("admin");
-        dataSource.setPassword("admin");
-        return dataSource;
     }
 
     @Bean
@@ -114,23 +111,4 @@ public class Configuration {
         return polling;
     }
 
-    @Bean
-    public Properties configurationProperties() {
-        Properties properties = new Properties();
-        try {
-            InputStream inputStream = Configuration.class.getResourceAsStream("/conf.properties");
-            String configuration = System.getProperty("easy.jobs.config");
-            if (configuration != null) {
-                LOGGER.log(Level.INFO, "Loading configuration properties from: " + configuration);
-                inputStream = new FileInputStream(configuration);
-            }
-            properties.load(inputStream);
-            if (configuration == null) {
-                properties.setProperty("easy.jobs.database.url", System.getProperty("user.dir") + System.getProperty("file.separator") +  "easy-jobs-db" );
-            }
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Unable to load configuration properties", e);
-        }
-        return properties;
-    }
 }
