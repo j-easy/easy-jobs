@@ -15,6 +15,7 @@
     <modules>
         <module>easy-jobs-core</module>
         <module>easy-jobs-h2</module>
+        <module>easy-jobs-mysql</module>
     </modules>
 
     <packaging>pom</packaging>

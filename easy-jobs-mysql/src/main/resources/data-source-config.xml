@@ -2,12 +2,14 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <bean id="dataSource" class="org.h2.jdbcx.JdbcDataSource">
-        <property name="url" value="${easy.jobs.h2.url}"/>
-        <property name="user" value="${easy.jobs.h2.user}"/>
-        <property name="password" value="${easy.jobs.h2.password}"/>
+
+    <bean id="dataSource" class="com.mysql.cj.jdbc.MysqlDataSource">
+        <property name="url" value="${easy.jobs.mysql.url}"/>
+        <property name="user" value="${easy.jobs.mysql.user}"/>
+        <property name="password" value="${easy.jobs.mysql.password}"/>
     </bean>
+
     <bean id="hibernateDialect" class="java.lang.String">
-        <constructor-arg value="org.hibernate.dialect.H2Dialect"/>
+        <constructor-arg value="org.hibernate.dialect.MySQLDialect"/>
     </bean>
 </beans>
