@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JobServerConfiguration {
+class JobServerConfiguration {
 
-    public static final String CONFIGURATION_PATH_PARAMETER_NAME = "easy.jobs.configuration.path";
-    public static final JobServerConfiguration defaultJobServerConfiguration =
+    static final String CONFIGURATION_PATH_PARAMETER_NAME = "easy.jobs.configuration.path";
+    static final JobServerConfiguration defaultJobServerConfiguration =
             new JobServerConfiguration(
                     10,
                     30,
@@ -31,7 +31,7 @@ public class JobServerConfiguration {
     public JobServerConfiguration() {
     }
 
-    public JobServerConfiguration(int workersNumber, int pollingInterval, String databaseType, boolean databaseInit, List<JobDefinition> jobDefinitions) {
+    private JobServerConfiguration(int workersNumber, int pollingInterval, String databaseType, boolean databaseInit, List<JobDefinition> jobDefinitions) {
         this.workersNumber = workersNumber;
         this.pollingInterval = pollingInterval;
         this.databaseType = databaseType;

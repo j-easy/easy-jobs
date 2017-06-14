@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 @org.springframework.context.annotation.Configuration
 @EnableTransactionManagement
 @ImportResource("classpath:data-source-config.xml")
-public class ContextConfiguration {
+class ContextConfiguration {
 
     private static final Logger LOGGER = Logger.getLogger(ContextConfiguration.class.getName());
 
