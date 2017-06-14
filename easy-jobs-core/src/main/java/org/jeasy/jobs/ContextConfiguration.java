@@ -2,6 +2,7 @@ package org.jeasy.jobs;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.core.io.ClassPathResource;
@@ -32,7 +33,6 @@ public class ContextConfiguration {
     @Bean
     public LocalSessionFactoryBean localSessionFactoryBean() {
         Properties hibernateProperties = new Properties();
-        // todo change according to user choice
         hibernateProperties.setProperty("hibernate.dialect", hibernateDialect);
         LocalSessionFactoryBean localSessionFactoryBean = new LocalSessionFactoryBean();
         localSessionFactoryBean.setDataSource(dataSource);
@@ -43,6 +43,13 @@ public class ContextConfiguration {
                 new ClassPathResource("org/jeasy/jobs/jobExecution.hbm.xml")
         );
         return localSessionFactoryBean;
+    }
+
+    @Bean
+    public PropertyPlaceholderConfigurer databasePropertiesPlaceholderConfigurer() {
+        PropertyPlaceholderConfigurer propertyPlaceholderConfigurer = new PropertyPlaceholderConfigurer();
+        propertyPlaceholderConfigurer.setLocation(new ClassPathResource("database.properties"));
+        return propertyPlaceholderConfigurer;
     }
 
     @Bean
