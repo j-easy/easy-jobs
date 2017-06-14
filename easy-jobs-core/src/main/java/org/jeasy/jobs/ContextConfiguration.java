@@ -46,7 +46,7 @@ public class ContextConfiguration {
     }
 
     @Bean
-    public PropertyPlaceholderConfigurer databasePropertiesPlaceholderConfigurer() {
+    public static PropertyPlaceholderConfigurer databasePropertiesPlaceholderConfigurer() {
         PropertyPlaceholderConfigurer propertyPlaceholderConfigurer = new PropertyPlaceholderConfigurer();
         propertyPlaceholderConfigurer.setLocation(new ClassPathResource("database.properties"));
         return propertyPlaceholderConfigurer;
