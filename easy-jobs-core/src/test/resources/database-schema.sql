@@ -1,21 +1,21 @@
 ------------------
 -- drop all tables
 ------------------
-drop table if exists job;
-drop table if exists job_request;
 drop table if exists job_execution;
+drop table if exists job_request;
+drop table if exists job;
 
 ------------------
 -- create tables
 ------------------
 
 create table job (
-  id bigint not null,
+  id bigint primary key,
   name varchar(255)
 );
 
 create table job_request (
-  id bigint auto_increment,
+  id bigint auto_increment primary key,
   job_id bigint not null,
   parameters varchar(4096),
   status varchar(255),
@@ -24,7 +24,7 @@ create table job_request (
 );
 
 create table job_execution (
-  id bigint auto_increment,
+  id bigint auto_increment primary key,
   request_id bigint not null,
   status varchar(255),
   job_status varchar(255),
@@ -35,6 +35,5 @@ create table job_execution (
 ------------------
 -- add constraints
 ------------------
-alter table job add primary key (id);
 alter table job_request add foreign key (job_id) references job(id);
 alter table job_execution add foreign key (request_id) references job_request(id);
