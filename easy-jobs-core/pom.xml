@@ -104,6 +104,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>3.0.1</version>
+                <configuration>
+                    <includeScope>runtime</includeScope>
+                </configuration>
             </plugin>
             <!-- todo add maven shade plugin-->
         </plugins>

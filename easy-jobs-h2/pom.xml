@@ -58,6 +58,19 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>3.0.1</version>
+                <configuration>
+                    <artifactItems>
+                        <artifactItem>
+                            <groupId>com.h2database</groupId>
+                            <artifactId>h2</artifactId>
+                            <version>${h2.version}</version>
+                            <type>jar</type>
+                        </artifactItem>
+                    </artifactItems>
+                    <excludeGroupIds>org.jeasy</excludeGroupIds>
+                    <excludeTransitive>true</excludeTransitive>
+                    <includeScope>runtime</includeScope>
+                </configuration>
             </plugin>
         </plugins>
     </build>
