@@ -8,12 +8,15 @@ import java.util.List;
 class JobServerConfiguration {
 
     static final String CONFIGURATION_PATH_PARAMETER_NAME = "easy.jobs.configuration.path";
-    static final JobServerConfiguration defaultJobServerConfiguration =
+    static final JobServerConfiguration DEFAULT_JOB_SERVER_CONFIGURATION =
             new JobServerConfiguration(
                     10,
                     30,
                     "h2",
                     true,
+                    "jdbc:h2:" + System.getProperty("user.home") + "/.easy-jobs/db;DATABASE_TO_UPPER=false",
+                    "admin",
+                    "",
                     new ArrayList<>()
             );
 
@@ -25,17 +28,26 @@ class JobServerConfiguration {
     private String databaseType;
     @JsonProperty("database.init")
     private boolean databaseInit;
+    @JsonProperty("database.url")
+    private String databaseUrl;
+    @JsonProperty("database.user")
+    private String databaseUser;
+    @JsonProperty("database.password")
+    private String databasePassword;
     @JsonProperty("jobs")
     private List<JobDefinition> jobDefinitions;
 
     public JobServerConfiguration() {
     }
 
-    private JobServerConfiguration(int workersNumber, int pollingInterval, String databaseType, boolean databaseInit, List<JobDefinition> jobDefinitions) {
+    public JobServerConfiguration(int workersNumber, int pollingInterval, String databaseType, boolean databaseInit, String databaseUrl, String databaseUser, String databasePassword, List<JobDefinition> jobDefinitions) {
         this.workersNumber = workersNumber;
         this.pollingInterval = pollingInterval;
         this.databaseType = databaseType;
         this.databaseInit = databaseInit;
+        this.databaseUrl = databaseUrl;
+        this.databaseUser = databaseUser;
+        this.databasePassword = databasePassword;
         this.jobDefinitions = jobDefinitions;
     }
 
@@ -79,6 +91,30 @@ class JobServerConfiguration {
         this.jobDefinitions = jobDefinitions;
     }
 
+    public String getDatabaseUrl() {
+        return databaseUrl;
+    }
+
+    public void setDatabaseUrl(String databaseUrl) {
+        this.databaseUrl = databaseUrl;
+    }
+
+    public String getDatabaseUser() {
+        return databaseUser;
+    }
+
+    public void setDatabaseUser(String databaseUser) {
+        this.databaseUser = databaseUser;
+    }
+
+    public String getDatabasePassword() {
+        return databasePassword;
+    }
+
+    public void setDatabasePassword(String databasePassword) {
+        this.databasePassword = databasePassword;
+    }
+
     @Override
     public String toString() {
         return "JobServerConfiguration{" +
@@ -86,6 +122,9 @@ class JobServerConfiguration {
                 ", pollingInterval=" + pollingInterval +
                 ", databaseType='" + databaseType + '\'' +
                 ", databaseInit=" + databaseInit +
+                ", databaseUrl='" + databaseUrl + '\'' +
+                ", databaseUser='" + databaseUser + '\'' +
+                ", databasePassword='" + "**********" + '\'' +
                 ", jobDefinitions=" + jobDefinitions +
                 '}';
     }

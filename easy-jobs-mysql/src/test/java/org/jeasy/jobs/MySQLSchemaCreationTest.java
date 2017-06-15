@@ -1,33 +1,42 @@
 package org.jeasy.jobs;
 
-import com.mysql.cj.jdbc.MysqlDataSource;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.Properties;
+import javax.sql.DataSource;
+
+import java.io.File;
 
 import static org.junit.Assert.fail;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@org.springframework.test.context.ContextConfiguration(classes = {org.jeasy.jobs.ContextConfiguration.class})
 public class MySQLSchemaCreationTest {
+
+    @Autowired
+    private DataSource dataSource;
+
+    @Before
+    public void init() throws Exception {
+        File file = new File("src/test/resources/easy-jobs-config.json");
+        System.setProperty(JobServerConfiguration.CONFIGURATION_PATH_PARAMETER_NAME, file.getAbsolutePath());
+    }
 
     @Test
     public void canExecuteSQLScriptAgainstMySQLDatabase() throws Exception {
         // Given
-        Properties properties = new Properties();
-        properties.load(MySQLSchemaCreationTest.class.getResourceAsStream("/database.properties"));
-        MysqlDataSource mysqlDataSource = new MysqlDataSource();
-        mysqlDataSource.setUrl(properties.getProperty("easy.jobs.mysql.url"));
-        mysqlDataSource.setUser(properties.getProperty("easy.jobs.mysql.user"));
-        mysqlDataSource.setPassword(properties.getProperty("easy.jobs.mysql.password"));
-
         Resource resource = new ClassPathResource("database-schema.sql");
         ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator(resource);
 
         // When
         try {
-            databasePopulator.execute(mysqlDataSource);
+            databasePopulator.execute(dataSource);
         } catch (Exception e) {
             e.printStackTrace();
             fail("Unable to run sql script against mysql database");

@@ -1,0 +1,9 @@
+{
+  "workers.number": 10,
+  "polling.interval": 30,
+  "database.type": "h2",
+  "database.url": "jdbc:h2:./target/db;DATABASE_TO_UPPER=false",
+  "database.user": "admin",
+  "database.password": "",
+  "jobs": []
+}

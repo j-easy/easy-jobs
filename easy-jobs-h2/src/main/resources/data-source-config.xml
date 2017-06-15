@@ -3,10 +3,11 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <!-- todo use abstract bean for common properties-->
     <bean id="dataSource" class="org.h2.jdbcx.JdbcDataSource">
-        <property name="url" value="${easy.jobs.h2.url}"/>
-        <property name="user" value="${easy.jobs.h2.user}"/>
-        <property name="password" value="${easy.jobs.h2.password}"/>
+        <property name="url" value="#{serverConfiguration.getDatabaseUrl()}"/>
+        <property name="user" value="#{serverConfiguration.getDatabaseUser()}"/>
+        <property name="password" value="#{serverConfiguration.getDatabasePassword()}"/>
     </bean>
 
     <bean id="hibernateDialect" class="java.lang.String">

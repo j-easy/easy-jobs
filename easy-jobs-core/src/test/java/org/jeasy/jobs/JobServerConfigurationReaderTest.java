@@ -23,6 +23,9 @@ public class JobServerConfigurationReaderTest {
         assertThat(serverConfiguration.getWorkersNumber()).isEqualTo(10);
         assertThat(serverConfiguration.getPollingInterval()).isEqualTo(30);
         assertThat(serverConfiguration.getDatabaseType()).isEqualTo("h2");
+        assertThat(serverConfiguration.getDatabaseUrl()).isEqualTo("/tmp");
+        assertThat(serverConfiguration.getDatabaseUser()).isEqualTo("admin");
+        assertThat(serverConfiguration.getDatabasePassword()).isEqualTo("");
         assertThat(serverConfiguration.isDatabaseInit()).isTrue();
 
         List<JobServerConfiguration.JobDefinition> jobDefinitions = serverConfiguration.getJobDefinitions();

@@ -1,6 +1,7 @@
 package org.jeasy.jobs;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.sql.DataSource;
+
+import java.io.File;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,6 +27,12 @@ public class JobDAOTest {
     private JobDAO jobDAO;
 
     private JdbcTemplate jdbcTemplate;
+
+    @BeforeClass
+    public static void init() throws Exception {
+        File file = new File("src/test/resources/easy-jobs-config.json");
+        System.setProperty(JobServerConfiguration.CONFIGURATION_PATH_PARAMETER_NAME, file.getAbsolutePath());
+    }
 
     @Before
     public void setUp() throws Exception {

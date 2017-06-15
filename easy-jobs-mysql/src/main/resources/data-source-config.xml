@@ -3,10 +3,11 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <!-- todo use abstract bean for common properties-->
     <bean id="dataSource" class="com.mysql.cj.jdbc.MysqlDataSource">
-        <property name="url" value="${easy.jobs.mysql.url}"/>
-        <property name="user" value="${easy.jobs.mysql.user}"/>
-        <property name="password" value="${easy.jobs.mysql.password}"/>
+        <property name="url" value="#{serverConfiguration.getDatabaseUrl()}"/>
+        <property name="user" value="#{serverConfiguration.getDatabaseUser()}"/>
+        <property name="password" value="#{serverConfiguration.getDatabasePassword()}"/>
     </bean>
 
     <bean id="hibernateDialect" class="java.lang.String">

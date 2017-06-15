@@ -2,7 +2,6 @@ package org.jeasy.jobs;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.core.io.ClassPathResource;
@@ -43,13 +42,6 @@ class ContextConfiguration {
                 new ClassPathResource("org/jeasy/jobs/jobExecution.hbm.xml")
         );
         return localSessionFactoryBean;
-    }
-
-    @Bean
-    public static PropertyPlaceholderConfigurer databasePropertiesPlaceholderConfigurer() {
-        PropertyPlaceholderConfigurer propertyPlaceholderConfigurer = new PropertyPlaceholderConfigurer();
-        propertyPlaceholderConfigurer.setLocation(new ClassPathResource("database.properties"));
-        return propertyPlaceholderConfigurer;
     }
 
     @Bean
@@ -104,7 +96,7 @@ class ContextConfiguration {
 
     @Bean
     public JobServerConfiguration serverConfiguration() {
-        JobServerConfiguration defaultJobServerConfiguration = JobServerConfiguration.defaultJobServerConfiguration;
+        JobServerConfiguration defaultJobServerConfiguration = JobServerConfiguration.DEFAULT_JOB_SERVER_CONFIGURATION;
         String configurationPath = System.getProperty(JobServerConfiguration.CONFIGURATION_PATH_PARAMETER_NAME);
         try {
             if (configurationPath != null) {
@@ -115,7 +107,7 @@ class ContextConfiguration {
             }
         } catch (Exception e) {
            LOGGER.log(Level.WARNING, "Unable to read configuration from file " + configurationPath, e);
-           // FIXME may be fail fast is better? Should easy jobs introspect and validate job definitions (existing method, etc). I guess yes
+           // FIXME Should easy jobs introspect and validate job definitions (existing method, etc) ? I guess yes
             LOGGER.log(Level.WARNING, "Using default configuration: " + defaultJobServerConfiguration);
             return defaultJobServerConfiguration;
         }

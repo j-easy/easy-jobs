@@ -1,0 +1,9 @@
+{
+  "workers.number": 10,
+  "polling.interval": 30,
+  "database.type": "mysql",
+  "database.url": "jdbc:mysql://localhost:3306/test?serverTimezone=Europe/Brussels",
+  "database.user": "root",
+  "database.password": "root",
+  "jobs": []
+}
