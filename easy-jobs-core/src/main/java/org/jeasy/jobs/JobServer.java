@@ -48,8 +48,10 @@ public class JobServer implements Runnable {
 
         ApplicationContext ctx = new AnnotationConfigApplicationContext(ContextConfiguration.class);
         JobServerConfiguration jobServerConfiguration = ctx.getBean(JobServerConfiguration.class);
+        LOGGER.info("Using job server configuration: " + jobServerConfiguration);
         if (jobServerConfiguration.isDatabaseInit()) {
             DataSource dataSource = ctx.getBean(DataSource.class);
+            LOGGER.info("Initializing database");
             init(dataSource, jobServerConfiguration, ctx);
         }
 
@@ -61,7 +63,7 @@ public class JobServer implements Runnable {
         JobServer jobServer = new JobServer(jobService);
 
         SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(jobServer, 0, jobServerConfiguration.getPollingInterval(), TimeUnit.SECONDS);
-        LOGGER.info("Job manager started.");
+        LOGGER.info("Job server started");
 
     }
 
@@ -82,6 +84,7 @@ public class JobServer implements Runnable {
         ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator(resource);
         databasePopulator.execute(dataSource);
         JobDAO jobDAO = ctx.getBean(JobDAO.class);
+        LOGGER.info("Loading job definitions");
         for (JobServerConfiguration.JobDefinition jobDefinition : jobServerConfiguration.getJobDefinitions()) {
             String name = jobDefinition.getName();
             if (name == null) {
@@ -95,7 +98,7 @@ public class JobServer implements Runnable {
     private static void registerShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             SCHEDULED_EXECUTOR_SERVICE.shutdownNow();
-            LOGGER.info("Job manager stopped."); }));
+            LOGGER.info("Job manager stopped"); }));
     }
 
 }

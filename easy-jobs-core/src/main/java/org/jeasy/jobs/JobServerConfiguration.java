@@ -117,7 +117,7 @@ class JobServerConfiguration {
 
     @Override
     public String toString() {
-        return "JobServerConfiguration{" +
+        return "JobServerConfiguration {" +
                 "workersNumber=" + workersNumber +
                 ", pollingInterval=" + pollingInterval +
                 ", databaseType='" + databaseType + '\'' +
@@ -177,7 +177,7 @@ class JobServerConfiguration {
             return "Job {" +
                     "id=" + id +
                     ", name='" + name + '\'' +
-                    ", clazz='" + clazz + '\'' +
+                    ", class='" + clazz + '\'' +
                     ", method='" + method + '\'' +
                     '}';
         }
