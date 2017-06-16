@@ -2,7 +2,6 @@ package org.jeasy.jobs;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -14,6 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.sql.DataSource;
 import java.io.File;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -46,7 +46,6 @@ public abstract class AbstractJobExecutionDAOTest {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    @Test
     public void testJobExecutionPersistence() throws Exception {
         // given
         jobDAO.save(new Job(1, "MyJob"));
@@ -58,5 +57,23 @@ public abstract class AbstractJobExecutionDAOTest {
         // then
         Integer nbJobExecutions = jdbcTemplate.queryForObject("select count(*) from job_execution", Integer.class);
         assertThat(nbJobExecutions).isEqualTo(1);
+    }
+
+    public void testJobExecutionUpdate() throws Exception {
+        // given
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime endDate = now.plus(2, ChronoUnit.MINUTES);
+        jobDAO.save(new Job(1, "MyJob"));
+        jobRequestDAO.save(new JobRequest(1, "", JobRequestStatus.PENDING, now, null));
+        jobExecutionDAO.save(new JobExecution(1, JobExecutionStatus.RUNNING, null, now, null));
+
+        // when
+        jobExecutionDAO.update(1, JobExitStatus.SUCCEEDED, endDate);
+
+        // then
+        JobExecution jobExecution = jobExecutionDAO.getByJobRequestId(1);
+        assertThat(jobExecution.getJobExecutionStatus()).isEqualTo(JobExecutionStatus.FINISHED);
+        assertThat(jobExecution.getJobExitStatus()).isEqualTo(JobExitStatus.SUCCEEDED);
+        assertThat(jobExecution.getEndDate()).isEqualToIgnoringNanos(endDate);
     }
 }

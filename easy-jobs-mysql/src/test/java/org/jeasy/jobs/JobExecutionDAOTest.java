@@ -8,4 +8,9 @@ public class JobExecutionDAOTest extends AbstractJobExecutionDAOTest {
     public void testJobExecutionPersistenceInMySQL() throws Exception {
         super.testJobExecutionPersistence();
     }
+
+    @Test
+    public void testJobExecutionUpdateInMySQL() throws Exception {
+        super.testJobExecutionUpdate();
+    }
 }

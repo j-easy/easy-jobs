@@ -8,4 +8,19 @@ public class JobRequestDAOTest extends AbstractJobRequestDAOTest {
     public void testJobRequestPersistenceInH2() throws Exception {
         super.testJobRequestPersistence();
     }
+
+    @Test
+    public void testGetPendingJobRequestsFromH2() throws Exception {
+        super.testGetPendingJobRequests();
+    }
+
+    @Test
+    public void testUpdateJobRequestStatusInH2() throws Exception {
+        super.testUpdateJobRequestStatus();
+    }
+
+    @Test
+    public void testUpdateJobRequestStatusAndProcessingDateInH2() throws Exception {
+        super.testUpdateJobRequestStatusAndProcessingDate();
+    }
 }

@@ -1,7 +1,6 @@
 package org.jeasy.jobs;
 
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -27,7 +26,6 @@ public abstract class SchemaCreationTest {
         System.setProperty(JobServerConfiguration.CONFIGURATION_PATH_PARAMETER_NAME, file.getAbsolutePath());
     }
 
-    @Test
     public void canExecuteSQLScript() throws Exception {
         // Given
         Resource resource = new ClassPathResource("database-schema.sql");
