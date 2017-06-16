@@ -1,6 +1,7 @@
 package org.jeasy.jobs;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,10 +45,7 @@ class JobService {
         jobRequestDAO.updateStatusAndProcessingDate(requestId, JobRequestStatus.PROCESSED, LocalDateTime.now());
     }
 
-    // TODO 1. add transaction around this and you get horizontal scaling
-    // The transaction will not wait for jobs to finish, only their submission (which should be fast enough)
-    // TODO 2. what if new job request comes in in between? Well don't worry, it will be processed in the next run
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     void pollRequestsAndSubmitJobs() {
         List<JobRequest> pendingJobRequests = jobRequestDAO.getPendingJobRequests(); // add limit 10 (nb workers) and you have throttling/back pressure for free!
         if (pendingJobRequests.isEmpty()) {
