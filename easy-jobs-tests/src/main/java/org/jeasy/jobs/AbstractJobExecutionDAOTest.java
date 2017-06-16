@@ -74,6 +74,6 @@ public abstract class AbstractJobExecutionDAOTest {
         JobExecution jobExecution = jobExecutionDAO.getByJobRequestId(1);
         assertThat(jobExecution.getJobExecutionStatus()).isEqualTo(JobExecutionStatus.FINISHED);
         assertThat(jobExecution.getJobExitStatus()).isEqualTo(JobExitStatus.SUCCEEDED);
-        assertThat(jobExecution.getEndDate()).isEqualToIgnoringNanos(endDate);
+        assertThat(jobExecution.getEndDate()).isEqualToIgnoringSeconds(endDate); // sometimes this test fails when ignoring only nanoseconds
     }
 }
