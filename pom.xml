@@ -17,6 +17,7 @@
         <module>easy-jobs-h2</module>
         <module>easy-jobs-mysql</module>
         <module>easy-jobs-dist</module>
+        <module>easy-jobs-tests</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -79,31 +80,6 @@
             <url>http://opensource.org/licenses/mit-license.php</url>
         </license>
     </licenses>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.assertj</groupId>
-                <artifactId>assertj-core</artifactId>
-                <version>${assertj.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-core</artifactId>
-                <version>${mockito.version}</version>
-                <scope>test</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <pluginManagement>
