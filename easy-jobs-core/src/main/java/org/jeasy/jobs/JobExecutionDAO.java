@@ -18,15 +18,20 @@ class JobExecutionDAO {
         this.sessionFactory = sessionFactory;
     }
 
+    public JobExecution getByJobRequestId(int jobRequestId) {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("from JobExecution where requestId = :requestId ");
+        query.setParameter("requestId", jobRequestId);
+        return (JobExecution) query.getSingleResult(); // todo use TypedQuery
+    }
+
     public void save(JobExecution jobExecution) {
         sessionFactory.getCurrentSession().saveOrUpdate(jobExecution);
     }
 
     public void update(int jobRequestId, JobExitStatus jobExitStatus, LocalDateTime endDate) {
         Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("from JobExecution where requestId = :requestId ");
-        query.setParameter("requestId", jobRequestId);
-        JobExecution jobExecution = (JobExecution) query.getSingleResult(); // todo use TypedQuery
+        JobExecution jobExecution = getByJobRequestId(jobRequestId);
         jobExecution.setJobExecutionStatus(JobExecutionStatus.FINISHED);
         jobExecution.setJobExitStatus(jobExitStatus);
         jobExecution.setEndDate(endDate);

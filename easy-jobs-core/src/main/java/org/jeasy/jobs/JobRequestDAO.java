@@ -19,6 +19,10 @@ class JobRequestDAO {
         this.sessionFactory = sessionFactory;
     }
 
+    public JobRequest getById(int id) {
+        return sessionFactory.getCurrentSession().get(JobRequest.class, id);
+    }
+
     public void save(JobRequest jobRequest) {
         sessionFactory.getCurrentSession().saveOrUpdate(jobRequest);
     }
