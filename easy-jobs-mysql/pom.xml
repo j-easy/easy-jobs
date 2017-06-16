@@ -13,7 +13,7 @@
     <artifactId>easy-jobs-mysql</artifactId>
     <packaging>jar</packaging>
     <name>Easy Jobs MySQL database support module</name>
-    <description>This module adds support for MySQL database</description>
+    <description>This module provides support for MySQL database</description>
 
     <properties>
         <mysql-connector.version>6.0.6</mysql-connector.version>
@@ -28,16 +28,16 @@
         <dependency>
             <groupId>org.jeasy</groupId>
             <artifactId>easy-jobs-tests</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.0.1</version>
                 <configuration>
                     <artifactItems>
                         <artifactItem>
@@ -54,4 +54,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>

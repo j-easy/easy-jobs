@@ -13,7 +13,7 @@
     <artifactId>easy-jobs-h2</artifactId>
     <packaging>jar</packaging>
     <name>Easy Jobs H2 database support module</name>
-    <description>This module adds support for H2 database</description>
+    <description>This module provides support for H2 database</description>
 
     <properties>
         <h2.version>1.4.194</h2.version>
@@ -28,7 +28,7 @@
         <dependency>
             <groupId>org.jeasy</groupId>
             <artifactId>easy-jobs-tests</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -38,7 +38,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.0.1</version>
                 <configuration>
                     <artifactItems>
                         <artifactItem>

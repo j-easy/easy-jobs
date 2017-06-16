@@ -10,12 +10,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>easy-jobs-tests</artifactId>
+    <packaging>jar</packaging>
+    <name>Easy jobs tests module</name>
+    <description>This module provides database agnostic tests that are inherited in each database module</description>
 
     <dependencies>
         <dependency>
             <groupId>org.jeasy</groupId>
             <artifactId>easy-jobs-core</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -35,10 +38,8 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <!--rename property to spring.version-->
-            <version>${spring-jdbc.version}</version>
+            <version>${spring.version}</version>
         </dependency>
     </dependencies>
-
 
 </project>

@@ -6,31 +6,19 @@
         <artifactId>easy-jobs-parent</artifactId>
         <groupId>org.jeasy</groupId>
         <version>0.1-SNAPSHOT</version>
-        <relativePath>../easy-jobs/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>easy-jobs-dist</artifactId>
+    <packaging>pom</packaging>
+    <name>Easy Jobs distribution module</name>
+    <description>This module provides assembly files to create a single distribution of the project</description>
 
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.6</version>
-                <configuration>
-                    <descriptors>
-                        <descriptor>src/assembly/src.xml</descriptor>
-                    </descriptors>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
