@@ -1,11 +1,11 @@
-package org.jeasy.jobs;
+package org.jeasy.jobs.job;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-class DefaultJob implements Callable<JobExitStatus> {
+public class DefaultJob implements Callable<JobExitStatus> {
 
     private static final Logger LOGGER = Logger.getLogger(DefaultJob.class.getName());
 
@@ -15,7 +15,7 @@ class DefaultJob implements Callable<JobExitStatus> {
     private Object target;
     private Method method;
 
-    DefaultJob(int requestId, Object target, Method method, JobService jobService) {
+    public DefaultJob(int requestId, Object target, Method method, JobService jobService) {
         this.requestId = requestId;
         this.target = target;
         this.method = method;

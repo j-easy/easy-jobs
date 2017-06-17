@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
-<hibernate-mapping package="org.jeasy.jobs">
+<hibernate-mapping package="org.jeasy.jobs.execution">
 
     <class name="JobExecution" table="job_execution">
         <id name="id" column="id">
@@ -12,12 +12,12 @@
         <property name="requestId" column="request_id" type="integer"/>
         <property name="jobExecutionStatus" column="status">
             <type name="org.hibernate.type.EnumType">
-                <param name="enumClass">org.jeasy.jobs.JobExecutionStatus</param>
+                <param name="enumClass">org.jeasy.jobs.execution.JobExecutionStatus</param>
             </type>
         </property>
         <property name="jobExitStatus" column="job_status">
             <type name="org.hibernate.type.EnumType">
-                <param name="enumClass">org.jeasy.jobs.JobExitStatus</param>
+                <param name="enumClass">org.jeasy.jobs.job.JobExitStatus</param>
             </type>
         </property>
         <property name="startDate" column="start_date" type="java.time.LocalDateTime"/>

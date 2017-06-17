@@ -1,5 +1,14 @@
 package org.jeasy.jobs;
 
+import org.jeasy.jobs.execution.JobExecution;
+import org.jeasy.jobs.execution.JobExecutionDAO;
+import org.jeasy.jobs.execution.JobExecutionStatus;
+import org.jeasy.jobs.job.Job;
+import org.jeasy.jobs.job.JobDAO;
+import org.jeasy.jobs.job.JobExitStatus;
+import org.jeasy.jobs.request.JobRequest;
+import org.jeasy.jobs.request.JobRequestDAO;
+import org.jeasy.jobs.request.JobRequestStatus;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;

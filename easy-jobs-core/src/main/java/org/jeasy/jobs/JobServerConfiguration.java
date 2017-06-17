@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-class JobServerConfiguration {
+public class JobServerConfiguration {
 
     static final String CONFIGURATION_PATH_PARAMETER_NAME = "easy.jobs.configuration.path";
     static final JobServerConfiguration DEFAULT_JOB_SERVER_CONFIGURATION =
@@ -129,7 +129,7 @@ class JobServerConfiguration {
                 '}';
     }
 
-    static class JobDefinition {
+    public static class JobDefinition {
 
         private int id;
         private String name;

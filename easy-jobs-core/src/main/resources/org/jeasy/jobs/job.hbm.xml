@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
-<hibernate-mapping package="org.jeasy.jobs">
+<hibernate-mapping package="org.jeasy.jobs.job">
 
     <class name="Job" table="job">
         <id name="id" column="id">

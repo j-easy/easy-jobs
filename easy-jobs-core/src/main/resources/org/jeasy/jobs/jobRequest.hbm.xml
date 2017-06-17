@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
-<hibernate-mapping package="org.jeasy.jobs">
+<hibernate-mapping package="org.jeasy.jobs.request">
 
     <class name="JobRequest" table="job_request">
         <id name="id" column="id">
@@ -13,7 +13,7 @@
         <property name="parameters" type="string"/>
         <property name="status">
             <type name="org.hibernate.type.EnumType">
-                <param name="enumClass">org.jeasy.jobs.JobRequestStatus</param>
+                <param name="enumClass">org.jeasy.jobs.request.JobRequestStatus</param>
             </type>
         </property>
         <property name="creationDate" column="creation_date" type="java.time.LocalDateTime"/>

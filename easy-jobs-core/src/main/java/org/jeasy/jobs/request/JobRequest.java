@@ -1,8 +1,8 @@
-package org.jeasy.jobs;
+package org.jeasy.jobs.request;
 
 import java.time.LocalDateTime;
 
-class JobRequest {
+public class JobRequest {
 
     private int id;
     private int jobId;

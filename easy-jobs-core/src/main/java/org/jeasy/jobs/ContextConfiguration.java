@@ -1,6 +1,11 @@
 package org.jeasy.jobs;
 
 import org.hibernate.SessionFactory;
+import org.jeasy.jobs.execution.JobExecutionDAO;
+import org.jeasy.jobs.job.JobDAO;
+import org.jeasy.jobs.job.JobFactory;
+import org.jeasy.jobs.job.JobService;
+import org.jeasy.jobs.request.JobRequestDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
@@ -20,7 +25,7 @@ import java.util.logging.Logger;
 @org.springframework.context.annotation.Configuration
 @EnableTransactionManagement
 @ImportResource("classpath:data-source-config.xml")
-class ContextConfiguration {
+public class ContextConfiguration {
 
     private static final Logger LOGGER = Logger.getLogger(ContextConfiguration.class.getName());
 

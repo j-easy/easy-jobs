@@ -1,6 +1,6 @@
-package org.jeasy.jobs;
+package org.jeasy.jobs.job;
 
-class Job {
+public class Job {
 
     private int id;
     private String name;
@@ -22,7 +22,7 @@ class Job {
         return name;
     }
 
-    // if no setter => org.hibernate.PropertyNotFoundException: Could not locate setter method for property [org.jeasy.jobs.Job#id]
+    // if no setter => org.hibernate.PropertyNotFoundException: Could not locate setter method for property [org.jeasy.jobs.job.Job#id]
     public void setId(int id) {
         this.id = id;
     }

@@ -1,8 +1,9 @@
-package org.jeasy.jobs;
+package org.jeasy.jobs.execution;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.jeasy.jobs.job.JobExitStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Repository
 @Transactional
-class JobExecutionDAO {
+public class JobExecutionDAO {
 
     private SessionFactory sessionFactory;
 

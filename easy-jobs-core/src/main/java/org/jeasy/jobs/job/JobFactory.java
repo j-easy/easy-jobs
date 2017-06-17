@@ -1,6 +1,7 @@
-package org.jeasy.jobs;
+package org.jeasy.jobs.job;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.jeasy.jobs.JobServerConfiguration;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
@@ -8,7 +9,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 @Component
-class JobFactory {
+public class JobFactory {
 
     private static final Logger LOGGER = Logger.getLogger(JobFactory.class.getName());
 
@@ -16,17 +17,17 @@ class JobFactory {
 
     private JobService jobService;
 
-    JobFactory() {
+    public JobFactory() {
     }
 
-    DefaultJob createJob(int id, int requestId, String parameters) throws Exception {
+    public DefaultJob createJob(int id, int requestId, String parameters) throws Exception {
         JobServerConfiguration.JobDefinition jobDefinition = jobs.get(id);
         String jobClass = jobDefinition.getClazz();
         String jobMethod = jobDefinition.getMethod();
         return createJob(requestId, jobClass, jobMethod, parameters);
     }
 
-    private DefaultJob createJob(int requestId, String jobType, String jobMethod, String parameters) throws Exception {
+    public DefaultJob createJob(int requestId, String jobType, String jobMethod, String parameters) throws Exception {
         Class<?> jobClass = Class.forName(jobType);
         Object jobInstance = jobClass.newInstance();
         Map<String, Object> parsedParameters = parseParameters(parameters);
@@ -54,7 +55,7 @@ class JobFactory {
         return parsedParameters;
     }
 
-    void setJobService(JobService jobService) {
+    public void setJobService(JobService jobService) {
         this.jobService = jobService;
     }
 

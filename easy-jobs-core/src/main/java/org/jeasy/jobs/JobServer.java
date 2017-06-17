@@ -1,5 +1,9 @@
 package org.jeasy.jobs;
 
+import org.jeasy.jobs.job.Job;
+import org.jeasy.jobs.job.JobDAO;
+import org.jeasy.jobs.job.JobFactory;
+import org.jeasy.jobs.job.JobService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.io.ClassPathResource;

@@ -1,4 +1,4 @@
-package org.jeasy.jobs;
+package org.jeasy.jobs.request;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 @Transactional
-class JobRequestDAO {
+public class JobRequestDAO {
 
     private SessionFactory sessionFactory;
 

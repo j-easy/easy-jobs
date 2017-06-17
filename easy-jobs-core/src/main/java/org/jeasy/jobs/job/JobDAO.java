@@ -1,4 +1,4 @@
-package org.jeasy.jobs;
+package org.jeasy.jobs.job;
 
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-class JobDAO { // todo rename all dao to repository
+public class JobDAO { // todo rename all dao to repository
 
     private SessionFactory sessionFactory;
 

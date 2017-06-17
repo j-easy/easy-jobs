@@ -1,8 +1,10 @@
-package org.jeasy.jobs;
+package org.jeasy.jobs.execution;
+
+import org.jeasy.jobs.job.JobExitStatus;
 
 import java.time.LocalDateTime;
 
-class JobExecution {
+public class JobExecution {
 
     private int id;
     private int requestId;

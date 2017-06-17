@@ -3,7 +3,7 @@ package org.jeasy.jobs;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
 
-class WorkerThreadFactory implements ThreadFactory {
+public class WorkerThreadFactory implements ThreadFactory {
 
     private final AtomicLong count = new AtomicLong(0);
 

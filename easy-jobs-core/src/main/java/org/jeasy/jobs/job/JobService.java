@@ -1,5 +1,11 @@
-package org.jeasy.jobs;
+package org.jeasy.jobs.job;
 
+import org.jeasy.jobs.execution.JobExecution;
+import org.jeasy.jobs.execution.JobExecutionDAO;
+import org.jeasy.jobs.execution.JobExecutionStatus;
+import org.jeasy.jobs.request.JobRequest;
+import org.jeasy.jobs.request.JobRequestDAO;
+import org.jeasy.jobs.request.JobRequestStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -16,7 +22,7 @@ import java.util.logging.Logger;
  * Central service providing transactional methods to save/update job requests/executions together in a consistent way.
  */
 @Service
-class JobService {
+public class JobService {
 
     private static final Logger LOGGER = Logger.getLogger(JobService.class.getName());
 
@@ -25,7 +31,7 @@ class JobService {
     private ExecutorService executorService;
     private JobFactory jobFactory;
 
-    JobService(ExecutorService executorService, JobExecutionDAO jobExecutionDAO, JobRequestDAO jobRequestDAO, JobFactory jobFactory) {
+    public JobService(ExecutorService executorService, JobExecutionDAO jobExecutionDAO, JobRequestDAO jobRequestDAO, JobFactory jobFactory) {
         this.jobExecutionDAO = jobExecutionDAO;
         this.jobRequestDAO = jobRequestDAO;
         this.executorService = executorService;
@@ -40,13 +46,13 @@ class JobService {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    void updateJobExecutionAndItsCorrespondingRequest(int requestId, JobExitStatus jobExitStatus) {
+    public void updateJobExecutionAndItsCorrespondingRequest(int requestId, JobExitStatus jobExitStatus) {
         jobExecutionDAO.update(requestId, jobExitStatus, LocalDateTime.now());
         jobRequestDAO.updateStatusAndProcessingDate(requestId, JobRequestStatus.PROCESSED, LocalDateTime.now());
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    void pollRequestsAndSubmitJobs() {
+    public void pollRequestsAndSubmitJobs() {
         List<JobRequest> pendingJobRequests = jobRequestDAO.getPendingJobRequests(); // add limit 10 (nb workers) and you have throttling/back pressure for free!
         if (pendingJobRequests.isEmpty()) {
             return;
