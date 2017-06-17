@@ -11,7 +11,7 @@
 
     <artifactId>easy-jobs-tests</artifactId>
     <packaging>jar</packaging>
-    <name>Easy jobs tests module</name>
+    <name>Easy Jobs tests module</name>
     <description>This module provides database agnostic tests that are inherited in each database module</description>
 
     <dependencies>
