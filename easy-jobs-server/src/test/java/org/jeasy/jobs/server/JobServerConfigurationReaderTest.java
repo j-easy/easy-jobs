@@ -1,5 +1,7 @@
-package org.jeasy.jobs;
+package org.jeasy.jobs.server;
 
+import org.assertj.core.api.Assertions;
+import org.jeasy.jobs.job.JobDefinition;
 import org.junit.Test;
 
 import java.io.File;
@@ -22,16 +24,12 @@ public class JobServerConfigurationReaderTest {
         // Then
         assertThat(serverConfiguration.getWorkersNumber()).isEqualTo(10);
         assertThat(serverConfiguration.getPollingInterval()).isEqualTo(30);
-        assertThat(serverConfiguration.getDatabaseType()).isEqualTo("h2");
-        assertThat(serverConfiguration.getDatabaseUrl()).isEqualTo("/tmp");
-        assertThat(serverConfiguration.getDatabaseUser()).isEqualTo("admin");
-        assertThat(serverConfiguration.getDatabasePassword()).isEqualTo("");
         assertThat(serverConfiguration.isDatabaseInit()).isTrue();
 
-        List<JobServerConfiguration.JobDefinition> jobDefinitions = serverConfiguration.getJobDefinitions();
-        assertThat(jobDefinitions).isNotEmpty();
+        List<JobDefinition> jobDefinitions = serverConfiguration.getJobDefinitions();
+        Assertions.assertThat(jobDefinitions).isNotEmpty();
 
-        JobServerConfiguration.JobDefinition jobDefinition = jobDefinitions.get(0);
+        JobDefinition jobDefinition = jobDefinitions.get(0);
         assertThat(jobDefinition.getId()).isEqualTo(1);
         assertThat(jobDefinition.getName()).isEqualTo("my job");
         assertThat(jobDefinition.getClazz()).isEqualTo("org.jeasy.jobs.test.MyJob");

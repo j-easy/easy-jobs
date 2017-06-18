@@ -1,8 +1,9 @@
-package org.jeasy.jobs;
+package org.jeasy.jobs.server;
 
+import org.jeasy.jobs.ContextConfiguration;
 import org.jeasy.jobs.job.Job;
 import org.jeasy.jobs.job.JobDAO;
-import org.jeasy.jobs.job.JobFactory;
+import org.jeasy.jobs.job.JobDefinition;
 import org.jeasy.jobs.job.JobService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -11,10 +12,14 @@ import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 import javax.sql.DataSource;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -51,7 +56,7 @@ public class JobServer implements Runnable {
         printBanner();
 
         ApplicationContext ctx = new AnnotationConfigApplicationContext(ContextConfiguration.class);
-        JobServerConfiguration jobServerConfiguration = ctx.getBean(JobServerConfiguration.class);
+        JobServerConfiguration jobServerConfiguration = getServerConfiguration();
         LOGGER.info("Using job server configuration: " + jobServerConfiguration);
         if (jobServerConfiguration.isDatabaseInit()) {
             DataSource dataSource = ctx.getBean(DataSource.class);
@@ -59,11 +64,10 @@ public class JobServer implements Runnable {
             init(dataSource, jobServerConfiguration, ctx);
         }
 
-        JobFactory jobFactory = ctx.getBean(JobFactory.class);
-        Map<Integer, JobServerConfiguration.JobDefinition> jobDefinitions = getJobDefinitions(jobServerConfiguration);
-        jobFactory.setJobs(jobDefinitions);
+        Map<Integer, JobDefinition> jobDefinitions = getJobDefinitions(jobServerConfiguration);
         JobService jobService = ctx.getBean(JobService.class);
-        jobFactory.setJobService(jobService);
+        jobService.setExecutorService(executorService());
+        jobService.setJobDefinitions(jobDefinitions);
         JobServer jobServer = new JobServer(jobService);
 
         SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(jobServer, 0, jobServerConfiguration.getPollingInterval(), TimeUnit.SECONDS);
@@ -71,9 +75,9 @@ public class JobServer implements Runnable {
 
     }
 
-    private static Map<Integer, JobServerConfiguration.JobDefinition> getJobDefinitions(JobServerConfiguration jobServerConfiguration) {
-        Map<Integer, JobServerConfiguration.JobDefinition> jobDefinitions = new HashMap<>();
-        for (JobServerConfiguration.JobDefinition jobDefinition : jobServerConfiguration.getJobDefinitions()) {
+    private static Map<Integer, JobDefinition> getJobDefinitions(JobServerConfiguration jobServerConfiguration) {
+        Map<Integer, JobDefinition> jobDefinitions = new HashMap<>();
+        for (JobDefinition jobDefinition : jobServerConfiguration.getJobDefinitions()) {
             jobDefinitions.put(jobDefinition.getId(), jobDefinition);
         }
         return jobDefinitions;
@@ -89,7 +93,7 @@ public class JobServer implements Runnable {
         databasePopulator.execute(dataSource);
         JobDAO jobDAO = ctx.getBean(JobDAO.class);
         LOGGER.info("Loading job definitions");
-        for (JobServerConfiguration.JobDefinition jobDefinition : jobServerConfiguration.getJobDefinitions()) {
+        for (JobDefinition jobDefinition : jobServerConfiguration.getJobDefinitions()) {
             String name = jobDefinition.getName();
             if (name == null) {
                 name = jobDefinition.getClazz(); // todo get simple class name from fully qualified name
@@ -103,6 +107,28 @@ public class JobServer implements Runnable {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             SCHEDULED_EXECUTOR_SERVICE.shutdownNow();
             LOGGER.info("Job manager stopped"); }));
+    }
+
+    private static JobServerConfiguration getServerConfiguration() {
+        JobServerConfiguration defaultJobServerConfiguration = JobServerConfiguration.DEFAULT_JOB_SERVER_CONFIGURATION;
+        String configurationPath = System.getProperty(JobServerConfiguration.CONFIGURATION_PATH_PARAMETER_NAME);
+        try {
+            if (configurationPath != null) {
+                return new JobServerConfigurationReader().read(new File(configurationPath));
+            } else {
+                LOGGER.log(Level.INFO, "No configuration file specified, using default configuration: " + defaultJobServerConfiguration);
+                return defaultJobServerConfiguration;
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "Unable to read configuration from file " + configurationPath, e);
+            // FIXME Should easy jobs introspect and validate job definitions (existing method, etc) ? I guess yes
+            LOGGER.log(Level.WARNING, "Using default configuration: " + defaultJobServerConfiguration);
+            return defaultJobServerConfiguration;
+        }
+    }
+
+    private static ExecutorService executorService() {
+        return Executors.newFixedThreadPool(getServerConfiguration().getWorkersNumber(), new WorkerThreadFactory());
     }
 
 }

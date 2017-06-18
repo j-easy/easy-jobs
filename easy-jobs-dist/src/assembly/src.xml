@@ -24,16 +24,16 @@
         </fileSet>
         <!--lib-->
         <fileSet>
-            <directory>../easy-jobs-core/target/dependency</directory> <!-- run mvn dependency plugin first -->
+            <directory>../easy-jobs-server/target/dependency</directory>
             <outputDirectory>lib</outputDirectory>
         </fileSet>
         <!--drivers-->
         <fileSet>
-            <directory>../easy-jobs-h2/target/dependency</directory> <!-- run mvn dependency plugin first -->
+            <directory>../easy-jobs-h2/target/dependency</directory>
             <outputDirectory>drivers/h2</outputDirectory>
         </fileSet>
         <fileSet>
-            <directory>../easy-jobs-mysql/target/dependency</directory> <!-- run mvn dependency plugin first -->
+            <directory>../easy-jobs-mysql/target/dependency</directory>
             <outputDirectory>drivers/mysql</outputDirectory>
         </fileSet>
     </fileSets>
@@ -45,7 +45,7 @@
             <lineEnding>unix</lineEnding>
         </file>
         <file>
-            <source>../easy-jobs-core/target/easy-jobs-core-${project.version}.jar</source>
+            <source>../easy-jobs-server/target/easy-jobs-server-${project.version}.jar</source>
             <outputDirectory>lib</outputDirectory>
         </file>
         <file>

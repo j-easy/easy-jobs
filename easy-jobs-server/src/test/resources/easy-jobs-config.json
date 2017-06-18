@@ -1,10 +1,6 @@
 {
   "workers.number": 10,
   "polling.interval": 30,
-  "database.type": "h2",
-  "database.url": "/tmp",
-  "database.user": "admin",
-  "database.password": "",
   "database.init": true,
   "jobs": [
     {

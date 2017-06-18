@@ -43,8 +43,8 @@ public abstract class AbstractJobExecutionDAOTest {
 
     @BeforeClass
     public static void init() throws Exception {
-        File file = new File("src/test/resources/easy-jobs-config.json");
-        System.setProperty(JobServerConfiguration.CONFIGURATION_PATH_PARAMETER_NAME, file.getAbsolutePath());
+        File file = new File("src/test/resources/database.properties");
+        System.setProperty(DataSourceConfiguration.DATA_SOURCE_CONFIGURATION_PROPERTY, file.getAbsolutePath());
     }
 
     @Before

@@ -1,4 +1,4 @@
-package org.jeasy.jobs;
+package org.jeasy.jobs.server;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;

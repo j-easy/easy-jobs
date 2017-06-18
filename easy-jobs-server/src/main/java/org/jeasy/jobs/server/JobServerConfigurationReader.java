@@ -1,4 +1,4 @@
-package org.jeasy.jobs;
+package org.jeasy.jobs.server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;

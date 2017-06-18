@@ -3,7 +3,6 @@ package org.jeasy.jobs;
 import org.hibernate.SessionFactory;
 import org.jeasy.jobs.execution.JobExecutionDAO;
 import org.jeasy.jobs.job.JobDAO;
-import org.jeasy.jobs.job.JobFactory;
 import org.jeasy.jobs.job.JobService;
 import org.jeasy.jobs.request.JobRequestDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +15,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 import java.io.File;
+import java.io.FileReader;
 import java.util.Properties;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static org.jeasy.jobs.DataSourceConfiguration.*;
 
 @org.springframework.context.annotation.Configuration
 @EnableTransactionManagement
@@ -75,47 +76,31 @@ public class ContextConfiguration {
     }
 
     @Bean
-    public ExecutorService executorService() {
-        return Executors.newFixedThreadPool(serverConfiguration().getWorkersNumber(), workerThreadFactory());
-    }
-
-    @Bean
-    public JobFactory jobFactory() {
-        return new JobFactory();
-    }
-
-    @Bean
     public JobService jobService() {
-        return new JobService(executorService(), jobExecutionDAO(), jobRequestDAO(), jobFactory());
+        return new JobService(jobExecutionDAO(), jobRequestDAO());
     }
 
     @Bean
-    public WorkerThreadFactory workerThreadFactory() {
-        return new WorkerThreadFactory();
-    }
-
-    @Bean
-    public JobServerConfigurationReader configurationReader() {
-        return new JobServerConfigurationReader();
-    }
-
-    @Bean
-    public JobServerConfiguration serverConfiguration() {
-        JobServerConfiguration defaultJobServerConfiguration = JobServerConfiguration.DEFAULT_JOB_SERVER_CONFIGURATION;
-        String configurationPath = System.getProperty(JobServerConfiguration.CONFIGURATION_PATH_PARAMETER_NAME);
+    public DataSourceConfiguration dataSourceConfiguration() {
+        DataSourceConfiguration defaultDataSourceConfiguration = DEFAULT_DATA_SOURCE_CONFIGURATION;
+        String configurationPath = System.getProperty(DATA_SOURCE_CONFIGURATION_PROPERTY);
         try {
             if (configurationPath != null) {
-                return configurationReader().read(new File(configurationPath));
+                Properties properties = new Properties();
+                properties.load(new FileReader(new File(configurationPath)));
+                DataSourceConfiguration dataSourceConfiguration = new DataSourceConfiguration();
+                dataSourceConfiguration.setDatabaseUrl(properties.getProperty(DATA_SOURCE_CONFIGURATION_URL));
+                dataSourceConfiguration.setDatabaseUser(properties.getProperty(DATA_SOURCE_CONFIGURATION_USER));
+                dataSourceConfiguration.setDatabasePassword(properties.getProperty(DATA_SOURCE_CONFIGURATION_PASSWORD));
+                return dataSourceConfiguration;
             } else {
-                LOGGER.log(Level.INFO, "No configuration file specified, using default configuration: " + defaultJobServerConfiguration);
-                return defaultJobServerConfiguration;
+                LOGGER.log(Level.INFO, "No data source configuration file specified, using default configuration: " + defaultDataSourceConfiguration);
+                return defaultDataSourceConfiguration;
             }
         } catch (Exception e) {
-           LOGGER.log(Level.WARNING, "Unable to read configuration from file " + configurationPath, e);
-           // FIXME Should easy jobs introspect and validate job definitions (existing method, etc) ? I guess yes
-            LOGGER.log(Level.WARNING, "Using default configuration: " + defaultJobServerConfiguration);
-            return defaultJobServerConfiguration;
+            LOGGER.log(Level.WARNING, "Unable to read data source configuration from file " + configurationPath, e);
+            LOGGER.log(Level.WARNING, "Using default data source configuration: " + defaultDataSourceConfiguration);
+            return defaultDataSourceConfiguration;
         }
     }
-
 }

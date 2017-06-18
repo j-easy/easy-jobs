@@ -1,17 +1,15 @@
 #!/bin/bash
 set -e
 
-if [ "$#" -ne 1 ]; then
-    echo "Please provide the path to Easy Jobs configuration file"
-    exit 1;
-fi
-
-CONFIG_FILE=$1
+# todo everything should be optional, default db to h2 + don't add -Deasy.jobs.* flags if not supplied
+DB_TYPE=$1
+DB_CONFIG_FILE=$2
+SERVER_CONFIG_FILE=$3
 WORKING_DIR=`pwd`
 ROOT_DIR=`dirname ${WORKING_DIR}`
-DB_TYPE=$(cat ${CONFIG_FILE} | grep 'database.type' | cut -d : -f 2 | tr '"' ' ' | tr ',' ' ' | sed 's/^ *//;s/ *$//')
 
 java -cp "${ROOT_DIR}/jobs/*:${ROOT_DIR}/lib/*:${ROOT_DIR}/drivers/${DB_TYPE}/*" \
  -Djava.util.logging.config.file=${ROOT_DIR}/conf/logging.properties \
- -Deasy.jobs.configuration.path=${CONFIG_FILE} \
- org.jeasy.jobs.JobServer &
+ -Deasy.jobs.server.config.file=${SERVER_CONFIG_FILE} \
+ -Deasy.jobs.database.config.file=${DB_CONFIG_FILE} \
+ org.jeasy.jobs.server.JobServer &

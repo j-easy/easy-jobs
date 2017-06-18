@@ -18,6 +18,7 @@
         <module>easy-jobs-mysql</module>
         <module>easy-jobs-dist</module>
         <module>easy-jobs-tests</module>
+        <module>easy-jobs-server</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -114,6 +115,14 @@
                     <configuration>
                         <includeScope>runtime</includeScope>
                     </configuration>
+                    <executions>
+                        <execution>
+                            <phase>install</phase>
+                            <goals>
+                                <goal>copy-dependencies</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

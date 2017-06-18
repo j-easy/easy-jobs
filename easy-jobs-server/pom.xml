@@ -5,30 +5,38 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>easy-jobs-parent</artifactId>
         <groupId>org.jeasy</groupId>
+        <artifactId>easy-jobs-parent</artifactId>
         <version>0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>easy-jobs-dist</artifactId>
-    <packaging>pom</packaging>
-    <name>Easy Jobs distribution module</name>
-    <description>This module provides assembly files to create a single distribution of the project</description>
+    <artifactId>easy-jobs-server</artifactId>
+    <packaging>jar</packaging>
+    <name>Easy Jobs server module</name>
+    <description>Easy Jobs server</description>
 
     <dependencies>
         <dependency>
             <groupId>org.jeasy</groupId>
-            <artifactId>easy-jobs-server</artifactId>
+            <artifactId>easy-jobs-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.jeasy</groupId>
+            <artifactId>easy-jobs-tests</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
+                <artifactId>maven-dependency-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
+
 
 </project>

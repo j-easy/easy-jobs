@@ -5,9 +5,9 @@
 
     <!-- todo use abstract bean for common properties-->
     <bean id="dataSource" class="com.mysql.cj.jdbc.MysqlDataSource">
-        <property name="url" value="#{serverConfiguration.getDatabaseUrl()}"/>
-        <property name="user" value="#{serverConfiguration.getDatabaseUser()}"/>
-        <property name="password" value="#{serverConfiguration.getDatabasePassword()}"/>
+        <property name="url" value="#{dataSourceConfiguration.getDatabaseUrl()}"/>
+        <property name="user" value="#{dataSourceConfiguration.getDatabaseUser()}"/>
+        <property name="password" value="#{dataSourceConfiguration.getDatabasePassword()}"/>
     </bean>
 
     <bean id="hibernateDialect" class="java.lang.String">

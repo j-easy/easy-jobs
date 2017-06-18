@@ -22,8 +22,8 @@ public abstract class SchemaCreationTest {
 
     @Before
     public void init() throws Exception {
-        File file = new File("src/test/resources/easy-jobs-config.json");
-        System.setProperty(JobServerConfiguration.CONFIGURATION_PATH_PARAMETER_NAME, file.getAbsolutePath());
+        File file = new File("src/test/resources/database.properties");
+        System.setProperty(DataSourceConfiguration.DATA_SOURCE_CONFIGURATION_PROPERTY, file.getAbsolutePath());
     }
 
     public void canExecuteSQLScript() throws Exception {
