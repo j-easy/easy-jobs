@@ -13,7 +13,9 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 import javax.sql.DataSource;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -72,7 +74,7 @@ public class JobServer implements Runnable {
 
         SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(jobServer, 0, jobServerConfiguration.getPollingInterval(), TimeUnit.SECONDS);
         LOGGER.info("Job server started");
-
+        writePidToFile();
     }
 
     private static Map<Integer, JobDefinition> getJobDefinitions(JobServerConfiguration jobServerConfiguration) {
@@ -129,6 +131,27 @@ public class JobServer implements Runnable {
 
     private static ExecutorService executorService() {
         return Executors.newFixedThreadPool(getServerConfiguration().getWorkersNumber(), new WorkerThreadFactory());
+    }
+
+    private static void writePidToFile() {
+        FileWriter pidWriter = null;
+        try {
+            pidWriter = new FileWriter("process.id");
+            String pidAtHost = ManagementFactory.getRuntimeMXBean().getName();
+            String pid = pidAtHost.substring(0, pidAtHost.indexOf('@'));
+            pidWriter.write(pid);
+            pidWriter.flush();
+        } catch (IOException e) {
+            LOGGER.log(Level.WARNING, "Unable to write process id", e);
+        } finally {
+            try {
+                if (pidWriter != null) {
+                    pidWriter.close();
+                }
+            } catch (IOException e) {
+                LOGGER.log(Level.WARNING, "Unable close process id writer", e);
+            }
+        }
     }
 
 }

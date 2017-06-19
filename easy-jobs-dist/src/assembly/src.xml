@@ -14,6 +14,16 @@
                 <include>*.properties</include>
             </includes>
         </fileSet>
+        <!--binary scripts-->
+        <fileSet>
+            <directory>src/assembly/bin</directory>
+            <outputDirectory>bin</outputDirectory>
+            <includes>
+                <include>*.sh</include>
+            </includes>
+            <fileMode>0744</fileMode>
+            <lineEnding>unix</lineEnding>
+        </fileSet>
         <!--jobs-->
         <fileSet>
             <directory>src/assembly/jobs</directory>
@@ -38,12 +48,6 @@
         </fileSet>
     </fileSets>
     <files>
-        <file>
-            <source>src/assembly/bin/run.sh</source>
-            <outputDirectory>bin</outputDirectory>
-            <fileMode>0744</fileMode>
-            <lineEnding>unix</lineEnding>
-        </file>
         <file>
             <source>../easy-jobs-server/target/easy-jobs-server-${project.version}.jar</source>
             <outputDirectory>lib</outputDirectory>
