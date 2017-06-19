@@ -1,10 +1,10 @@
 package org.jeasy.jobs;
 
 import org.hibernate.SessionFactory;
-import org.jeasy.jobs.execution.JobExecutionDAO;
-import org.jeasy.jobs.job.JobDAO;
+import org.jeasy.jobs.execution.JobExecutionRepository;
+import org.jeasy.jobs.job.JobRepository;
 import org.jeasy.jobs.job.JobService;
-import org.jeasy.jobs.request.JobRequestDAO;
+import org.jeasy.jobs.request.JobRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
@@ -17,7 +17,6 @@ import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileReader;
 import java.util.Properties;
-import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -61,23 +60,23 @@ public class ContextConfiguration {
     }
 
     @Bean
-    public JobDAO jobDAO() {
-        return new JobDAO(sessionFactory());
+    public JobRepository jobRepository() {
+        return new JobRepository(sessionFactory());
     }
 
     @Bean
-    public JobRequestDAO jobRequestDAO() {
-        return new JobRequestDAO(sessionFactory());
+    public JobRequestRepository jobRequestRepository() {
+        return new JobRequestRepository(sessionFactory());
     }
 
     @Bean
-    public JobExecutionDAO jobExecutionDAO() {
-        return new JobExecutionDAO(sessionFactory());
+    public JobExecutionRepository jobExecutionRepository() {
+        return new JobExecutionRepository(sessionFactory());
     }
 
     @Bean
     public JobService jobService() {
-        return new JobService(jobExecutionDAO(), jobRequestDAO());
+        return new JobService(jobExecutionRepository(), jobRequestRepository());
     }
 
     @Bean

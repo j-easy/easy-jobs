@@ -2,7 +2,7 @@ package org.jeasy.jobs;
 
 import org.junit.Test;
 
-public class JobExecutionDAOTest extends AbstractJobExecutionDAOTest {
+public class JobExecutionRepositoryTest extends AbstractJobExecutionRepositoryTest {
 
     @Test
     public void testJobExecutionPersistenceInMySQL() throws Exception {

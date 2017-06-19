@@ -1,9 +1,9 @@
 package org.jeasy.jobs;
 
 import org.jeasy.jobs.job.Job;
-import org.jeasy.jobs.job.JobDAO;
+import org.jeasy.jobs.job.JobRepository;
 import org.jeasy.jobs.request.JobRequest;
-import org.jeasy.jobs.request.JobRequestDAO;
+import org.jeasy.jobs.request.JobRequestRepository;
 import org.jeasy.jobs.request.JobRequestStatus;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -25,14 +25,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @org.springframework.test.context.ContextConfiguration(classes = {ContextConfiguration.class})
-public abstract class AbstractJobRequestDAOTest {
+public abstract class AbstractJobRequestRepositoryTest {
 
     @Autowired
     private DataSource dataSource;
     @Autowired
-    private JobDAO jobDAO;
+    private JobRepository jobRepository;
     @Autowired
-    private JobRequestDAO jobRequestDAO;
+    private JobRequestRepository jobRequestRepository;
 
     private JdbcTemplate jdbcTemplate;
 
@@ -52,10 +52,10 @@ public abstract class AbstractJobRequestDAOTest {
 
     public void testJobRequestPersistence() throws Exception {
         // given
-        jobDAO.save(new Job(1, "MyJob"));
+        jobRepository.save(new Job(1, "MyJob"));
 
         // when
-        jobRequestDAO.save(new JobRequest(1, "", JobRequestStatus.PENDING, LocalDateTime.now(), null));
+        jobRequestRepository.save(new JobRequest(1, "", JobRequestStatus.PENDING, LocalDateTime.now(), null));
 
         // then
         Integer nbJobRequests = jdbcTemplate.queryForObject("select count(*) from job_request", Integer.class);
@@ -64,14 +64,14 @@ public abstract class AbstractJobRequestDAOTest {
 
     public void testGetPendingJobRequests() throws Exception {
         // given
-        jobDAO.save(new Job(1, "MyJob"));
-        jobRequestDAO.save(new JobRequest(1, "", JobRequestStatus.PENDING, LocalDateTime.now(), null));
-        jobRequestDAO.save(new JobRequest(1, "", JobRequestStatus.PENDING, LocalDateTime.now(), null));
-        jobRequestDAO.save(new JobRequest(1, "", JobRequestStatus.SUBMITTED, LocalDateTime.now(), null));
-        jobRequestDAO.save(new JobRequest(1, "", JobRequestStatus.PROCESSED, LocalDateTime.now(), LocalDateTime.now().plus(2, ChronoUnit.MINUTES)));
+        jobRepository.save(new Job(1, "MyJob"));
+        jobRequestRepository.save(new JobRequest(1, "", JobRequestStatus.PENDING, LocalDateTime.now(), null));
+        jobRequestRepository.save(new JobRequest(1, "", JobRequestStatus.PENDING, LocalDateTime.now(), null));
+        jobRequestRepository.save(new JobRequest(1, "", JobRequestStatus.SUBMITTED, LocalDateTime.now(), null));
+        jobRequestRepository.save(new JobRequest(1, "", JobRequestStatus.PROCESSED, LocalDateTime.now(), LocalDateTime.now().plus(2, ChronoUnit.MINUTES)));
 
         // when
-        List<JobRequest> pendingJobRequests = jobRequestDAO.getPendingJobRequests();
+        List<JobRequest> pendingJobRequests = jobRequestRepository.getPendingJobRequests();
 
         // then
         assertThat(pendingJobRequests.size()).isEqualTo(2);
@@ -79,16 +79,16 @@ public abstract class AbstractJobRequestDAOTest {
 
     public void testUpdateJobRequestStatus() throws Exception {
         // given
-        jobDAO.save(new Job(1, "MyJob"));
-        jobRequestDAO.save(new JobRequest(1, "", JobRequestStatus.PENDING, LocalDateTime.now(), null));
-        List<JobRequest> pendingJobRequests = jobRequestDAO.getPendingJobRequests();
+        jobRepository.save(new Job(1, "MyJob"));
+        jobRequestRepository.save(new JobRequest(1, "", JobRequestStatus.PENDING, LocalDateTime.now(), null));
+        List<JobRequest> pendingJobRequests = jobRequestRepository.getPendingJobRequests();
         JobRequest jobRequest = pendingJobRequests.get(0);
 
         // when
-        jobRequestDAO.updateStatus(jobRequest.getId(), JobRequestStatus.SUBMITTED);
+        jobRequestRepository.updateStatus(jobRequest.getId(), JobRequestStatus.SUBMITTED);
 
         // then
-        JobRequest request = jobRequestDAO.getById(jobRequest.getId());
+        JobRequest request = jobRequestRepository.getById(jobRequest.getId());
         assertThat(request.getStatus()).isEqualTo(JobRequestStatus.SUBMITTED);
     }
 
@@ -96,16 +96,16 @@ public abstract class AbstractJobRequestDAOTest {
         // given
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime processingDate = now.plus(2, ChronoUnit.MINUTES);
-        jobDAO.save(new Job(1, "MyJob"));
-        jobRequestDAO.save(new JobRequest(1, "", JobRequestStatus.PENDING, now, null));
-        List<JobRequest> pendingJobRequests = jobRequestDAO.getPendingJobRequests();
+        jobRepository.save(new Job(1, "MyJob"));
+        jobRequestRepository.save(new JobRequest(1, "", JobRequestStatus.PENDING, now, null));
+        List<JobRequest> pendingJobRequests = jobRequestRepository.getPendingJobRequests();
         JobRequest jobRequest = pendingJobRequests.get(0);
 
         // when
-        jobRequestDAO.updateStatusAndProcessingDate(jobRequest.getId(), JobRequestStatus.PROCESSED, processingDate);
+        jobRequestRepository.updateStatusAndProcessingDate(jobRequest.getId(), JobRequestStatus.PROCESSED, processingDate);
 
         // then
-        JobRequest request = jobRequestDAO.getById(jobRequest.getId());
+        JobRequest request = jobRequestRepository.getById(jobRequest.getId());
         assertThat(request.getStatus()).isEqualTo(JobRequestStatus.PROCESSED);
         assertThat(request.getProcessingDate()).isEqualToIgnoringSeconds(processingDate); // sometimes this test fails when ignoring only nanoseconds
     }

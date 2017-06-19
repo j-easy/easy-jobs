@@ -1,7 +1,7 @@
 package org.jeasy.jobs;
 
 import org.jeasy.jobs.job.Job;
-import org.jeasy.jobs.job.JobDAO;
+import org.jeasy.jobs.job.JobRepository;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -19,12 +19,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @org.springframework.test.context.ContextConfiguration(classes = {ContextConfiguration.class})
-public abstract class AbstractJobDAOTest {
+public abstract class AbstractJobRepositoryTest {
 
     @Autowired
     private DataSource dataSource;
     @Autowired
-    private JobDAO jobDAO;
+    private JobRepository jobRepository;
 
     private JdbcTemplate jdbcTemplate;
 
@@ -47,7 +47,7 @@ public abstract class AbstractJobDAOTest {
         Job job = new Job(1, "MyJob");
 
         // when
-        jobDAO.save(job);
+        jobRepository.save(job);
 
         // then
         Integer nbJobs = jdbcTemplate.queryForObject("select count(*) from job", Integer.class);

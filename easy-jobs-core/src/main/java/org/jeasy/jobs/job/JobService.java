@@ -2,10 +2,10 @@ package org.jeasy.jobs.job;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.jeasy.jobs.execution.JobExecution;
-import org.jeasy.jobs.execution.JobExecutionDAO;
+import org.jeasy.jobs.execution.JobExecutionRepository;
 import org.jeasy.jobs.execution.JobExecutionStatus;
 import org.jeasy.jobs.request.JobRequest;
-import org.jeasy.jobs.request.JobRequestDAO;
+import org.jeasy.jobs.request.JobRequestRepository;
 import org.jeasy.jobs.request.JobRequestStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -31,14 +31,14 @@ public class JobService {
 
     private static final Logger LOGGER = Logger.getLogger(JobService.class.getName());
 
-    private JobExecutionDAO jobExecutionDAO;
-    private JobRequestDAO jobRequestDAO;
+    private JobExecutionRepository jobExecutionDAO;
+    private JobRequestRepository jobRequestRepository;
     private ExecutorService executorService;
     private Map<Integer, JobDefinition> jobDefinitions;
 
-    public JobService(JobExecutionDAO jobExecutionDAO, JobRequestDAO jobRequestDAO) {
+    public JobService(JobExecutionRepository jobExecutionDAO, JobRequestRepository jobRequestRepository) {
         this.jobExecutionDAO = jobExecutionDAO;
-        this.jobRequestDAO = jobRequestDAO;
+        this.jobRequestRepository = jobRequestRepository;
         this.executorService = Executors.newSingleThreadExecutor();
         this.jobDefinitions = new HashMap<>();
     }
@@ -47,18 +47,18 @@ public class JobService {
     private void saveJobExecutionAndUpdateItsCorrespondingRequest(int requestId) {
         JobExecution jobExecution = new JobExecution(requestId, JobExecutionStatus.RUNNING, null, LocalDateTime.now(), null); // TODO constructor with less params or builder
         jobExecutionDAO.save(jobExecution);
-        jobRequestDAO.updateStatus(requestId, JobRequestStatus.SUBMITTED);
+        jobRequestRepository.updateStatus(requestId, JobRequestStatus.SUBMITTED);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateJobExecutionAndItsCorrespondingRequest(int requestId, JobExitStatus jobExitStatus) {
         jobExecutionDAO.update(requestId, jobExitStatus, LocalDateTime.now());
-        jobRequestDAO.updateStatusAndProcessingDate(requestId, JobRequestStatus.PROCESSED, LocalDateTime.now());
+        jobRequestRepository.updateStatusAndProcessingDate(requestId, JobRequestStatus.PROCESSED, LocalDateTime.now());
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void pollRequestsAndSubmitJobs() {
-        List<JobRequest> pendingJobRequests = jobRequestDAO.getPendingJobRequests(); // add limit 10 (nb workers) and you have throttling/back pressure for free!
+        List<JobRequest> pendingJobRequests = jobRequestRepository.getPendingJobRequests(); // add limit 10 (nb workers) and you have throttling/back pressure for free!
         if (pendingJobRequests.isEmpty()) {
             return;
         }

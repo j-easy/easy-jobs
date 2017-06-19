@@ -6,11 +6,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public class JobDAO { // todo rename all dao to repository
+public class JobRepository { // todo rename all dao to repository
 
     private SessionFactory sessionFactory;
 
-    public JobDAO(SessionFactory sessionFactory) {
+    public JobRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

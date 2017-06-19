@@ -11,11 +11,11 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class JobRequestDAO {
+public class JobRequestRepository {
 
     private SessionFactory sessionFactory;
 
-    public JobRequestDAO(SessionFactory sessionFactory) {
+    public JobRequestRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

@@ -1,13 +1,13 @@
 package org.jeasy.jobs;
 
 import org.jeasy.jobs.execution.JobExecution;
-import org.jeasy.jobs.execution.JobExecutionDAO;
+import org.jeasy.jobs.execution.JobExecutionRepository;
 import org.jeasy.jobs.execution.JobExecutionStatus;
 import org.jeasy.jobs.job.Job;
-import org.jeasy.jobs.job.JobDAO;
+import org.jeasy.jobs.job.JobRepository;
 import org.jeasy.jobs.job.JobExitStatus;
 import org.jeasy.jobs.request.JobRequest;
-import org.jeasy.jobs.request.JobRequestDAO;
+import org.jeasy.jobs.request.JobRequestRepository;
 import org.jeasy.jobs.request.JobRequestStatus;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -28,16 +28,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @org.springframework.test.context.ContextConfiguration(classes = {ContextConfiguration.class})
-public abstract class AbstractJobExecutionDAOTest {
+public abstract class AbstractJobExecutionRepositoryTest {
 
     @Autowired
     private DataSource dataSource;
     @Autowired
-    private JobDAO jobDAO;
+    private JobRepository jobRepository;
     @Autowired
-    private JobRequestDAO jobRequestDAO;
+    private JobRequestRepository jobRequestRepository;
     @Autowired
-    private JobExecutionDAO jobExecutionDAO;
+    private JobExecutionRepository jobExecutionRepository;
 
     private JdbcTemplate jdbcTemplate;
 
@@ -57,11 +57,11 @@ public abstract class AbstractJobExecutionDAOTest {
 
     public void testJobExecutionPersistence() throws Exception {
         // given
-        jobDAO.save(new Job(1, "MyJob"));
-        jobRequestDAO.save(new JobRequest(1, "", JobRequestStatus.PENDING, LocalDateTime.now(), null));
+        jobRepository.save(new Job(1, "MyJob"));
+        jobRequestRepository.save(new JobRequest(1, "", JobRequestStatus.PENDING, LocalDateTime.now(), null));
 
         // when
-        jobExecutionDAO.save(new JobExecution(1, JobExecutionStatus.RUNNING, null, LocalDateTime.now(), null));
+        jobExecutionRepository.save(new JobExecution(1, JobExecutionStatus.RUNNING, null, LocalDateTime.now(), null));
 
         // then
         Integer nbJobExecutions = jdbcTemplate.queryForObject("select count(*) from job_execution", Integer.class);
@@ -72,15 +72,15 @@ public abstract class AbstractJobExecutionDAOTest {
         // given
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime endDate = now.plus(2, ChronoUnit.MINUTES);
-        jobDAO.save(new Job(1, "MyJob"));
-        jobRequestDAO.save(new JobRequest(1, "", JobRequestStatus.PENDING, now, null));
-        jobExecutionDAO.save(new JobExecution(1, JobExecutionStatus.RUNNING, null, now, null));
+        jobRepository.save(new Job(1, "MyJob"));
+        jobRequestRepository.save(new JobRequest(1, "", JobRequestStatus.PENDING, now, null));
+        jobExecutionRepository.save(new JobExecution(1, JobExecutionStatus.RUNNING, null, now, null));
 
         // when
-        jobExecutionDAO.update(1, JobExitStatus.SUCCEEDED, endDate);
+        jobExecutionRepository.update(1, JobExitStatus.SUCCEEDED, endDate);
 
         // then
-        JobExecution jobExecution = jobExecutionDAO.getByJobRequestId(1);
+        JobExecution jobExecution = jobExecutionRepository.getByJobRequestId(1);
         assertThat(jobExecution.getJobExecutionStatus()).isEqualTo(JobExecutionStatus.FINISHED);
         assertThat(jobExecution.getJobExitStatus()).isEqualTo(JobExitStatus.SUCCEEDED);
         assertThat(jobExecution.getEndDate()).isEqualToIgnoringSeconds(endDate); // sometimes this test fails when ignoring only nanoseconds

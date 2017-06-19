@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 
 @Repository
 @Transactional
-public class JobExecutionDAO {
+public class JobExecutionRepository {
 
     private SessionFactory sessionFactory;
 
-    public JobExecutionDAO(SessionFactory sessionFactory) {
+    public JobExecutionRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

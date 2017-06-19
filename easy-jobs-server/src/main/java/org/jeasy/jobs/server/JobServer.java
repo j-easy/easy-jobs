@@ -2,7 +2,7 @@ package org.jeasy.jobs.server;
 
 import org.jeasy.jobs.ContextConfiguration;
 import org.jeasy.jobs.job.Job;
-import org.jeasy.jobs.job.JobDAO;
+import org.jeasy.jobs.job.JobRepository;
 import org.jeasy.jobs.job.JobDefinition;
 import org.jeasy.jobs.job.JobService;
 import org.springframework.context.ApplicationContext;
@@ -91,7 +91,7 @@ public class JobServer implements Runnable {
         Resource resource = new ClassPathResource("database-schema.sql");
         ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator(resource);
         databasePopulator.execute(dataSource);
-        JobDAO jobDAO = ctx.getBean(JobDAO.class);
+        JobRepository jobRepository = ctx.getBean(JobRepository.class);
         LOGGER.info("Loading job definitions");
         for (JobDefinition jobDefinition : jobServerConfiguration.getJobDefinitions()) {
             String name = jobDefinition.getName();
@@ -99,7 +99,7 @@ public class JobServer implements Runnable {
                 name = jobDefinition.getClazz(); // todo get simple class name from fully qualified name
             }
             LOGGER.info("Registering " + jobDefinition);
-            jobDAO.save(new Job(jobDefinition.getId(), name));
+            jobRepository.save(new Job(jobDefinition.getId(), name));
         }
     }
 
