@@ -42,9 +42,9 @@ public class ContextConfiguration {
         localSessionFactoryBean.setDataSource(dataSource);
         localSessionFactoryBean.setHibernateProperties(hibernateProperties);
         localSessionFactoryBean.setMappingLocations(
-                new ClassPathResource("org/jeasy/jobs/job.hbm.xml"),
-                new ClassPathResource("org/jeasy/jobs/jobRequest.hbm.xml"),
-                new ClassPathResource("org/jeasy/jobs/jobExecution.hbm.xml")
+                new ClassPathResource("job.hbm.xml"),
+                new ClassPathResource("jobRequest.hbm.xml"),
+                new ClassPathResource("jobExecution.hbm.xml")
         );
         return localSessionFactoryBean;
     }
