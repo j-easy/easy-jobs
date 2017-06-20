@@ -15,13 +15,11 @@ public class JobRequest {
     public JobRequest() {
     }
 
-    public JobRequest(int id, int jobId, String parameters, JobRequestStatus status, LocalDateTime creationDate, LocalDateTime processingDate) {
-        this.id = id;
+    public JobRequest(int jobId, String parameters) {
         this.jobId = jobId;
         this.parameters = parameters;
-        this.status = status;
-        this.creationDate = creationDate;
-        this.processingDate = processingDate;
+        this.status = JobRequestStatus.PENDING;
+        this.creationDate = LocalDateTime.now();
     }
 
     public JobRequest(int jobId, String parameters, JobRequestStatus status, LocalDateTime creationDate, LocalDateTime processingDate) {
