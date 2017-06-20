@@ -5,6 +5,9 @@ import org.jeasy.jobs.job.Job;
 import org.jeasy.jobs.job.JobDefinition;
 import org.jeasy.jobs.job.JobRepository;
 import org.jeasy.jobs.job.JobService;
+import org.jeasy.jobs.server.web.JobController;
+import org.jeasy.jobs.server.web.JobExecutionController;
+import org.jeasy.jobs.server.web.JobRequestController;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
@@ -62,7 +65,7 @@ public class JobServer implements Runnable {
 
     public static void main(String[] args) {
         registerShutdownHook();
-        ConfigurableApplicationContext applicationContext = SpringApplication.run(new Object[]{JobServer.class, ContextConfiguration.class}, args);
+        ConfigurableApplicationContext applicationContext = SpringApplication.run(getConfigurationClasses(), args);
         JobServerConfiguration jobServerConfiguration = getServerConfiguration();
         LOGGER.info("Using job server configuration: " + jobServerConfiguration);
         if (jobServerConfiguration.isDatabaseInit()) {
@@ -80,6 +83,12 @@ public class JobServer implements Runnable {
         SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(jobServer, 0, jobServerConfiguration.getPollingInterval(), TimeUnit.SECONDS);
         LOGGER.info("Job server started");
         writePidToFile();
+    }
+
+    private static Object[] getConfigurationClasses() {
+        return new Object[]{
+                JobServer.class, ContextConfiguration.class, JobController.class,
+                JobRequestController.class, JobExecutionController.class};
     }
 
     private static Map<Integer, JobDefinition> getJobDefinitions(JobServerConfiguration jobServerConfiguration) {
