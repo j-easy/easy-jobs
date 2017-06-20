@@ -28,11 +28,11 @@ public class JobRequestController {
 
     @RequestMapping(path = "/requests", method = RequestMethod.POST)
     @ResponseBody
-    String postJobRequest(@RequestParam int jobId, @RequestParam String parameters) {
+    String postJobRequest(@RequestParam int jobId, @RequestParam(required = false) String parameters) {
         if (jobRepository.getById(jobId) == null) {
             return "No job registered with id = " + jobId;
         }
-        JobRequest jobRequest = new JobRequest(jobId, parameters);
+        JobRequest jobRequest = new JobRequest(jobId, parameters == null ? "" : parameters);
         jobRequestRepository.save(jobRequest);
         return "Job request submitted successfully";
     }

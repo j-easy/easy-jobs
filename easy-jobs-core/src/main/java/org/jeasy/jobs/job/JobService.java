@@ -100,9 +100,12 @@ public class JobService {
         return new DefaultJob(requestId, jobInstance, method, this);
     }
 
-    // fixme better use json
+    // fixme better use json? curl -X POST -H "Content-Type: application/json" -d '{"key":"val"}' URL
     private Map<String, Object> parseParameters(String parameters) {
         Map<String, Object> parsedParameters = new HashMap<>();
+        if (parameters.trim().isEmpty()) {
+            return parsedParameters;
+        }
         String[] tokens = parameters.split(",");
         for (String token : tokens) {
             if( token.contains("=")) {
