@@ -2,11 +2,14 @@ package org.jeasy.jobs.server;
 
 import org.jeasy.jobs.ContextConfiguration;
 import org.jeasy.jobs.job.Job;
-import org.jeasy.jobs.job.JobRepository;
 import org.jeasy.jobs.job.JobDefinition;
+import org.jeasy.jobs.job.JobRepository;
 import org.jeasy.jobs.job.JobService;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
@@ -26,6 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+@EnableAutoConfiguration(exclude = HibernateJpaAutoConfiguration.class)
 public class JobServer implements Runnable {
 
     private static final Logger LOGGER = Logger.getLogger(JobServer.class.getName());
@@ -48,6 +52,9 @@ public class JobServer implements Runnable {
         this.jobService = jobService;
     }
 
+    public JobServer() {
+    }
+
     @Override
     public void run() {
         jobService.pollRequestsAndSubmitJobs();
@@ -55,19 +62,17 @@ public class JobServer implements Runnable {
 
     public static void main(String[] args) {
         registerShutdownHook();
-        printBanner();
-
-        ApplicationContext ctx = new AnnotationConfigApplicationContext(ContextConfiguration.class);
+        ConfigurableApplicationContext applicationContext = SpringApplication.run(new Object[]{JobServer.class, ContextConfiguration.class}, args);
         JobServerConfiguration jobServerConfiguration = getServerConfiguration();
         LOGGER.info("Using job server configuration: " + jobServerConfiguration);
         if (jobServerConfiguration.isDatabaseInit()) {
-            DataSource dataSource = ctx.getBean(DataSource.class);
+            DataSource dataSource = applicationContext.getBean(DataSource.class);
             LOGGER.info("Initializing database");
-            init(dataSource, jobServerConfiguration, ctx);
+            init(dataSource, jobServerConfiguration, applicationContext);
         }
 
         Map<Integer, JobDefinition> jobDefinitions = getJobDefinitions(jobServerConfiguration);
-        JobService jobService = ctx.getBean(JobService.class);
+        JobService jobService = applicationContext.getBean(JobService.class);
         jobService.setExecutorService(executorService());
         jobService.setJobDefinitions(jobDefinitions);
         JobServer jobServer = new JobServer(jobService);
@@ -83,10 +88,6 @@ public class JobServer implements Runnable {
             jobDefinitions.put(jobDefinition.getId(), jobDefinition);
         }
         return jobDefinitions;
-    }
-
-    private static void printBanner() {
-        // TODO banner with ascii art and version number
     }
 
     private static void init(DataSource dataSource, JobServerConfiguration jobServerConfiguration, ApplicationContext ctx) {
@@ -108,7 +109,8 @@ public class JobServer implements Runnable {
     private static void registerShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             SCHEDULED_EXECUTOR_SERVICE.shutdownNow();
-            LOGGER.info("Job manager stopped"); }));
+            LOGGER.info("Job manager stopped");
+        }));
     }
 
     private static JobServerConfiguration getServerConfiguration() {
