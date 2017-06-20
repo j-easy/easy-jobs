@@ -9,4 +9,14 @@ public class JobRepositoryTest extends AbstractJobRepositoryTest {
     public void testJobPersistenceInH2() throws Exception {
         super.testJobPersistence();
     }
+
+    @Test
+    public void testFindAllFromH2() throws Exception {
+        super.testFindAllJobs();
+    }
+
+    @Test
+    public void testGetByJobIdlFromH2() throws Exception {
+        super.testGetByJobId();
+    }
 }

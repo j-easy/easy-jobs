@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.sql.DataSource;
 import java.io.File;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -52,5 +53,33 @@ public abstract class AbstractJobRepositoryTest {
         // then
         Integer nbJobs = jdbcTemplate.queryForObject("select count(*) from job", Integer.class);
         assertThat(nbJobs).isEqualTo(1);
+    }
+
+    public void testFindAllJobs() throws Exception {
+        // given
+        Job job1 = new Job(1, "MyFirstJob");
+        Job job2 = new Job(2, "MySecondJob");
+        jobRepository.save(job1);
+        jobRepository.save(job2);
+
+        // when
+        List<Job> jobs = jobRepository.findAll();
+
+        // then
+        assertThat(jobs).isNotEmpty().hasSize(2);
+    }
+
+    public void testGetByJobId() throws Exception {
+        // given
+        Job job = new Job(1, "MyJob");
+        jobRepository.save(job);
+
+        // when
+        Job actual = jobRepository.getById(1);
+
+        // then
+        assertThat(actual).isNotNull();
+        assertThat(actual.getId()).isEqualTo(1);
+        assertThat(actual.getName()).isEqualTo("MyJob");
     }
 }

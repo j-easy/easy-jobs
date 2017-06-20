@@ -8,4 +8,14 @@ public class JobRepositoryTest extends AbstractJobRepositoryTest {
     public void testJobPersistenceInMySQL() throws Exception {
         super.testJobPersistence();
     }
+
+    @Test
+    public void testFindAllFromMySQL() throws Exception {
+        super.testFindAllJobs();
+    }
+
+    @Test
+    public void testGetByJobIdlFromMySQL() throws Exception {
+        super.testGetByJobId();
+    }
 }
