@@ -23,6 +23,7 @@ import javax.sql.DataSource;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -84,5 +85,22 @@ public abstract class AbstractJobExecutionRepositoryTest {
         assertThat(jobExecution.getJobExecutionStatus()).isEqualTo(JobExecutionStatus.FINISHED);
         assertThat(jobExecution.getJobExitStatus()).isEqualTo(JobExitStatus.SUCCEEDED);
         assertThat(jobExecution.getEndDate()).isEqualToIgnoringSeconds(endDate); // sometimes this test fails when ignoring only nanoseconds
+    }
+
+    public void testFindAllJobExecutions() throws Exception {
+        // given
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime endDate = now.plus(2, ChronoUnit.MINUTES);
+        jobRepository.save(new Job(1, "MyJob"));
+        jobRequestRepository.save(new JobRequest(1, "x=1", JobRequestStatus.SUBMITTED, now, null));
+        jobRequestRepository.save(new JobRequest(1, "x=2", JobRequestStatus.PROCESSED, now, endDate));
+        jobExecutionRepository.save(new JobExecution(1, JobExecutionStatus.RUNNING, null, now, null));
+        jobExecutionRepository.save(new JobExecution(2, JobExecutionStatus.FINISHED, JobExitStatus.SUCCEEDED, now, endDate));
+
+        // when
+        List<JobExecution> jobExecutions = jobExecutionRepository.findAllJobExecutions();
+
+        // then
+        assertThat(jobExecutions).hasSize(2);
     }
 }

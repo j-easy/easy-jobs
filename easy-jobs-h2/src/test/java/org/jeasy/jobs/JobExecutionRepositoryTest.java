@@ -13,4 +13,9 @@ public class JobExecutionRepositoryTest extends AbstractJobExecutionRepositoryTe
     public void testJobExecutionUpdateInH2() throws Exception {
         super.testJobExecutionUpdate();
     }
+
+    @Test
+    public void testFindAllJobExecutionsFromH2() throws Exception {
+        super.testFindAllJobExecutions();
+    }
 }

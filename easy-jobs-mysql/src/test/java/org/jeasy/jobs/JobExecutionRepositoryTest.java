@@ -13,4 +13,9 @@ public class JobExecutionRepositoryTest extends AbstractJobExecutionRepositoryTe
     public void testJobExecutionUpdateInMySQL() throws Exception {
         super.testJobExecutionUpdate();
     }
+
+    @Test
+    public void testFindAllJobExecutionsFromMySQL() throws Exception {
+        super.testFindAllJobExecutions();
+    }
 }

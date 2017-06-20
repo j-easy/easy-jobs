@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 @Transactional
@@ -21,9 +22,15 @@ public class JobExecutionRepository {
 
     public JobExecution getByJobRequestId(int jobRequestId) {
         Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("from JobExecution where requestId = :requestId ");
+        Query<JobExecution> query = session.createQuery("from JobExecution where requestId = :requestId ", JobExecution.class);
         query.setParameter("requestId", jobRequestId);
-        return (JobExecution) query.getSingleResult(); // todo use TypedQuery
+        return query.getSingleResult();
+    }
+
+    public List<JobExecution> findAllJobExecutions() {
+        Session session = sessionFactory.getCurrentSession();
+        Query<JobExecution> query = session.createQuery("from JobExecution", JobExecution.class);
+        return query.list();
     }
 
     public void save(JobExecution jobExecution) {
