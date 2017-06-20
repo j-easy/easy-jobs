@@ -43,11 +43,17 @@ public class JobRequestRepository {
     }
 
     public List<JobRequest> getPendingJobRequests() {
-        // TODO order by priority (keep something for v2)
+        // TODO order by priority
         Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("from JobRequest where status = :status ");
+        Query<JobRequest> query = session.createQuery("from JobRequest where status = :status ", JobRequest.class);
         query.setParameter("status", JobRequestStatus.PENDING);
-        return query.list(); // todo argh untyped APIs.. use TypedQuery
+        return query.list();
+    }
+
+    public List<JobRequest> findAllJobRequests() {
+        Session session = sessionFactory.getCurrentSession();
+        Query<JobRequest> query = session.createQuery("from JobRequest", JobRequest.class);
+        return query.list();
     }
 
 }

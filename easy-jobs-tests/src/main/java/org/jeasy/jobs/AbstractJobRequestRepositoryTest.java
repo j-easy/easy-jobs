@@ -77,6 +77,19 @@ public abstract class AbstractJobRequestRepositoryTest {
         assertThat(pendingJobRequests.size()).isEqualTo(2);
     }
 
+    public void testFindAllJobRequests() throws Exception {
+        // given
+        jobRepository.save(new Job(1, "MyJob"));
+        jobRequestRepository.save(new JobRequest(1, "x=1", JobRequestStatus.PENDING, LocalDateTime.now(), null));
+        jobRequestRepository.save(new JobRequest(1, "x=2", JobRequestStatus.PENDING, LocalDateTime.now(), null));
+
+        // when
+        List<JobRequest> jobRequests = jobRequestRepository.findAllJobRequests();
+
+        // then
+        assertThat(jobRequests.size()).isEqualTo(2);
+    }
+
     public void testUpdateJobRequestStatus() throws Exception {
         // given
         jobRepository.save(new Job(1, "MyJob"));

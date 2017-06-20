@@ -23,4 +23,9 @@ public class JobRequestRepositoryTest extends AbstractJobRequestRepositoryTest {
     public void testUpdateJobRequestStatusAndProcessingDateInMySQL() throws Exception {
         super.testUpdateJobRequestStatusAndProcessingDate();
     }
+
+    @Test
+    public void testFindAllJobRequestsFromMySQL() throws Exception {
+        super.testFindAllJobRequests();
+    }
 }

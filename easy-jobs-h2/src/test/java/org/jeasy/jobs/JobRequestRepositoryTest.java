@@ -23,4 +23,9 @@ public class JobRequestRepositoryTest extends AbstractJobRequestRepositoryTest {
     public void testUpdateJobRequestStatusAndProcessingDateInH2() throws Exception {
         super.testUpdateJobRequestStatusAndProcessingDate();
     }
+
+    @Test
+    public void testFindAllJobRequestsFromH2() throws Exception {
+        super.testFindAllJobRequests();
+    }
 }
