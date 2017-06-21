@@ -1,13 +1,14 @@
 package org.jeasy.jobs.job;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class DefaultJob implements Callable<JobExitStatus> {
 
-    private static final Logger LOGGER = Logger.getLogger(DefaultJob.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultJob.class);
 
     private int requestId;
     private JobService jobService;
@@ -30,7 +31,7 @@ public class DefaultJob implements Callable<JobExitStatus> {
             LOGGER.info("Successfully processed job request with id " + requestId);
             return JobExitStatus.SUCCEEDED;
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Processing of request with id " + requestId + " has failed", e);
+            LOGGER.error("Processing of request with id " + requestId + " has failed", e);
             jobService.updateJobExecutionAndItsCorrespondingRequest(requestId, JobExitStatus.FAILED);
             return JobExitStatus.FAILED;
         }

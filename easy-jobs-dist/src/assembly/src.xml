@@ -6,14 +6,6 @@
         <format>zip</format>
     </formats>
     <fileSets>
-        <!--configuration files-->
-        <fileSet>
-            <directory>src/assembly/conf</directory>
-            <outputDirectory>conf</outputDirectory>
-            <includes>
-                <include>*.properties</include>
-            </includes>
-        </fileSet>
         <!--binary scripts-->
         <fileSet>
             <directory>src/assembly/bin</directory>

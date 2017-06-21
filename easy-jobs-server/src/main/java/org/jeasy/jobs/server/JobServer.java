@@ -8,6 +8,8 @@ import org.jeasy.jobs.job.JobService;
 import org.jeasy.jobs.server.web.JobController;
 import org.jeasy.jobs.server.web.JobExecutionController;
 import org.jeasy.jobs.server.web.JobRequestController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
@@ -28,27 +30,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 @EnableAutoConfiguration(exclude = HibernateJpaAutoConfiguration.class)
 public class JobServer implements Runnable {
 
-    private static final Logger LOGGER = Logger.getLogger(JobServer.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(JobServer.class);
     private static final ScheduledExecutorService SCHEDULED_EXECUTOR_SERVICE = Executors.newSingleThreadScheduledExecutor();
-
-    static {
-        try {
-            if (System.getProperty("java.util.logging.config.file") == null &&
-                    System.getProperty("java.util.logging.config.class") == null) {
-                LogManager.getLogManager().readConfiguration(JobServer.class.getResourceAsStream("/logging.properties"));
-            }
-        } catch (IOException e) {
-            LOGGER.log(Level.WARNING, "Unable to load logging configuration properties", e);
-        }
-    }
-
     private JobService jobService;
 
     private JobServer(JobService jobService) {
@@ -129,13 +116,13 @@ public class JobServer implements Runnable {
             if (configurationPath != null) {
                 return new JobServerConfigurationReader().read(new File(configurationPath));
             } else {
-                LOGGER.log(Level.INFO, "No configuration file specified, using default configuration: " + defaultJobServerConfiguration);
+                LOGGER.info("No configuration file specified, using default configuration: " + defaultJobServerConfiguration);
                 return defaultJobServerConfiguration;
             }
         } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Unable to read configuration from file " + configurationPath, e);
+            LOGGER.warn("Unable to read configuration from file " + configurationPath, e);
             // FIXME Should easy jobs introspect and validate job definitions (existing method, etc) ? I guess yes
-            LOGGER.log(Level.WARNING, "Using default configuration: " + defaultJobServerConfiguration);
+            LOGGER.warn("Using default configuration: " + defaultJobServerConfiguration);
             return defaultJobServerConfiguration;
         }
     }
@@ -153,14 +140,14 @@ public class JobServer implements Runnable {
             pidWriter.write(pid);
             pidWriter.flush();
         } catch (IOException e) {
-            LOGGER.log(Level.WARNING, "Unable to write process id", e);
+            LOGGER.warn("Unable to write process id", e);
         } finally {
             try {
                 if (pidWriter != null) {
                     pidWriter.close();
                 }
             } catch (IOException e) {
-                LOGGER.log(Level.WARNING, "Unable close process id writer", e);
+                LOGGER.warn("Unable close process id writer", e);
             }
         }
     }

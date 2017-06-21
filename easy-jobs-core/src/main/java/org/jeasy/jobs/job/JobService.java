@@ -7,6 +7,8 @@ import org.jeasy.jobs.execution.JobExecutionStatus;
 import org.jeasy.jobs.request.JobRequest;
 import org.jeasy.jobs.request.JobRequestRepository;
 import org.jeasy.jobs.request.JobRequestStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -20,8 +22,6 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Central service providing transactional methods to save/update job requests/executions together in a consistent way.
@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 @Service
 public class JobService {
 
-    private static final Logger LOGGER = Logger.getLogger(JobService.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(JobService.class);
 
     private JobExecutionRepository jobExecutionDAO;
     private JobRequestRepository jobRequestRepository;
@@ -77,7 +77,7 @@ public class JobService {
                 executorService.submit(job);
                 LOGGER.info("Submitted a new job for request n° " + requestId);
             } catch (Exception e) {
-                LOGGER.log(Level.SEVERE, "Unable to create a new job for request n° " + requestId, e);
+                LOGGER.error("Unable to create a new job for request n° " + requestId, e);
             }
         }
     }
@@ -114,7 +114,7 @@ public class JobService {
                 String value = pair[1];
                 parsedParameters.put(key, value);
             } else {
-                LOGGER.warning("Parameter '" + token + "' not in 'key=value' format");
+                LOGGER.warn("Parameter '" + token + "' not in 'key=value' format");
             }
         }
         return parsedParameters;

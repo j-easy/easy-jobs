@@ -5,6 +5,8 @@ import org.jeasy.jobs.execution.JobExecutionRepository;
 import org.jeasy.jobs.job.JobRepository;
 import org.jeasy.jobs.job.JobService;
 import org.jeasy.jobs.request.JobRequestRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
@@ -17,8 +19,6 @@ import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileReader;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static org.jeasy.jobs.DataSourceConfiguration.*;
 
@@ -27,7 +27,7 @@ import static org.jeasy.jobs.DataSourceConfiguration.*;
 @ImportResource("classpath:data-source-config.xml")
 public class ContextConfiguration {
 
-    private static final Logger LOGGER = Logger.getLogger(ContextConfiguration.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ContextConfiguration.class);
 
     @Autowired
     private DataSource dataSource;
@@ -93,12 +93,12 @@ public class ContextConfiguration {
                 dataSourceConfiguration.setDatabasePassword(properties.getProperty(DATA_SOURCE_CONFIGURATION_PASSWORD));
                 return dataSourceConfiguration;
             } else {
-                LOGGER.log(Level.INFO, "No data source configuration file specified, using default configuration: " + defaultDataSourceConfiguration);
+                LOGGER.info("No data source configuration file specified, using default configuration: " + defaultDataSourceConfiguration);
                 return defaultDataSourceConfiguration;
             }
         } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Unable to read data source configuration from file " + configurationPath, e);
-            LOGGER.log(Level.WARNING, "Using default data source configuration: " + defaultDataSourceConfiguration);
+            LOGGER.warn("Unable to read data source configuration from file " + configurationPath, e);
+            LOGGER.warn("Using default data source configuration: " + defaultDataSourceConfiguration);
             return defaultDataSourceConfiguration;
         }
     }
