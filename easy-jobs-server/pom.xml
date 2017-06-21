@@ -22,12 +22,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jeasy</groupId>
-            <artifactId>easy-jobs-h2</artifactId>
-            <version>${project.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <version>1.5.4.RELEASE</version>
