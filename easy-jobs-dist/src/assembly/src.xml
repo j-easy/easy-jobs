@@ -6,16 +6,6 @@
         <format>zip</format>
     </formats>
     <fileSets>
-        <!--binary scripts-->
-        <fileSet>
-            <directory>src/assembly/bin</directory>
-            <outputDirectory>bin</outputDirectory>
-            <includes>
-                <include>*.sh</include>
-            </includes>
-            <fileMode>0744</fileMode>
-            <lineEnding>unix</lineEnding>
-        </fileSet>
         <!--jobs-->
         <fileSet>
             <directory>src/assembly/jobs</directory>
@@ -51,6 +41,9 @@
         <file>
             <source>../easy-jobs-mysql/target/easy-jobs-mysql-${project.version}.jar</source>
             <outputDirectory>drivers/mysql</outputDirectory>
+        </file>
+        <file>
+            <source>src/assembly/readme.txt</source>
         </file>
     </files>
 </assembly>
