@@ -29,7 +29,7 @@ public class DatabaseInitializer {
         Resource resource = new ClassPathResource("database-schema.sql");
         ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator(resource);
         databasePopulator.execute(dataSource);
-        LOGGER.info("Loading job definitions");
+        LOGGER.info("Loading job definitions from " + jobDefinitions.getSourceFile());
         for (JobDefinition jobDefinition : jobDefinitions.getJobDefinitions()) {
             String name = jobDefinition.getName();
             if (name == null) {

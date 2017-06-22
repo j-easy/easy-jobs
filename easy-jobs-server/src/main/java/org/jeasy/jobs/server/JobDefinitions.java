@@ -13,10 +13,12 @@ public class JobDefinitions {
 
     static final String JOBS_DEFINITIONS_CONFIGURATION_FILE_PARAMETER_NAME = "easy.jobs.server.jobs.config.file";
 
+    private String sourceFile;
     private List<JobDefinition> jobDefinitions;
 
-    public JobDefinitions(List<JobDefinition> jobDefinitions) {
+    public JobDefinitions(List<JobDefinition> jobDefinitions, String sourceFile) {
         this.jobDefinitions = jobDefinitions;
+        this.sourceFile = sourceFile;
     }
 
     public List<JobDefinition> getJobDefinitions() {
@@ -27,13 +29,21 @@ public class JobDefinitions {
         this.jobDefinitions = jobDefinitions;
     }
 
+    public String getSourceFile() {
+        return sourceFile;
+    }
+
+    public void setSourceFile(String sourceFile) {
+        this.sourceFile = sourceFile;
+    }
+
     static class Reader {
 
         private ObjectMapper mapper = new ObjectMapper();
 
         JobDefinitions read(File file) throws Exception {
             List<JobDefinition> jobDefinitions = Arrays.asList(mapper.readValue(file, JobDefinition[].class));
-            return new JobDefinitions(jobDefinitions);
+            return new JobDefinitions(jobDefinitions, file.getAbsolutePath());
         }
 
     }
