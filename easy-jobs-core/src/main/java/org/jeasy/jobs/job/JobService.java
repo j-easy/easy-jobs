@@ -1,6 +1,7 @@
 package org.jeasy.jobs.job;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.jeasy.jobs.Utils;
 import org.jeasy.jobs.execution.JobExecution;
 import org.jeasy.jobs.execution.JobExecutionRepository;
 import org.jeasy.jobs.execution.JobExecutionStatus;
@@ -92,32 +93,12 @@ public class JobService {
     private DefaultJob createJob(int requestId, String jobType, String jobMethod, String parameters) throws Exception {
         Class<?> jobClass = Class.forName(jobType);
         Object jobInstance = jobClass.newInstance();
-        Map<String, Object> parsedParameters = parseParameters(parameters);
-        for (Map.Entry<String, Object> entry : parsedParameters.entrySet()) {
+        Map<String, String> parsedParameters = Utils.parseParameters(parameters);
+        for (Map.Entry<String, String> entry : parsedParameters.entrySet()) {
             BeanUtils.setProperty(jobInstance, entry.getKey(), entry.getValue());
         }
         Method method = jobClass.getMethod(jobMethod);
         return new DefaultJob(requestId, jobInstance, method, this);
-    }
-
-    // fixme better use json? curl -X POST -H "Content-Type: application/json" -d '{"key":"val"}' URL
-    private Map<String, Object> parseParameters(String parameters) {
-        Map<String, Object> parsedParameters = new HashMap<>();
-        if (parameters.trim().isEmpty()) {
-            return parsedParameters;
-        }
-        String[] tokens = parameters.split(",");
-        for (String token : tokens) {
-            if( token.contains("=")) {
-                String[] pair = token.split("=");
-                String key = pair[0];
-                String value = pair[1];
-                parsedParameters.put(key, value);
-            } else {
-                LOGGER.warn("Parameter '" + token + "' not in 'key=value' format");
-            }
-        }
-        return parsedParameters;
     }
 
     public void setExecutorService(ExecutorService executorService) {
