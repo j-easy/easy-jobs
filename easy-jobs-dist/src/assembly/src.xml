@@ -43,7 +43,7 @@
             <outputDirectory>drivers/mysql</outputDirectory>
         </file>
         <file>
-            <source>src/assembly/readme.txt</source>
+            <source>../README.md</source>
         </file>
     </files>
 </assembly>
