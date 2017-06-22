@@ -8,6 +8,7 @@ public class JobServerConfiguration {
     private static final Logger LOGGER = LoggerFactory.getLogger(JobServerConfiguration.class);
 
     static final String WORKERS_POOL_SIZE_PARAMETER_NAME = "easy.jobs.server.config.workers.pool.size";
+    static final String WORKERS_NAME_PREFIX_PARAMETER_NAME = "easy.jobs.server.config.workers.name.prefix";
     static final String POLLING_INTERVAL_PARAMETER_NAME = "easy.jobs.server.config.polling.interval";
     static final String DATABASE_INIT_PARAMETER_NAME = "easy.jobs.server.config.database.init";
 

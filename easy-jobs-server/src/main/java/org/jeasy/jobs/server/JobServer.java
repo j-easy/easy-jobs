@@ -71,7 +71,11 @@ public class JobServer {
         final AtomicLong count = new AtomicLong(0);
         return Executors.newFixedThreadPool(workersPoolSize, r -> {
             Thread thread = new Thread(r);
-            thread.setName("worker-thread-" + count.incrementAndGet()); // make this configurable: easy.jobs.server.config.workers.name.prefix
+            String workerNamePrefix = System.getProperty(JobServerConfiguration.WORKERS_NAME_PREFIX_PARAMETER_NAME);
+            if (workerNamePrefix == null) {
+                workerNamePrefix = "worker-thread-";
+            }
+            thread.setName(workerNamePrefix + count.incrementAndGet());
             return thread;
         });
     }
