@@ -32,14 +32,16 @@ public class JobService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JobService.class);
 
+    private JobRepository jobRepository;
     private JobExecutionRepository jobExecutionDAO;
     private JobRequestRepository jobRequestRepository;
     private ExecutorService executorService;
     private Map<Integer, JobDefinition> jobDefinitions;
 
-    public JobService(JobExecutionRepository jobExecutionDAO, JobRequestRepository jobRequestRepository) {
+    public JobService(JobExecutionRepository jobExecutionDAO, JobRequestRepository jobRequestRepository, JobRepository jobRepository) {
         this.jobExecutionDAO = jobExecutionDAO;
         this.jobRequestRepository = jobRequestRepository;
+        this.jobRepository = jobRepository;
         this.executorService = Executors.newSingleThreadExecutor();
         this.jobDefinitions = new HashMap<>();
     }
@@ -68,7 +70,10 @@ public class JobService {
             int requestId = pendingJobRequest.getId();
             int jobId = pendingJobRequest.getJobId();
             String parameters = pendingJobRequest.getParameters();
-            // todo sanity check on jobId, if no job with given id, then warning + do nothing
+            if (jobRepository.getById(jobId) == null) { // this is an extra check on the core side, the web controller already filters bad requests upfront
+                LOGGER.warn("Unable to find a job with id " + jobId + ". Ignoring request with id " + requestId);
+                continue;
+            }
             // todo add allowsConcurrent parameter: if there is already an execution for the job, don't create a new job and don't saveJobExecutionAndUpdateItsCorrespondingRequest, the request will be picked up in the next run
             LOGGER.info("Creating a new job for request n° " + requestId + " with parameters [" + parameters + "]");
             Callable<JobExitStatus> job;

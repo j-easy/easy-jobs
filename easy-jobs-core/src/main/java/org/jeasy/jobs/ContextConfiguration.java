@@ -77,7 +77,7 @@ public class ContextConfiguration {
 
     @Bean
     public JobService jobService() {
-        return new JobService(jobExecutionRepository(), jobRequestRepository());
+        return new JobService(jobExecutionRepository(), jobRequestRepository(), jobRepository());
     }
 
     @Bean
