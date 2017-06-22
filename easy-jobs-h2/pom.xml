@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.jeasy</groupId>
         <artifactId>easy-jobs-parent</artifactId>
-        <version>0.1-SNAPSHOT</version>
+        <version>0.1</version>
     </parent>
 
     <artifactId>easy-jobs-h2</artifactId>
