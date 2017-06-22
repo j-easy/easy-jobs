@@ -4,6 +4,8 @@ import org.jeasy.jobs.Utils;
 import org.jeasy.jobs.job.JobRepository;
 import org.jeasy.jobs.request.JobRequest;
 import org.jeasy.jobs.request.JobRequestRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +14,8 @@ import java.util.Map;
 
 @RestController
 public class JobRequestController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(JobRequestController.class);
 
     @Autowired
     private JobRepository jobRepository;
@@ -50,6 +54,7 @@ public class JobRequestController {
         }
         JobRequest jobRequest = new JobRequest(jobIdentifier, parameters);
         jobRequestRepository.save(jobRequest);
+        LOGGER.info("Submitted a new job request for job " + jobId + " with parameters " + parsedParameters);
         return "Job request submitted successfully";
     }
 

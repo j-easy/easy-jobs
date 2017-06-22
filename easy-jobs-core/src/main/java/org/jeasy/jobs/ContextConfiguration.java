@@ -95,6 +95,7 @@ public class ContextConfiguration {
             dataSourceConfiguration.setDatabaseUrl(properties.getProperty(DATA_SOURCE_CONFIGURATION_URL));
             dataSourceConfiguration.setDatabaseUser(properties.getProperty(DATA_SOURCE_CONFIGURATION_USER));
             dataSourceConfiguration.setDatabasePassword(properties.getProperty(DATA_SOURCE_CONFIGURATION_PASSWORD));
+            LOGGER.info("Using data source configuration: " + dataSourceConfiguration);
             return dataSourceConfiguration;
         } catch (Exception e) {
             throw new BeanInstantiationException(DataSourceConfiguration.class, "Unable to read data source configuration from file " + configurationPath, e);
