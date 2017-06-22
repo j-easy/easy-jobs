@@ -1,23 +1,14 @@
 package org.jeasy.jobs.server;
 
 import org.jeasy.jobs.ContextConfiguration;
-import org.jeasy.jobs.job.Job;
-import org.jeasy.jobs.job.JobDefinition;
-import org.jeasy.jobs.job.JobRepository;
 import org.jeasy.jobs.job.JobService;
-import org.jeasy.jobs.server.web.JobController;
-import org.jeasy.jobs.server.web.JobExecutionController;
-import org.jeasy.jobs.server.web.JobRequestController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.context.annotation.ComponentScan;
 
 import javax.sql.DataSource;
 import java.io.File;
@@ -25,6 +16,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 @EnableAutoConfiguration(exclude = HibernateJpaAutoConfiguration.class)
+@ComponentScan("org.jeasy.jobs.server")
 public class JobServer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JobServer.class);
@@ -48,11 +40,12 @@ public class JobServer {
         }
         JobServerConfiguration jobServerConfiguration = new JobServerConfiguration.Loader().loadServerConfiguration();
         LOGGER.info("Using job server configuration: " + jobServerConfiguration);
-        ConfigurableApplicationContext applicationContext = SpringApplication.run(getConfigurationClasses(), args);
+        ConfigurableApplicationContext applicationContext = SpringApplication.run(new Object[]{JobServer.class, ContextConfiguration.class}, args);
         if (jobServerConfiguration.isDatabaseInit()) {
             DataSource dataSource = applicationContext.getBean(DataSource.class);
             LOGGER.info("Initializing database");
-            init(dataSource, jobDefinitions, applicationContext);
+            DatabaseInitializer databaseInitializer = applicationContext.getBean(DatabaseInitializer.class);
+            databaseInitializer.init(dataSource, jobDefinitions);
         }
 
         JobService jobService = applicationContext.getBean(JobService.class);
@@ -62,28 +55,6 @@ public class JobServer {
         SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(jobRequestPoller, 0, jobServerConfiguration.getPollingInterval(), TimeUnit.SECONDS);
         LOGGER.info("Job server started");
         registerShutdownHook();
-    }
-
-    private static Object[] getConfigurationClasses() {
-        return new Object[]{
-                JobServer.class, ContextConfiguration.class, JobController.class,
-                JobRequestController.class, JobExecutionController.class};
-    }
-
-    private static void init(DataSource dataSource, JobDefinitions jobDefinitions, ApplicationContext ctx) {
-        Resource resource = new ClassPathResource("database-schema.sql");
-        ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator(resource);
-        databasePopulator.execute(dataSource);
-        JobRepository jobRepository = ctx.getBean(JobRepository.class);
-        LOGGER.info("Loading job definitions");
-        for (JobDefinition jobDefinition : jobDefinitions.getJobDefinitions()) {
-            String name = jobDefinition.getName();
-            if (name == null) {
-                name = jobDefinition.getClazz(); // todo get simple class name from fully qualified name
-            }
-            LOGGER.info("Registering " + jobDefinition);
-            jobRepository.save(new Job(jobDefinition.getId(), name));
-        }
     }
 
     private static void registerShutdownHook() {
