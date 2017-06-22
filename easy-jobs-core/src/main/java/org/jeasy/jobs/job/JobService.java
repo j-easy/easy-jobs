@@ -24,6 +24,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static org.jeasy.jobs.execution.JobExecution.newJobExecution;
+
 /**
  * Central service providing transactional methods to save/update job requests/executions together in a consistent way.
  */
@@ -48,7 +50,7 @@ public class JobService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     private void saveJobExecutionAndUpdateItsCorrespondingRequest(int requestId) {
-        JobExecution jobExecution = new JobExecution(requestId, JobExecutionStatus.RUNNING, null, LocalDateTime.now(), null); // TODO constructor with less params or builder
+        JobExecution jobExecution = newJobExecution().withRequestId(requestId).withJobExecutionStatus(JobExecutionStatus.RUNNING).withStartDate(LocalDateTime.now());
         jobExecutionDAO.save(jobExecution);
         jobRequestRepository.updateStatus(requestId, JobRequestStatus.SUBMITTED);
     }

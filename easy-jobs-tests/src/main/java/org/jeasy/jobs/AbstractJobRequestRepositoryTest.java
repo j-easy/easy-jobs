@@ -22,6 +22,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.jeasy.jobs.request.JobRequest.newJobRequest;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @org.springframework.test.context.ContextConfiguration(classes = {ContextConfiguration.class})
@@ -55,7 +56,7 @@ public abstract class AbstractJobRequestRepositoryTest {
         jobRepository.save(new Job(1, "MyJob"));
 
         // when
-        jobRequestRepository.save(new JobRequest(1, "", JobRequestStatus.PENDING, LocalDateTime.now(), null));
+        jobRequestRepository.save(newJobRequest().withJobId(1).withParameters("").withStatus(JobRequestStatus.PENDING).withCreationDate(LocalDateTime.now()));
 
         // then
         Integer nbJobRequests = jdbcTemplate.queryForObject("select count(*) from job_request", Integer.class);
@@ -65,10 +66,10 @@ public abstract class AbstractJobRequestRepositoryTest {
     public void testGetPendingJobRequests() throws Exception {
         // given
         jobRepository.save(new Job(1, "MyJob"));
-        jobRequestRepository.save(new JobRequest(1, "", JobRequestStatus.PENDING, LocalDateTime.now(), null));
-        jobRequestRepository.save(new JobRequest(1, "", JobRequestStatus.PENDING, LocalDateTime.now(), null));
-        jobRequestRepository.save(new JobRequest(1, "", JobRequestStatus.SUBMITTED, LocalDateTime.now(), null));
-        jobRequestRepository.save(new JobRequest(1, "", JobRequestStatus.PROCESSED, LocalDateTime.now(), LocalDateTime.now().plus(2, ChronoUnit.MINUTES)));
+        jobRequestRepository.save(newJobRequest().withJobId(1).withParameters("").withStatus(JobRequestStatus.PENDING).withCreationDate(LocalDateTime.now()));
+        jobRequestRepository.save(newJobRequest().withJobId(1).withParameters("").withStatus(JobRequestStatus.PENDING).withCreationDate(LocalDateTime.now()));
+        jobRequestRepository.save(newJobRequest().withJobId(1).withParameters("").withStatus(JobRequestStatus.SUBMITTED).withCreationDate(LocalDateTime.now()));
+        jobRequestRepository.save(newJobRequest().withJobId(1).withParameters("").withStatus(JobRequestStatus.PROCESSED).withCreationDate(LocalDateTime.now()).withProcessingDate(LocalDateTime.now().plus(2, ChronoUnit.MINUTES)));
 
         // when
         List<JobRequest> pendingJobRequests = jobRequestRepository.getPendingJobRequests();
@@ -80,8 +81,8 @@ public abstract class AbstractJobRequestRepositoryTest {
     public void testFindAllJobRequests() throws Exception {
         // given
         jobRepository.save(new Job(1, "MyJob"));
-        jobRequestRepository.save(new JobRequest(1, "x=1", JobRequestStatus.PENDING, LocalDateTime.now(), null));
-        jobRequestRepository.save(new JobRequest(1, "x=2", JobRequestStatus.PENDING, LocalDateTime.now(), null));
+        jobRequestRepository.save(newJobRequest().withJobId(1).withParameters("x=1").withStatus(JobRequestStatus.PENDING).withCreationDate(LocalDateTime.now()));
+        jobRequestRepository.save(newJobRequest().withJobId(1).withParameters("x=2").withStatus(JobRequestStatus.PENDING).withCreationDate(LocalDateTime.now()));
 
         // when
         List<JobRequest> jobRequests = jobRequestRepository.findAllJobRequests();
@@ -93,7 +94,7 @@ public abstract class AbstractJobRequestRepositoryTest {
     public void testUpdateJobRequestStatus() throws Exception {
         // given
         jobRepository.save(new Job(1, "MyJob"));
-        jobRequestRepository.save(new JobRequest(1, "", JobRequestStatus.PENDING, LocalDateTime.now(), null));
+        jobRequestRepository.save(newJobRequest().withJobId(1).withParameters("").withStatus(JobRequestStatus.PENDING).withCreationDate(LocalDateTime.now()));
         List<JobRequest> pendingJobRequests = jobRequestRepository.getPendingJobRequests();
         JobRequest jobRequest = pendingJobRequests.get(0);
 
@@ -110,7 +111,7 @@ public abstract class AbstractJobRequestRepositoryTest {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime processingDate = now.plus(2, ChronoUnit.MINUTES);
         jobRepository.save(new Job(1, "MyJob"));
-        jobRequestRepository.save(new JobRequest(1, "", JobRequestStatus.PENDING, now, null));
+        jobRequestRepository.save(newJobRequest().withJobId(1).withParameters("").withStatus(JobRequestStatus.PENDING).withCreationDate(now));
         List<JobRequest> pendingJobRequests = jobRequestRepository.getPendingJobRequests();
         JobRequest jobRequest = pendingJobRequests.get(0);
 

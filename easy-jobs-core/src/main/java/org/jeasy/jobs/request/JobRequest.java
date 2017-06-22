@@ -30,6 +30,10 @@ public class JobRequest {
         this.processingDate = processingDate;
     }
 
+    public static JobRequest newJobRequest() {
+        return new JobRequest();
+    }
+
     public int getId() {
         return id;
     }
@@ -76,6 +80,31 @@ public class JobRequest {
 
     public void setProcessingDate(LocalDateTime processingDate) {
         this.processingDate = processingDate;
+    }
+
+    public JobRequest withJobId(int jobId) {
+        this.jobId = jobId;
+        return this;
+    }
+
+    public JobRequest withParameters(String parameters) {
+        this.parameters = parameters;
+        return this;
+    }
+
+    public JobRequest withStatus(JobRequestStatus status) {
+        this.status = status;
+        return this;
+    }
+
+    public JobRequest withCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+        return this;
+    }
+
+    public JobRequest withProcessingDate(LocalDateTime processingDate) {
+        this.processingDate = processingDate;
+        return this;
     }
 
     @Override

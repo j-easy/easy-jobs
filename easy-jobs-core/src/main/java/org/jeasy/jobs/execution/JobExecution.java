@@ -24,6 +24,10 @@ public class JobExecution {
         this.endDate = endDate;
     }
 
+    public static JobExecution newJobExecution() {
+        return new JobExecution();
+    }
+
     public int getId() {
         return id;
     }
@@ -70,5 +74,30 @@ public class JobExecution {
 
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
+    }
+
+    public JobExecution withRequestId(int requestId) {
+        this.requestId = requestId;
+        return this;
+    }
+
+    public JobExecution withJobExecutionStatus(JobExecutionStatus jobExecutionStatus) {
+        this.jobExecutionStatus = jobExecutionStatus;
+        return this;
+    }
+
+    public JobExecution withJobExitStatus(JobExitStatus jobExitStatus) {
+        this.jobExitStatus = jobExitStatus;
+        return this;
+    }
+
+    public JobExecution withStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
+        return this;
+    }
+
+    public JobExecution withEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
+        return this;
     }
 }
