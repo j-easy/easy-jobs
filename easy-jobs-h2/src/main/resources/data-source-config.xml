@@ -3,7 +3,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <!-- todo use abstract bean for common properties-->
     <bean id="dataSource" class="org.h2.jdbcx.JdbcDataSource">
         <property name="url" value="#{dataSourceConfiguration.getDatabaseUrl()}"/>
         <property name="user" value="#{dataSourceConfiguration.getDatabaseUser()}"/>
