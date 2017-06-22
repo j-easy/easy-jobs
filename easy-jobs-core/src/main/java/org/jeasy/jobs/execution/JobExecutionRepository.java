@@ -20,7 +20,7 @@ public class JobExecutionRepository {
         this.sessionFactory = sessionFactory;
     }
 
-    public JobExecution getByJobRequestId(int jobRequestId) {
+    public JobExecution findByJobRequestId(int jobRequestId) {
         Session session = sessionFactory.getCurrentSession();
         Query<JobExecution> query = session.createQuery("from JobExecution where requestId = :requestId ", JobExecution.class);
         query.setParameter("requestId", jobRequestId);
@@ -39,7 +39,7 @@ public class JobExecutionRepository {
 
     public void update(int jobRequestId, JobExitStatus jobExitStatus, LocalDateTime endDate) {
         Session session = sessionFactory.getCurrentSession();
-        JobExecution jobExecution = getByJobRequestId(jobRequestId);
+        JobExecution jobExecution = findByJobRequestId(jobRequestId);
         jobExecution.setJobExecutionStatus(JobExecutionStatus.FINISHED);
         jobExecution.setJobExitStatus(jobExitStatus);
         jobExecution.setEndDate(endDate);

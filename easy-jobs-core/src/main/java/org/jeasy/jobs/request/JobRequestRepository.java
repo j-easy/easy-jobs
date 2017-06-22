@@ -19,7 +19,7 @@ public class JobRequestRepository {
         this.sessionFactory = sessionFactory;
     }
 
-    public JobRequest getById(int id) {
+    public JobRequest findById(int id) {
         return sessionFactory.getCurrentSession().get(JobRequest.class, id);
     }
 

@@ -69,13 +69,13 @@ public abstract class AbstractJobRepositoryTest {
         assertThat(jobs).isNotEmpty().hasSize(2);
     }
 
-    public void testGetByJobId() throws Exception {
+    public void testFindByJobId() throws Exception {
         // given
         Job job = new Job(1, "MyJob");
         jobRepository.save(job);
 
         // when
-        Job actual = jobRepository.getById(1);
+        Job actual = jobRepository.findById(1);
 
         // then
         assertThat(actual).isNotNull();

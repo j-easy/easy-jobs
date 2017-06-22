@@ -16,6 +16,6 @@ public class JobRepositoryTest extends AbstractJobRepositoryTest {
 
     @Test
     public void testGetByJobIdlFromMySQL() throws Exception {
-        super.testGetByJobId();
+        super.testFindByJobId();
     }
 }

@@ -82,7 +82,7 @@ public abstract class AbstractJobExecutionRepositoryTest {
         jobExecutionRepository.update(1, JobExitStatus.SUCCEEDED, endDate);
 
         // then
-        JobExecution jobExecution = jobExecutionRepository.getByJobRequestId(1);
+        JobExecution jobExecution = jobExecutionRepository.findByJobRequestId(1);
         assertThat(jobExecution.getJobExecutionStatus()).isEqualTo(JobExecutionStatus.FINISHED);
         assertThat(jobExecution.getJobExitStatus()).isEqualTo(JobExitStatus.SUCCEEDED);
         assertThat(jobExecution.getEndDate()).isEqualToIgnoringSeconds(endDate); // sometimes this test fails when ignoring only nanoseconds

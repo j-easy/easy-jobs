@@ -102,7 +102,7 @@ public abstract class AbstractJobRequestRepositoryTest {
         jobRequestRepository.updateStatus(jobRequest.getId(), JobRequestStatus.SUBMITTED);
 
         // then
-        JobRequest request = jobRequestRepository.getById(jobRequest.getId());
+        JobRequest request = jobRequestRepository.findById(jobRequest.getId());
         assertThat(request.getStatus()).isEqualTo(JobRequestStatus.SUBMITTED);
     }
 
@@ -119,7 +119,7 @@ public abstract class AbstractJobRequestRepositoryTest {
         jobRequestRepository.updateStatusAndProcessingDate(jobRequest.getId(), JobRequestStatus.PROCESSED, processingDate);
 
         // then
-        JobRequest request = jobRequestRepository.getById(jobRequest.getId());
+        JobRequest request = jobRequestRepository.findById(jobRequest.getId());
         assertThat(request.getStatus()).isEqualTo(JobRequestStatus.PROCESSED);
         assertThat(request.getProcessingDate()).isEqualToIgnoringSeconds(processingDate); // sometimes this test fails when ignoring only nanoseconds
     }

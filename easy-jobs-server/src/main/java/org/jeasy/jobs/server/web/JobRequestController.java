@@ -20,7 +20,7 @@ public class JobRequestController {
 
     @RequestMapping("/requests/{id}")
     JobRequest getJobRequest(@PathVariable int id) {
-        return jobRequestRepository.getById(id);
+        return jobRequestRepository.findById(id);
     }
 
     @RequestMapping(path = "/requests", method = RequestMethod.GET)
@@ -45,7 +45,7 @@ public class JobRequestController {
         } catch (NumberFormatException e) {
             return "jobId parameter must be an integer";
         }
-        if (jobRepository.getById(jobIdentifier) == null) {
+        if (jobRepository.findById(jobIdentifier) == null) {
             return "No job registered with id = " + jobId;
         }
         JobRequest jobRequest = new JobRequest(jobIdentifier, parameters);

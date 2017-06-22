@@ -16,7 +16,7 @@ public class JobRepositoryTest extends AbstractJobRepositoryTest {
     }
 
     @Test
-    public void testGetByJobIdlFromH2() throws Exception {
-        super.testGetByJobId();
+    public void testFindByJobIdlFromH2() throws Exception {
+        super.testFindByJobId();
     }
 }

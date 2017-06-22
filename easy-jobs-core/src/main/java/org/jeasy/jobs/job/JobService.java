@@ -72,7 +72,7 @@ public class JobService {
             int requestId = pendingJobRequest.getId();
             int jobId = pendingJobRequest.getJobId();
             String parameters = pendingJobRequest.getParameters();
-            if (jobRepository.getById(jobId) == null) { // this is an extra check on the core side, the web controller already filters bad requests upfront
+            if (jobRepository.findById(jobId) == null) { // this is an extra check on the core side, the web controller already filters bad requests upfront
                 LOGGER.warn("Unable to find a job with id " + jobId + ". Ignoring request with id " + requestId);
                 continue;
             }

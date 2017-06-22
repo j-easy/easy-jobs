@@ -26,7 +26,7 @@ public class JobRepository {
         return query.list();
     }
 
-    public Job getById(int id) {
+    public Job findById(int id) {
         return sessionFactory.getCurrentSession().get(Job.class, id);
     }
 
