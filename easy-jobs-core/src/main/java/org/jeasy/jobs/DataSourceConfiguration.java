@@ -54,7 +54,7 @@ public class DataSourceConfiguration {
         return "DataSourceConfiguration {" +
                 "databaseUrl='" + databaseUrl + '\'' +
                 ", databaseUser='" + databaseUser + '\'' +
-                ", databasePassword='" + databasePassword + '\'' +
+                ", databasePassword='********'" +
                 '}';
     }
 }
