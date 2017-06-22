@@ -1,6 +1,7 @@
 package org.jeasy.jobs.server;
 
 import org.jeasy.jobs.ContextConfiguration;
+import org.jeasy.jobs.job.JobDefinition;
 import org.jeasy.jobs.job.JobService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,7 @@ public class JobServer {
 
     public static void main(String[] args) {
         JobDefinitions jobDefinitions = failFastLoadJobDefinitions();
+        failFastLoadJobs(jobDefinitions);
         ConfigurableApplicationContext applicationContext = SpringApplication.run(new Object[]{JobServer.class, ContextConfiguration.class}, args);
         JobServerConfiguration jobServerConfiguration = new JobServerConfiguration.Loader().loadServerConfiguration();
         LOGGER.info("Using job server configuration: " + jobServerConfiguration);
@@ -58,6 +60,18 @@ public class JobServer {
             System.exit(1);
         }
         return jobDefinitions;
+    }
+
+    private static void failFastLoadJobs(JobDefinitions jobDefinitions) {
+        JobDefinitions.Validator validator = new JobDefinitions.Validator();
+        for (JobDefinition jobDefinition : jobDefinitions.getJobDefinitions()) {
+            try {
+                validator.validate(jobDefinition);
+            } catch (JobDefinitions.InvalidJobDefinitionException e) {
+                LOGGER.error("Unable to validate job definition " + jobDefinition, e);
+                System.exit(1);
+            }
+        }
     }
 
     private static void registerShutdownHook() {
