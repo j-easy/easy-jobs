@@ -10,7 +10,7 @@ public class WorkerThreadFactory implements ThreadFactory {
     @Override
     public Thread newThread(Runnable r) {
         Thread thread = new Thread(r);
-        thread.setName("worker-thread-" + count.incrementAndGet());
+        thread.setName("worker-thread-" + count.incrementAndGet()); // make this configurable: easy.jobs.server.config.workers.name.prefix
         return thread;
     }
 }
