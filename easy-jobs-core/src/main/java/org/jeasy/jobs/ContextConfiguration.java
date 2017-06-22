@@ -7,6 +7,7 @@ import org.jeasy.jobs.job.JobService;
 import org.jeasy.jobs.request.JobRequestRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
@@ -83,23 +84,20 @@ public class ContextConfiguration {
     public DataSourceConfiguration dataSourceConfiguration() {
         DataSourceConfiguration defaultDataSourceConfiguration = DEFAULT_DATA_SOURCE_CONFIGURATION;
         String configurationPath = System.getProperty(DATA_SOURCE_CONFIGURATION_PROPERTY);
-        try {
-            if (configurationPath != null) {
-                Properties properties = new Properties();
-                properties.load(new FileReader(new File(configurationPath)));
-                DataSourceConfiguration dataSourceConfiguration = new DataSourceConfiguration();
-                dataSourceConfiguration.setDatabaseUrl(properties.getProperty(DATA_SOURCE_CONFIGURATION_URL));
-                dataSourceConfiguration.setDatabaseUser(properties.getProperty(DATA_SOURCE_CONFIGURATION_USER));
-                dataSourceConfiguration.setDatabasePassword(properties.getProperty(DATA_SOURCE_CONFIGURATION_PASSWORD));
-                return dataSourceConfiguration;
-            } else {
-                LOGGER.info("No data source configuration file specified, using default configuration: " + defaultDataSourceConfiguration);
-                return defaultDataSourceConfiguration;
-            }
-        } catch (Exception e) {
-            LOGGER.warn("Unable to read data source configuration from file " + configurationPath, e);
-            LOGGER.warn("Using default data source configuration: " + defaultDataSourceConfiguration);
+        if (configurationPath == null) {
+            LOGGER.info("No data source configuration file specified, using default configuration: " + defaultDataSourceConfiguration);
             return defaultDataSourceConfiguration;
+        }
+        try {
+            Properties properties = new Properties();
+            properties.load(new FileReader(new File(configurationPath)));
+            DataSourceConfiguration dataSourceConfiguration = new DataSourceConfiguration();
+            dataSourceConfiguration.setDatabaseUrl(properties.getProperty(DATA_SOURCE_CONFIGURATION_URL));
+            dataSourceConfiguration.setDatabaseUser(properties.getProperty(DATA_SOURCE_CONFIGURATION_USER));
+            dataSourceConfiguration.setDatabasePassword(properties.getProperty(DATA_SOURCE_CONFIGURATION_PASSWORD));
+            return dataSourceConfiguration;
+        } catch (Exception e) {
+            throw new BeanInstantiationException(DataSourceConfiguration.class, "Unable to read data source configuration from file " + configurationPath, e);
         }
     }
 }
