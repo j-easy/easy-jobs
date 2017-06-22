@@ -22,25 +22,11 @@ public class JobServer {
     private static final Logger LOGGER = LoggerFactory.getLogger(JobServer.class);
     private static final ScheduledExecutorService SCHEDULED_EXECUTOR_SERVICE = Executors.newSingleThreadScheduledExecutor();
 
-    public JobServer() {
-    }
-
     public static void main(String[] args) {
-        String configurationPath = System.getProperty(JobDefinitions.JOBS_DEFINITIONS_CONFIGURATION_FILE_PARAMETER_NAME);
-        if (configurationPath == null) {
-            LOGGER.error("No jobs configuration file specified. Jobs configuration file is mandatory to load job definitions." +
-                    "Please provide a JVM property -D" + JobDefinitions.JOBS_DEFINITIONS_CONFIGURATION_FILE_PARAMETER_NAME + "=/path/to/jobs/configuration/file");
-        }
-        JobDefinitions jobDefinitions = null;
-        try {
-            jobDefinitions = loadJobDefinitions(configurationPath);
-        } catch (Exception e) {
-            LOGGER.error("Unable to load jobs configuration from file " + configurationPath, e);
-            System.exit(1);
-        }
+        JobDefinitions jobDefinitions = failFastLoadJobDefinitions();
+        ConfigurableApplicationContext applicationContext = SpringApplication.run(new Object[]{JobServer.class, ContextConfiguration.class}, args);
         JobServerConfiguration jobServerConfiguration = new JobServerConfiguration.Loader().loadServerConfiguration();
         LOGGER.info("Using job server configuration: " + jobServerConfiguration);
-        ConfigurableApplicationContext applicationContext = SpringApplication.run(new Object[]{JobServer.class, ContextConfiguration.class}, args);
         if (jobServerConfiguration.isDatabaseInit()) {
             DataSource dataSource = applicationContext.getBean(DataSource.class);
             LOGGER.info("Initializing database");
@@ -57,15 +43,28 @@ public class JobServer {
         registerShutdownHook();
     }
 
+    private static JobDefinitions failFastLoadJobDefinitions() {
+        JobDefinitions jobDefinitions = null;
+        String configurationPath = System.getProperty(JobDefinitions.JOBS_DEFINITIONS_CONFIGURATION_FILE_PARAMETER_NAME);
+        if (configurationPath == null) {
+            LOGGER.error("No jobs configuration file specified. Jobs configuration file is mandatory to load job definitions." +
+                    "Please provide a JVM property -D" + JobDefinitions.JOBS_DEFINITIONS_CONFIGURATION_FILE_PARAMETER_NAME + "=/path/to/jobs/configuration/file");
+            System.exit(1);
+        }
+        try {
+            jobDefinitions = new JobDefinitions.Reader().read(new File(configurationPath));
+        } catch (Exception e) {
+            LOGGER.error("Unable to load jobs configuration from file " + configurationPath, e);
+            System.exit(1);
+        }
+        return jobDefinitions;
+    }
+
     private static void registerShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             SCHEDULED_EXECUTOR_SERVICE.shutdownNow();
             LOGGER.info("Job manager stopped");
         }));
-    }
-
-    private static JobDefinitions loadJobDefinitions(String configurationPath) throws Exception {
-        return new JobDefinitions.Reader().read(new File(configurationPath));
     }
 
     private static ExecutorService executorService(int workersNumber) {
