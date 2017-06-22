@@ -27,22 +27,12 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 @EnableAutoConfiguration(exclude = HibernateJpaAutoConfiguration.class)
-public class JobServer implements Runnable {
+public class JobServer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JobServer.class);
     private static final ScheduledExecutorService SCHEDULED_EXECUTOR_SERVICE = Executors.newSingleThreadScheduledExecutor();
-    private JobService jobService;
-
-    private JobServer(JobService jobService) {
-        this.jobService = jobService;
-    }
 
     public JobServer() {
-    }
-
-    @Override
-    public void run() {
-        jobService.pollRequestsAndSubmitJobs();
     }
 
     public static void main(String[] args) {
@@ -71,9 +61,8 @@ public class JobServer implements Runnable {
         JobService jobService = applicationContext.getBean(JobService.class);
         jobService.setExecutorService(executorService(jobServerConfiguration.getWorkersNumber()));
         jobService.setJobDefinitions(jobDefinitionsMap);
-        JobServer jobServer = new JobServer(jobService);
-
-        SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(jobServer, 0, jobServerConfiguration.getPollingInterval(), TimeUnit.SECONDS);
+        JobRequestPoller jobRequestPoller = new JobRequestPoller(jobService);
+        SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(jobRequestPoller, 0, jobServerConfiguration.getPollingInterval(), TimeUnit.SECONDS);
         LOGGER.info("Job server started");
         registerShutdownHook();
     }
