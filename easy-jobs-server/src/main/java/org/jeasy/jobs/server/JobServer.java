@@ -23,10 +23,7 @@ import javax.sql.DataSource;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 @EnableAutoConfiguration(exclude = HibernateJpaAutoConfiguration.class)
 public class JobServer implements Runnable {
@@ -48,24 +45,36 @@ public class JobServer implements Runnable {
     }
 
     public static void main(String[] args) {
-        registerShutdownHook();
-        ConfigurableApplicationContext applicationContext = SpringApplication.run(getConfigurationClasses(), args);
-        JobServerConfiguration jobServerConfiguration = getServerConfiguration();
+        String configurationPath = System.getProperty(JobDefinitions.JOBS_DEFINITIONS_CONFIGURATION_FILE_PARAMETER_NAME);
+        if (configurationPath == null) {
+            LOGGER.error("No jobs configuration file specified. Jobs configuration file is mandatory to load job definitions." +
+                    "Please provide a JVM property -D" + JobDefinitions.JOBS_DEFINITIONS_CONFIGURATION_FILE_PARAMETER_NAME + "=/path/to/jobs/configuration/file");
+        }
+        JobDefinitions jobDefinitions = null;
+        try {
+            jobDefinitions = loadJobDefinitions(configurationPath);
+        } catch (Exception e) {
+            LOGGER.error("Unable to load jobs configuration from file " + configurationPath, e);
+            System.exit(1);
+        }
+        JobServerConfiguration jobServerConfiguration = new JobServerConfiguration.Loader().loadServerConfiguration();
         LOGGER.info("Using job server configuration: " + jobServerConfiguration);
+        ConfigurableApplicationContext applicationContext = SpringApplication.run(getConfigurationClasses(), args);
         if (jobServerConfiguration.isDatabaseInit()) {
             DataSource dataSource = applicationContext.getBean(DataSource.class);
             LOGGER.info("Initializing database");
-            init(dataSource, jobServerConfiguration, applicationContext);
+            init(dataSource, jobDefinitions, applicationContext);
         }
 
-        Map<Integer, JobDefinition> jobDefinitions = getJobDefinitions(jobServerConfiguration);
+        Map<Integer, JobDefinition> jobDefinitionsMap = mapJobDefinitionsToJobIdentifiers(jobDefinitions);
         JobService jobService = applicationContext.getBean(JobService.class);
-        jobService.setExecutorService(executorService());
-        jobService.setJobDefinitions(jobDefinitions);
+        jobService.setExecutorService(executorService(jobServerConfiguration.getWorkersNumber()));
+        jobService.setJobDefinitions(jobDefinitionsMap);
         JobServer jobServer = new JobServer(jobService);
 
         SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(jobServer, 0, jobServerConfiguration.getPollingInterval(), TimeUnit.SECONDS);
         LOGGER.info("Job server started");
+        registerShutdownHook();
     }
 
     private static Object[] getConfigurationClasses() {
@@ -74,21 +83,21 @@ public class JobServer implements Runnable {
                 JobRequestController.class, JobExecutionController.class};
     }
 
-    private static Map<Integer, JobDefinition> getJobDefinitions(JobServerConfiguration jobServerConfiguration) {
+    private static Map<Integer, JobDefinition> mapJobDefinitionsToJobIdentifiers(JobDefinitions definitions) {
         Map<Integer, JobDefinition> jobDefinitions = new HashMap<>();
-        for (JobDefinition jobDefinition : jobServerConfiguration.getJobDefinitions()) {
+        for (JobDefinition jobDefinition : definitions.getJobDefinitions()) {
             jobDefinitions.put(jobDefinition.getId(), jobDefinition);
         }
         return jobDefinitions;
     }
 
-    private static void init(DataSource dataSource, JobServerConfiguration jobServerConfiguration, ApplicationContext ctx) {
+    private static void init(DataSource dataSource, JobDefinitions jobDefinitions, ApplicationContext ctx) {
         Resource resource = new ClassPathResource("database-schema.sql");
         ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator(resource);
         databasePopulator.execute(dataSource);
         JobRepository jobRepository = ctx.getBean(JobRepository.class);
         LOGGER.info("Loading job definitions");
-        for (JobDefinition jobDefinition : jobServerConfiguration.getJobDefinitions()) {
+        for (JobDefinition jobDefinition : jobDefinitions.getJobDefinitions()) {
             String name = jobDefinition.getName();
             if (name == null) {
                 name = jobDefinition.getClazz(); // todo get simple class name from fully qualified name
@@ -105,26 +114,12 @@ public class JobServer implements Runnable {
         }));
     }
 
-    private static JobServerConfiguration getServerConfiguration() {
-        JobServerConfiguration defaultJobServerConfiguration = JobServerConfiguration.DEFAULT_JOB_SERVER_CONFIGURATION;
-        String configurationPath = System.getProperty(JobServerConfiguration.CONFIGURATION_PATH_PARAMETER_NAME);
-        try {
-            if (configurationPath != null) {
-                return new JobServerConfigurationReader().read(new File(configurationPath));
-            } else {
-                LOGGER.info("No configuration file specified, using default configuration: " + defaultJobServerConfiguration);
-                return defaultJobServerConfiguration;
-            }
-        } catch (Exception e) {
-            LOGGER.warn("Unable to read configuration from file " + configurationPath, e);
-            // FIXME Should easy jobs introspect and validate job definitions (existing method, etc) ? I guess yes
-            LOGGER.warn("Using default configuration: " + defaultJobServerConfiguration);
-            return defaultJobServerConfiguration;
-        }
+    private static JobDefinitions loadJobDefinitions(String configurationPath) throws Exception {
+        return new JobDefinitions.Reader().read(new File(configurationPath));
     }
 
-    private static ExecutorService executorService() {
-        return Executors.newFixedThreadPool(getServerConfiguration().getWorkersNumber(), new WorkerThreadFactory());
+    private static ExecutorService executorService(int workersNumber) {
+        return Executors.newFixedThreadPool(workersNumber, new WorkerThreadFactory());
     }
 
 }

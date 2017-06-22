@@ -1,40 +1,19 @@
 package org.jeasy.jobs.server;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.jeasy.jobs.job.JobDefinition;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JobServerConfiguration {
 
-    static final String CONFIGURATION_PATH_PARAMETER_NAME = "easy.jobs.server.config.file";
-    static final JobServerConfiguration DEFAULT_JOB_SERVER_CONFIGURATION =
-            new JobServerConfiguration(
-                    10,
-                    30,
-                    true,
-                    new ArrayList<>()
-            );
+    private static final Logger LOGGER = LoggerFactory.getLogger(JobServerConfiguration.class);
 
-    @JsonProperty("workers.number")
-    private int workersNumber;
-    @JsonProperty("polling.interval")
-    private int pollingInterval;
-    @JsonProperty("database.init")
-    private boolean databaseInit;
-    @JsonProperty("jobs")
-    private List<JobDefinition> jobDefinitions;
+    static final String WORKERS_NUMBER_PARAMETER_NAME = "easy.jobs.server.config.workers.number";
+    static final String POLLING_INTERVAL_PARAMETER_NAME = "easy.jobs.server.config.polling.interval";
+    static final String DATABASE_INIT_PARAMETER_NAME = "easy.jobs.server.config.database.init";
 
-    public JobServerConfiguration() {
-    }
-
-    public JobServerConfiguration(int workersNumber, int pollingInterval, boolean databaseInit,List<JobDefinition> jobDefinitions) {
-        this.workersNumber = workersNumber;
-        this.pollingInterval = pollingInterval;
-        this.databaseInit = databaseInit;
-        this.jobDefinitions = jobDefinitions;
-    }
+    private int workersNumber = 10; // todo rename to workers pool size
+    private int pollingInterval = 30;
+    private boolean databaseInit = false;
 
     public int getWorkersNumber() {
         return workersNumber;
@@ -60,21 +39,61 @@ public class JobServerConfiguration {
         this.databaseInit = databaseInit;
     }
 
-    public List<JobDefinition> getJobDefinitions() {
-        return jobDefinitions;
-    }
-
-    public void setJobDefinitions(List<JobDefinition> jobDefinitions) {
-        this.jobDefinitions = jobDefinitions;
-    }
-
     @Override
     public String toString() {
         return "JobServerConfiguration {" +
                 "workersNumber=" + workersNumber +
                 ", pollingInterval=" + pollingInterval +
                 ", databaseInit=" + databaseInit +
-                ", jobDefinitions=" + jobDefinitions +
                 '}';
+    }
+
+    static class Loader {
+
+        JobServerConfiguration loadServerConfiguration() {
+            JobServerConfiguration jobServerConfiguration = new JobServerConfiguration();
+            loadWorkersNumberParameter(jobServerConfiguration);
+            loadPollingIntervalParameter(jobServerConfiguration);
+            loadDatabaseInitParameter(jobServerConfiguration);
+            return jobServerConfiguration;
+        }
+
+        // TODO use Easy Props to inject these parameters in a declarative way and get rid of this boilerplate
+
+        private void loadDatabaseInitParameter(JobServerConfiguration jobServerConfiguration) {
+            String databaseInitParameter = System.getProperty(JobServerConfiguration.DATABASE_INIT_PARAMETER_NAME);
+            if (databaseInitParameter != null) {
+                try {
+                    boolean databaseInit = Boolean.parseBoolean(databaseInitParameter);
+                    jobServerConfiguration.setDatabaseInit(databaseInit);
+                } catch (NumberFormatException e) {
+                    LOGGER.warn("Unable to read database init parameter value, I will use the default value:" + jobServerConfiguration.isDatabaseInit(), e);
+                }
+            }
+        }
+
+        private void loadPollingIntervalParameter(JobServerConfiguration jobServerConfiguration) {
+            String pollingIntervalParameter = System.getProperty(JobServerConfiguration.POLLING_INTERVAL_PARAMETER_NAME);
+            if (pollingIntervalParameter != null) {
+                try {
+                    int pollingInterval = Integer.parseInt(pollingIntervalParameter);
+                    jobServerConfiguration.setPollingInterval(pollingInterval);
+                } catch (NumberFormatException e) {
+                    LOGGER.warn("Unable to read polling interval parameter value, I will use the default value:" + jobServerConfiguration.getPollingInterval(), e);
+                }
+            }
+        }
+
+        private void loadWorkersNumberParameter(JobServerConfiguration jobServerConfiguration) {
+            String workersNumberParameter = System.getProperty(JobServerConfiguration.WORKERS_NUMBER_PARAMETER_NAME);
+            if (workersNumberParameter != null) {
+                try {
+                    int workersNumber = Integer.parseInt(workersNumberParameter);
+                    jobServerConfiguration.setWorkersNumber(workersNumber);
+                } catch (NumberFormatException e) {
+                    LOGGER.warn("Unable to read workers number parameter value, I will use the default value:" + jobServerConfiguration.getWorkersNumber(), e);
+                }
+            }
+        }
     }
 }
