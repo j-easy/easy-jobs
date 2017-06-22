@@ -3,11 +3,9 @@ package org.jeasy.jobs.execution;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-import org.jeasy.jobs.job.JobExitStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -34,16 +32,11 @@ public class JobExecutionRepository {
     }
 
     public void save(JobExecution jobExecution) {
-        sessionFactory.getCurrentSession().saveOrUpdate(jobExecution);
+        sessionFactory.getCurrentSession().save(jobExecution);
     }
 
-    public void update(int jobRequestId, JobExitStatus jobExitStatus, LocalDateTime endDate) {
-        Session session = sessionFactory.getCurrentSession();
-        JobExecution jobExecution = findByJobRequestId(jobRequestId);
-        jobExecution.setJobExecutionStatus(JobExecutionStatus.FINISHED);
-        jobExecution.setJobExitStatus(jobExitStatus);
-        jobExecution.setEndDate(endDate);
-        session.update(jobExecution);
+    public void update(JobExecution jobExecution) {
+        sessionFactory.getCurrentSession().update(jobExecution);
     }
 
 }

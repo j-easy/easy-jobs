@@ -10,18 +10,13 @@ public class JobRequestRepositoryTest extends AbstractJobRequestRepositoryTest {
     }
 
     @Test
-    public void testGetPendingJobRequestsFromH2() throws Exception {
-        super.testGetPendingJobRequests();
+    public void testFindJobRequestsByStatusFromH2() throws Exception {
+        super.testFindJobRequestsByStatus();
     }
 
     @Test
-    public void testUpdateJobRequestStatusInH2() throws Exception {
-        super.testUpdateJobRequestStatus();
-    }
-
-    @Test
-    public void testUpdateJobRequestStatusAndProcessingDateInH2() throws Exception {
-        super.testUpdateJobRequestStatusAndProcessingDate();
+    public void testUpdateJobRequestInH2() throws Exception {
+        super.testUpdateJobRequest();
     }
 
     @Test

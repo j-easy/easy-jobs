@@ -63,7 +63,7 @@ public abstract class AbstractJobRequestRepositoryTest {
         assertThat(nbJobRequests).isEqualTo(1);
     }
 
-    public void testGetPendingJobRequests() throws Exception {
+    public void testFindJobRequestsByStatus() throws Exception {
         // given
         jobRepository.save(new Job(1, "MyJob"));
         jobRequestRepository.save(newJobRequest().withJobId(1).withParameters("").withStatus(JobRequestStatus.PENDING).withCreationDate(LocalDateTime.now()));
@@ -72,10 +72,14 @@ public abstract class AbstractJobRequestRepositoryTest {
         jobRequestRepository.save(newJobRequest().withJobId(1).withParameters("").withStatus(JobRequestStatus.PROCESSED).withCreationDate(LocalDateTime.now()).withProcessingDate(LocalDateTime.now().plus(2, ChronoUnit.MINUTES)));
 
         // when
-        List<JobRequest> pendingJobRequests = jobRequestRepository.getPendingJobRequests();
+        List<JobRequest> pendingJobRequests = jobRequestRepository.findJobRequestsByStatus(JobRequestStatus.PENDING);
+        List<JobRequest> submittedJobRequests = jobRequestRepository.findJobRequestsByStatus(JobRequestStatus.SUBMITTED);
+        List<JobRequest> processedJobRequests = jobRequestRepository.findJobRequestsByStatus(JobRequestStatus.PROCESSED);
 
         // then
         assertThat(pendingJobRequests.size()).isEqualTo(2);
+        assertThat(submittedJobRequests.size()).isEqualTo(1);
+        assertThat(processedJobRequests.size()).isEqualTo(1);
     }
 
     public void testFindAllJobRequests() throws Exception {
@@ -91,36 +95,18 @@ public abstract class AbstractJobRequestRepositoryTest {
         assertThat(jobRequests.size()).isEqualTo(2);
     }
 
-    public void testUpdateJobRequestStatus() throws Exception {
+    public void testUpdateJobRequest() throws Exception {
         // given
         jobRepository.save(new Job(1, "MyJob"));
-        jobRequestRepository.save(newJobRequest().withJobId(1).withParameters("").withStatus(JobRequestStatus.PENDING).withCreationDate(LocalDateTime.now()));
-        List<JobRequest> pendingJobRequests = jobRequestRepository.getPendingJobRequests();
-        JobRequest jobRequest = pendingJobRequests.get(0);
+        JobRequest jobRequest = newJobRequest().withJobId(1).withStatus(JobRequestStatus.PENDING);
+        jobRequestRepository.save(jobRequest);
 
         // when
-        jobRequestRepository.updateStatus(jobRequest.getId(), JobRequestStatus.SUBMITTED);
+        jobRequest.setStatus(JobRequestStatus.SUBMITTED);
+        jobRequestRepository.update(jobRequest);
 
         // then
-        JobRequest request = jobRequestRepository.findById(jobRequest.getId());
-        assertThat(request.getStatus()).isEqualTo(JobRequestStatus.SUBMITTED);
-    }
-
-    public void testUpdateJobRequestStatusAndProcessingDate() throws Exception {
-        // given
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime processingDate = now.plus(2, ChronoUnit.MINUTES);
-        jobRepository.save(new Job(1, "MyJob"));
-        jobRequestRepository.save(newJobRequest().withJobId(1).withParameters("").withStatus(JobRequestStatus.PENDING).withCreationDate(now));
-        List<JobRequest> pendingJobRequests = jobRequestRepository.getPendingJobRequests();
-        JobRequest jobRequest = pendingJobRequests.get(0);
-
-        // when
-        jobRequestRepository.updateStatusAndProcessingDate(jobRequest.getId(), JobRequestStatus.PROCESSED, processingDate);
-
-        // then
-        JobRequest request = jobRequestRepository.findById(jobRequest.getId());
-        assertThat(request.getStatus()).isEqualTo(JobRequestStatus.PROCESSED);
-        assertThat(request.getProcessingDate()).isEqualToIgnoringSeconds(processingDate); // sometimes this test fails when ignoring only nanoseconds
+        JobRequest updatedJobRequest = jobRequestRepository.findById(jobRequest.getId());
+        assertThat(updatedJobRequest.getStatus()).isEqualTo(JobRequestStatus.SUBMITTED);
     }
 }

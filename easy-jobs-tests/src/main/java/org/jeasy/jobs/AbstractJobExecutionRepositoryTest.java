@@ -76,16 +76,18 @@ public abstract class AbstractJobExecutionRepositoryTest {
         LocalDateTime endDate = now.plus(2, ChronoUnit.MINUTES);
         jobRepository.save(new Job(1, "MyJob"));
         jobRequestRepository.save(newJobRequest().withJobId(1).withParameters("").withStatus(JobRequestStatus.PENDING).withCreationDate(now));
-        jobExecutionRepository.save(newJobExecution().withRequestId(1).withJobExecutionStatus(JobExecutionStatus.RUNNING).withStartDate(now));
+        JobExecution jobExecution = newJobExecution().withRequestId(1).withJobExecutionStatus(JobExecutionStatus.RUNNING).withStartDate(now);
+        jobExecutionRepository.save(jobExecution);
 
         // when
-        jobExecutionRepository.update(1, JobExitStatus.SUCCEEDED, endDate);
+        jobExecution.setJobExitStatus(JobExitStatus.SUCCEEDED);
+        jobExecution.setEndDate(endDate);
+        jobExecutionRepository.update(jobExecution);
 
         // then
-        JobExecution jobExecution = jobExecutionRepository.findByJobRequestId(1);
-        assertThat(jobExecution.getJobExecutionStatus()).isEqualTo(JobExecutionStatus.FINISHED);
-        assertThat(jobExecution.getJobExitStatus()).isEqualTo(JobExitStatus.SUCCEEDED);
-        assertThat(jobExecution.getEndDate()).isEqualToIgnoringSeconds(endDate); // sometimes this test fails when ignoring only nanoseconds
+        JobExecution updatedJobExecution = jobExecutionRepository.findByJobRequestId(1);
+        assertThat(updatedJobExecution.getJobExitStatus()).isEqualTo(JobExitStatus.SUCCEEDED);
+        assertThat(updatedJobExecution.getEndDate()).isEqualToIgnoringSeconds(endDate); // sometimes this test fails when ignoring only nanoseconds
     }
 
     public void testFindAllJobExecutions() throws Exception {

@@ -18,7 +18,7 @@ public class JobRepository {
     }
 
     public void save(Job job) {
-        sessionFactory.getCurrentSession().saveOrUpdate(job);
+        sessionFactory.getCurrentSession().save(job);
     }
 
     public List<Job> findAll() {

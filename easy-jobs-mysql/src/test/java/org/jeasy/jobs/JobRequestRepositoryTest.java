@@ -10,18 +10,13 @@ public class JobRequestRepositoryTest extends AbstractJobRequestRepositoryTest {
     }
 
     @Test
-    public void testGetPendingJobRequestsFromMySQL() throws Exception {
-        super.testGetPendingJobRequests();
+    public void testFindJobRequestsByStatusFromMySQL() throws Exception {
+        super.testFindJobRequestsByStatus();
     }
 
     @Test
-    public void testUpdateJobRequestStatusInMySQL() throws Exception {
-        super.testUpdateJobRequestStatus();
-    }
-
-    @Test
-    public void testUpdateJobRequestStatusAndProcessingDateInMySQL() throws Exception {
-        super.testUpdateJobRequestStatusAndProcessingDate();
+    public void testUpdateJobRequestInMySQL() throws Exception {
+        super.testUpdateJobRequest();
     }
 
     @Test

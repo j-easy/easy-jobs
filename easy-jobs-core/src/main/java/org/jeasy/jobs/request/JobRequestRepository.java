@@ -24,29 +24,18 @@ public class JobRequestRepository {
     }
 
     public void save(JobRequest jobRequest) {
-        sessionFactory.getCurrentSession().saveOrUpdate(jobRequest);
+        sessionFactory.getCurrentSession().save(jobRequest);
     }
 
-    public void updateStatusAndProcessingDate(int jobRequestId, JobRequestStatus status, LocalDateTime processingDate) {
-        Session session = sessionFactory.getCurrentSession();
-        JobRequest jobRequest = session.get(JobRequest.class, jobRequestId);
-        jobRequest.setStatus(status);
-        jobRequest.setProcessingDate(processingDate);
-        session.update(jobRequest);
+    public void update(JobRequest jobRequest) {
+        sessionFactory.getCurrentSession().update(jobRequest);
     }
 
-    public void updateStatus(int jobRequestId, JobRequestStatus status) {
-        Session session = sessionFactory.getCurrentSession();
-        JobRequest jobRequest = session.get(JobRequest.class, jobRequestId);
-        jobRequest.setStatus(status);
-        session.update(jobRequest);
-    }
-
-    public List<JobRequest> getPendingJobRequests() {
+    public List<JobRequest> findJobRequestsByStatus(JobRequestStatus status) {
         // TODO order by priority
         Session session = sessionFactory.getCurrentSession();
         Query<JobRequest> query = session.createQuery("from JobRequest where status = :status ", JobRequest.class);
-        query.setParameter("status", JobRequestStatus.PENDING);
+        query.setParameter("status", status);
         return query.list();
     }
 

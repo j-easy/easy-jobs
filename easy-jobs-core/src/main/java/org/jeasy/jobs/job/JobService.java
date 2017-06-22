@@ -52,18 +52,28 @@ public class JobService {
     private void saveJobExecutionAndUpdateItsCorrespondingRequest(int requestId) {
         JobExecution jobExecution = newJobExecution().withRequestId(requestId).withJobExecutionStatus(JobExecutionStatus.RUNNING).withStartDate(LocalDateTime.now());
         jobExecutionDAO.save(jobExecution);
-        jobRequestRepository.updateStatus(requestId, JobRequestStatus.SUBMITTED);
+        JobRequest jobRequest = jobRequestRepository.findById(requestId);
+        jobRequest.setStatus(JobRequestStatus.SUBMITTED);
+        jobRequestRepository.update(jobRequest);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateJobExecutionAndItsCorrespondingRequest(int requestId, JobExitStatus jobExitStatus) {
-        jobExecutionDAO.update(requestId, jobExitStatus, LocalDateTime.now());
-        jobRequestRepository.updateStatusAndProcessingDate(requestId, JobRequestStatus.PROCESSED, LocalDateTime.now());
+        JobExecution jobExecution = jobExecutionDAO.findByJobRequestId(requestId);
+        jobExecution.setJobExecutionStatus(JobExecutionStatus.FINISHED);
+        jobExecution.setJobExitStatus(jobExitStatus);
+        jobExecution.setEndDate(LocalDateTime.now());
+        jobExecutionDAO.update(jobExecution);
+
+        JobRequest jobRequest = jobRequestRepository.findById(requestId);
+        jobRequest.setStatus(JobRequestStatus.PROCESSED);
+        jobRequest.setProcessingDate(LocalDateTime.now());
+        jobRequestRepository.update(jobRequest);
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void pollRequestsAndSubmitJobs() {
-        List<JobRequest> pendingJobRequests = jobRequestRepository.getPendingJobRequests(); // add limit 10 (nb workers) and you have throttling/back pressure for free!
+        List<JobRequest> pendingJobRequests = jobRequestRepository.findJobRequestsByStatus(JobRequestStatus.PENDING); // add limit 10 (nb workers) and you have throttling/back pressure for free!
         if (pendingJobRequests.isEmpty()) {
             return;
         }
@@ -91,20 +101,14 @@ public class JobService {
     }
 
     private DefaultJob createJob(int id, int requestId, String parameters) throws Exception {
-        JobDefinition jobDefinition = jobDefinitions.get(id); // never return null, validated upfront
-        String jobClass = jobDefinition.getClazz();
-        String jobMethod = jobDefinition.getMethod();
-        return createJob(requestId, jobClass, jobMethod, parameters);
-    }
-
-    private DefaultJob createJob(int requestId, String jobType, String jobMethod, String parameters) throws Exception {
-        Class<?> jobClass = Class.forName(jobType);
+        JobDefinition jobDefinition = jobDefinitions.get(id);
+        Class<?> jobClass = Class.forName(jobDefinition.getClazz());
         Object jobInstance = jobClass.newInstance();
         Map<String, String> parsedParameters = Utils.parseParameters(parameters);
         for (Map.Entry<String, String> entry : parsedParameters.entrySet()) {
             BeanUtils.setProperty(jobInstance, entry.getKey(), entry.getValue());
         }
-        Method method = jobClass.getMethod(jobMethod);
+        Method method = jobClass.getMethod(jobDefinition.getMethod());
         return new DefaultJob(requestId, jobInstance, method, this);
     }
 
