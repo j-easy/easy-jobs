@@ -5,7 +5,9 @@ import org.jeasy.jobs.job.JobDefinition;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class JobDefinitions {
 
@@ -34,5 +36,13 @@ public class JobDefinitions {
             return new JobDefinitions(jobDefinitions);
         }
 
+    }
+
+    Map<Integer, JobDefinition> mapJobDefinitionsToJobIdentifiers() {
+        Map<Integer, JobDefinition> jobDefinitionsMap = new HashMap<>();
+        for (JobDefinition jobDefinition : jobDefinitions) {
+            jobDefinitionsMap.put(jobDefinition.getId(), jobDefinition);
+        }
+        return jobDefinitionsMap;
     }
 }

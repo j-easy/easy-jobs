@@ -21,8 +21,6 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 import javax.sql.DataSource;
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -57,10 +55,9 @@ public class JobServer {
             init(dataSource, jobDefinitions, applicationContext);
         }
 
-        Map<Integer, JobDefinition> jobDefinitionsMap = mapJobDefinitionsToJobIdentifiers(jobDefinitions);
         JobService jobService = applicationContext.getBean(JobService.class);
         jobService.setExecutorService(executorService(jobServerConfiguration.getWorkersNumber()));
-        jobService.setJobDefinitions(jobDefinitionsMap);
+        jobService.setJobDefinitions(jobDefinitions.mapJobDefinitionsToJobIdentifiers());
         JobRequestPoller jobRequestPoller = new JobRequestPoller(jobService);
         SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(jobRequestPoller, 0, jobServerConfiguration.getPollingInterval(), TimeUnit.SECONDS);
         LOGGER.info("Job server started");
@@ -71,14 +68,6 @@ public class JobServer {
         return new Object[]{
                 JobServer.class, ContextConfiguration.class, JobController.class,
                 JobRequestController.class, JobExecutionController.class};
-    }
-
-    private static Map<Integer, JobDefinition> mapJobDefinitionsToJobIdentifiers(JobDefinitions definitions) {
-        Map<Integer, JobDefinition> jobDefinitions = new HashMap<>();
-        for (JobDefinition jobDefinition : definitions.getJobDefinitions()) {
-            jobDefinitions.put(jobDefinition.getId(), jobDefinition);
-        }
-        return jobDefinitions;
     }
 
     private static void init(DataSource dataSource, JobDefinitions jobDefinitions, ApplicationContext ctx) {
