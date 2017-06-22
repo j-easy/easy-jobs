@@ -24,6 +24,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 @EnableAutoConfiguration(exclude = HibernateJpaAutoConfiguration.class)
 public class JobServer implements Runnable {
@@ -119,7 +120,12 @@ public class JobServer implements Runnable {
     }
 
     private static ExecutorService executorService(int workersNumber) {
-        return Executors.newFixedThreadPool(workersNumber, new WorkerThreadFactory());
+        final AtomicLong count = new AtomicLong(0);
+        return Executors.newFixedThreadPool(workersNumber, r -> {
+            Thread thread = new Thread(r);
+            thread.setName("worker-thread-" + count.incrementAndGet()); // make this configurable: easy.jobs.server.config.workers.name.prefix
+            return thread;
+        });
     }
 
 }
