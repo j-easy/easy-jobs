@@ -45,4 +45,12 @@ public class JobDefinitions {
         }
         return jobDefinitionsMap;
     }
+
+    static String getSimpleNameFrom(String fullyQualifiedName) {
+        int beginIndex = fullyQualifiedName.lastIndexOf('.');
+        if(beginIndex == -1) {
+            return fullyQualifiedName;
+        }
+        return fullyQualifiedName.substring(beginIndex + 1);
+    }
 }

@@ -33,7 +33,8 @@ public class DatabaseInitializer {
         for (JobDefinition jobDefinition : jobDefinitions.getJobDefinitions()) {
             String name = jobDefinition.getName();
             if (name == null) {
-                name = jobDefinition.getClazz(); // todo get simple class name from fully qualified name
+                name = JobDefinitions.getSimpleNameFrom(jobDefinition.getClazz());
+                jobDefinition.setName(name);
             }
             LOGGER.info("Registering " + jobDefinition);
             jobRepository.save(new Job(jobDefinition.getId(), name));
