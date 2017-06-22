@@ -7,20 +7,20 @@ public class JobServerConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JobServerConfiguration.class);
 
-    static final String WORKERS_NUMBER_PARAMETER_NAME = "easy.jobs.server.config.workers.number";
+    static final String WORKERS_POOL_SIZE_PARAMETER_NAME = "easy.jobs.server.config.workers.pool.size";
     static final String POLLING_INTERVAL_PARAMETER_NAME = "easy.jobs.server.config.polling.interval";
     static final String DATABASE_INIT_PARAMETER_NAME = "easy.jobs.server.config.database.init";
 
-    private int workersNumber = 10; // todo rename to workers pool size
+    private int workersPoolSize = 10; // todo rename to workers pool size
     private int pollingInterval = 30;
     private boolean databaseInit = false;
 
-    public int getWorkersNumber() {
-        return workersNumber;
+    public int getWorkersPoolSize() {
+        return workersPoolSize;
     }
 
-    public void setWorkersNumber(int workersNumber) {
-        this.workersNumber = workersNumber;
+    public void setWorkersPoolSize(int workersPoolSize) {
+        this.workersPoolSize = workersPoolSize;
     }
 
     public int getPollingInterval() {
@@ -42,7 +42,7 @@ public class JobServerConfiguration {
     @Override
     public String toString() {
         return "JobServerConfiguration {" +
-                "workersNumber=" + workersNumber +
+                "workersPoolSize=" + workersPoolSize +
                 ", pollingInterval=" + pollingInterval +
                 ", databaseInit=" + databaseInit +
                 '}';
@@ -52,7 +52,7 @@ public class JobServerConfiguration {
 
         JobServerConfiguration loadServerConfiguration() {
             JobServerConfiguration jobServerConfiguration = new JobServerConfiguration();
-            loadWorkersNumberParameter(jobServerConfiguration);
+            loadWorkersPoolSizeParameter(jobServerConfiguration);
             loadPollingIntervalParameter(jobServerConfiguration);
             loadDatabaseInitParameter(jobServerConfiguration);
             return jobServerConfiguration;
@@ -84,14 +84,14 @@ public class JobServerConfiguration {
             }
         }
 
-        private void loadWorkersNumberParameter(JobServerConfiguration jobServerConfiguration) {
-            String workersNumberParameter = System.getProperty(JobServerConfiguration.WORKERS_NUMBER_PARAMETER_NAME);
-            if (workersNumberParameter != null) {
+        private void loadWorkersPoolSizeParameter(JobServerConfiguration jobServerConfiguration) {
+            String workersPoolSizeParameter = System.getProperty(JobServerConfiguration.WORKERS_POOL_SIZE_PARAMETER_NAME);
+            if (workersPoolSizeParameter != null) {
                 try {
-                    int workersNumber = Integer.parseInt(workersNumberParameter);
-                    jobServerConfiguration.setWorkersNumber(workersNumber);
+                    int workersNumber = Integer.parseInt(workersPoolSizeParameter);
+                    jobServerConfiguration.setWorkersPoolSize(workersNumber);
                 } catch (NumberFormatException e) {
-                    LOGGER.warn("Unable to read workers number parameter value, I will use the default value:" + jobServerConfiguration.getWorkersNumber(), e);
+                    LOGGER.warn("Unable to read workers pool size parameter value, I will use the default value:" + jobServerConfiguration.getWorkersPoolSize(), e);
                 }
             }
         }

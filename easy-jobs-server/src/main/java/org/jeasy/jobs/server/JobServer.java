@@ -35,7 +35,7 @@ public class JobServer {
         }
 
         JobService jobService = applicationContext.getBean(JobService.class);
-        jobService.setExecutorService(executorService(jobServerConfiguration.getWorkersNumber()));
+        jobService.setExecutorService(executorService(jobServerConfiguration.getWorkersPoolSize()));
         jobService.setJobDefinitions(jobDefinitions.mapJobDefinitionsToJobIdentifiers());
         JobRequestPoller jobRequestPoller = new JobRequestPoller(jobService);
         SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(jobRequestPoller, 0, jobServerConfiguration.getPollingInterval(), TimeUnit.SECONDS);
@@ -67,9 +67,9 @@ public class JobServer {
         }));
     }
 
-    private static ExecutorService executorService(int workersNumber) {
+    private static ExecutorService executorService(int workersPoolSize) {
         final AtomicLong count = new AtomicLong(0);
-        return Executors.newFixedThreadPool(workersNumber, r -> {
+        return Executors.newFixedThreadPool(workersPoolSize, r -> {
             Thread thread = new Thread(r);
             thread.setName("worker-thread-" + count.incrementAndGet()); // make this configurable: easy.jobs.server.config.workers.name.prefix
             return thread;
