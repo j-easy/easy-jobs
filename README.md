@@ -97,7 +97,7 @@ To run the server, you can use the following command:
 
 ```
 java -cp "lib/*:jobs/*:drivers/h2/*" \
- -Deasy.jobs.server.config.file=path/to/deployment/descriptor \
+ -Deasy.jobs.server.jobs.config.file=path/to/deployment/descriptor \
  -Deasy.jobs.server.config.database.init=true \
   org.jeasy.jobs.server.JobServer
 ```
