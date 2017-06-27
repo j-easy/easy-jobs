@@ -100,4 +100,16 @@ public class JobExecution {
         this.endDate = endDate;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "JobExecution {" +
+                "id=" + id +
+                ", requestId=" + requestId +
+                ", jobExecutionStatus=" + jobExecutionStatus +
+                ", jobExitStatus=" + jobExitStatus +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                '}';
+    }
 }
