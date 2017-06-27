@@ -2,7 +2,7 @@ package org.jeasy.jobs.server;
 
 import org.jeasy.jobs.ContextConfiguration;
 import org.jeasy.jobs.job.JobDefinition;
-import org.jeasy.jobs.job.JobService;
+import org.jeasy.jobs.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -36,10 +36,8 @@ public class JobServer {
             databaseInitializer.init(dataSource, jobDefinitions);
         }
 
-        JobService jobService = applicationContext.getBean(JobService.class);
-        jobService.setExecutorService(executorService(jobServerConfiguration.getWorkersPoolSize()));
-        jobService.setJobDefinitions(jobDefinitions.mapJobDefinitionsToJobIdentifiers());
-        JobRequestPoller jobRequestPoller = new JobRequestPoller(jobService);
+        Service service = applicationContext.getBean(Service.class);
+        JobRequestPoller jobRequestPoller = new JobRequestPoller(service, executorService(jobServerConfiguration.getWorkersPoolSize()), jobDefinitions.mapJobDefinitionsToJobIdentifiers());
         SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(jobRequestPoller, 0, jobServerConfiguration.getPollingInterval(), TimeUnit.SECONDS);
         LOGGER.info("Job server started");
         registerShutdownHook();

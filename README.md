@@ -161,9 +161,9 @@ Great! the job has been executed and finished sucessfully. You should have seen 
 2017-06-23 09:25:13.911  INFO 11464 --- [pool-1-thread-1] org.jeasy.jobs.job.JobService            : Found 1 pending job request(s)
 2017-06-23 09:25:13.912  INFO 11464 --- [pool-1-thread-1] org.jeasy.jobs.job.JobService            : Creating a new job for request 1 with parameters [{"jobId":"1", "name":"world"}]
 2017-06-23 09:25:13.946  INFO 11464 --- [pool-1-thread-1] org.jeasy.jobs.job.JobService            : Submitted a new job for request 1
-2017-06-23 09:25:13.946  INFO 11464 --- [worker-thread-1] org.jeasy.jobs.job.DefaultJob            : Processing job request with id 1
+2017-06-23 09:25:13.946  INFO 11464 --- [worker-thread-1] org.jeasy.jobs.server.DefaultJob            : Processing job request with id 1
 Hello world
-2017-06-23 09:25:14.025  INFO 11464 --- [worker-thread-1] org.jeasy.jobs.job.DefaultJob            : Successfully processed job request with id 1
+2017-06-23 09:25:14.025  INFO 11464 --- [worker-thread-1] org.jeasy.jobs.server.DefaultJob            : Successfully processed job request with id 1
 ```
 
 That's it! You can find more details on how to configure the server in the [wiki](https://github.com/j-easy/easy-jobs/wiki).

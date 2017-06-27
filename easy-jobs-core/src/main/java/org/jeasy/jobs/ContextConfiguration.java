@@ -3,7 +3,6 @@ package org.jeasy.jobs;
 import org.hibernate.SessionFactory;
 import org.jeasy.jobs.execution.JobExecutionRepository;
 import org.jeasy.jobs.job.JobRepository;
-import org.jeasy.jobs.job.JobService;
 import org.jeasy.jobs.request.JobRequestRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,8 +75,8 @@ public class ContextConfiguration {
     }
 
     @Bean
-    public JobService jobService() {
-        return new JobService(jobExecutionRepository(), jobRequestRepository(), jobRepository());
+    public Service service() {
+        return new Service(jobExecutionRepository(), jobRequestRepository(), jobRepository());
     }
 
     @Bean

@@ -1,38 +1,40 @@
-package org.jeasy.jobs.job;
+package org.jeasy.jobs.server;
 
+import org.jeasy.jobs.job.JobExitStatus;
+import org.jeasy.jobs.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
 
-public class DefaultJob implements Callable<JobExitStatus> {
+class DefaultJob implements Callable<JobExitStatus> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultJob.class);
 
     private int requestId;
-    private JobService jobService;
+    private Service service;
 
     private Object target;
     private Method method;
 
-    public DefaultJob(int requestId, Object target, Method method, JobService jobService) {
+    DefaultJob(int requestId, Object target, Method method, Service service) {
         this.requestId = requestId;
         this.target = target;
         this.method = method;
-        this.jobService = jobService;
+        this.service = service;
     }
 
     public final JobExitStatus call() {
         try {
             LOGGER.info("Processing job request with id " + requestId);
             method.invoke(target);
-            jobService.updateJobExecutionAndItsCorrespondingRequest(requestId, JobExitStatus.SUCCEEDED);
+            service.updateJobExecutionAndItsCorrespondingRequest(requestId, JobExitStatus.SUCCEEDED);
             LOGGER.info("Successfully processed job request with id " + requestId);
             return JobExitStatus.SUCCEEDED;
         } catch (Exception e) {
             LOGGER.error("Processing of request with id " + requestId + " has failed", e);
-            jobService.updateJobExecutionAndItsCorrespondingRequest(requestId, JobExitStatus.FAILED);
+            service.updateJobExecutionAndItsCorrespondingRequest(requestId, JobExitStatus.FAILED);
             return JobExitStatus.FAILED;
         }
     }
