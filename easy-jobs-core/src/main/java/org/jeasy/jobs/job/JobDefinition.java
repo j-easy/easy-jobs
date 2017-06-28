@@ -1,12 +1,9 @@
 package org.jeasy.jobs.job;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class JobDefinition {
 
         private int id;
         private String name;
-        @JsonProperty("class")
         private String clazz;
         private String method;
 
@@ -47,7 +44,7 @@ public class JobDefinition {
 
         @Override
         public String toString() {
-            return "Job {" +
+            return "JobDefinition {" +
                     "id=" + id +
                     ", name='" + name + '\'' +
                     ", class='" + clazz + '\'' +

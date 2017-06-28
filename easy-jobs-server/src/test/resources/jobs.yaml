@@ -1,0 +1,10 @@
+---
+id: 1
+name: my first job
+class: org.mycompany.jobs.MyFirstJob
+method: doWork
+---
+id: 2
+name: my second job
+class: org.mycompany.jobs.MySecondJob
+method: doWork

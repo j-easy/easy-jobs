@@ -1,14 +1,12 @@
 package org.jeasy.jobs.server;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jeasy.jobs.job.JobDefinition;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
+import java.io.FileReader;
 import java.lang.reflect.Constructor;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.lang.String.format;
 
@@ -41,10 +39,27 @@ public class JobDefinitions {
     }
 
     static class Reader {
-        private ObjectMapper mapper = new ObjectMapper();
+        private Yaml yaml = new Yaml();
+
         JobDefinitions read(File file) throws Exception {
-            List<JobDefinition> jobDefinitions = Arrays.asList(mapper.readValue(file, JobDefinition[].class));
+            Iterable<Object> objects = yaml.loadAll(new FileReader(file));
+            List<JobDefinition> jobDefinitions = new ArrayList<>();
+            for (Object object : objects) {
+                Map<String, Object> map = (Map<String, Object>) object;
+                JobDefinition jobDefinition = createJobDefinition(map);
+                jobDefinitions.add(jobDefinition);
+            }
             return new JobDefinitions(jobDefinitions, file.getAbsolutePath());
+        }
+
+        private JobDefinition createJobDefinition(Map<String, Object> map) {
+            JobDefinition jobDefinition = new JobDefinition();
+            // todo add sanity checks
+            jobDefinition.setId((Integer) map.get("id"));
+            jobDefinition.setName((String) map.get("name"));
+            jobDefinition.setClazz((String) map.get("class"));
+            jobDefinition.setMethod((String) map.get("method"));
+            return jobDefinition;
         }
     }
 

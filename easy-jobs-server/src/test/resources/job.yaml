@@ -1,0 +1,4 @@
+id: 1
+name: my first job
+class: org.mycompany.jobs.MyFirstJob
+method: doWork
