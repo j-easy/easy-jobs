@@ -1,1 +1,1 @@
-put jobs jars and their dependencies here
+put jobs classes or jars and their dependencies here

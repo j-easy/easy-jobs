@@ -12,6 +12,9 @@
             <outputDirectory>jobs</outputDirectory>
             <includes>
                 <include>*.txt</include>
+                <include>*.jar</include>
+                <include>*.java</include>
+                <include>*.yml</include>
             </includes>
         </fileSet>
         <!--lib-->

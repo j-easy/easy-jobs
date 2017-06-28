@@ -1,0 +1,5 @@
+---
+id: 1
+name: hello world job
+class: HelloWorldJob
+method: doWork
