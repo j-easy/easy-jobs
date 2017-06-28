@@ -13,6 +13,7 @@ import static java.lang.String.format;
 public class JobDefinitions {
 
     static final String JOBS_DEFINITIONS_CONFIGURATION_FILE_PARAMETER_NAME = "easy.jobs.server.jobs.config.file";
+    static final String JOBS_DEFINITIONS_CONFIGURATION_PATH_PARAMETER_NAME = "easy.jobs.server.jobs.config.path";
 
     private String sourceFile;
     private List<JobDefinition> jobDefinitions;
@@ -64,13 +65,20 @@ public class JobDefinitions {
     }
 
     static class Validator {
+
+        private ClassLoader classLoader;
+
+        public Validator(ClassLoader classLoader) {
+            this.classLoader = classLoader;
+        }
+
         public void validate(JobDefinition jobDefinition) throws InvalidJobDefinitionException {
             // validation is done in separate try/catch blocks to provide a detailed error message for each case
 
             // validate job class
             Class<?> jobClass;
             try {
-                jobClass = Class.forName(jobDefinition.getClazz());
+                jobClass = Class.forName(jobDefinition.getClazz(), true, classLoader);
             } catch (ClassNotFoundException e) {
                 throw new InvalidJobDefinitionException(format("Unable to load class %s for job '%s'. The job class must be included in the classpath", jobDefinition.getClazz(), jobDefinition.getName()), e);
             }

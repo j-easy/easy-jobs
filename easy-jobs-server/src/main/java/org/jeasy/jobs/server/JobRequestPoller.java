@@ -22,11 +22,13 @@ public class JobRequestPoller implements Runnable {
     private Service jobService;
     private ExecutorService executorService;
     private Map<Integer, JobDefinition> jobDefinitions;
+    private ClassLoader jobClassLoader;
 
-    public JobRequestPoller(Service jobService, ExecutorService executorService, Map<Integer, JobDefinition> jobDefinitions) {
+    public JobRequestPoller(Service jobService, ExecutorService executorService, Map<Integer, JobDefinition> jobDefinitions, ClassLoader jobClassLoader) {
         this.jobService = jobService;
         this.executorService = executorService;
         this.jobDefinitions = jobDefinitions;
+        this.jobClassLoader = jobClassLoader;
     }
 
     @Override
@@ -60,7 +62,7 @@ public class JobRequestPoller implements Runnable {
 
     private DefaultJob createJob(int id, int requestId, String parameters) throws Exception {
         JobDefinition jobDefinition = jobDefinitions.get(id);
-        Class<?> jobClass = Class.forName(jobDefinition.getClazz());
+        Class<?> jobClass = Class.forName(jobDefinition.getClazz(), false, jobClassLoader);
         Object jobInstance = jobClass.newInstance();
         Map<String, String> parsedParameters = Utils.parseParameters(parameters);
         for (Map.Entry<String, String> entry : parsedParameters.entrySet()) {

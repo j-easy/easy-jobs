@@ -5,7 +5,7 @@ import org.junit.Test;
 
 public class ValidatorTest {
 
-    private JobDefinitions.Validator validator = new JobDefinitions.Validator();
+    private JobDefinitions.Validator validator = new JobDefinitions.Validator(ValidatorTest.class.getClassLoader());
 
     @Test(expected = JobDefinitions.InvalidJobDefinitionException.class)
     public void jobClassMustProvideDefaultConstructor() throws Exception {

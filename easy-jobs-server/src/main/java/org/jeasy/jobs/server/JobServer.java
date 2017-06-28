@@ -13,6 +13,12 @@ import org.springframework.context.annotation.ComponentScan;
 
 import javax.sql.DataSource;
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -24,8 +30,9 @@ public class JobServer {
     private static final ScheduledExecutorService SCHEDULED_EXECUTOR_SERVICE = Executors.newSingleThreadScheduledExecutor();
 
     public static void main(String[] args) {
+        ClassLoader jobClassLoader = getClassLoaderForJobs();
         JobDefinitions jobDefinitions = failFastLoadJobDefinitions();
-        failFastLoadJobs(jobDefinitions);
+        failFastLoadJobs(jobDefinitions, jobClassLoader);
         ConfigurableApplicationContext applicationContext = SpringApplication.run(new Object[]{JobServer.class, ContextConfiguration.class}, args);
         JobServerConfiguration jobServerConfiguration = new JobServerConfiguration.Loader().loadServerConfiguration();
         LOGGER.info("Using job server configuration: " + jobServerConfiguration);
@@ -37,10 +44,41 @@ public class JobServer {
         }
 
         Service service = applicationContext.getBean(Service.class);
-        JobRequestPoller jobRequestPoller = new JobRequestPoller(service, executorService(jobServerConfiguration.getWorkersPoolSize()), jobDefinitions.mapJobDefinitionsToJobIdentifiers());
+        JobRequestPoller jobRequestPoller = new JobRequestPoller(
+                service,
+                executorService(jobServerConfiguration.getWorkersPoolSize()),
+                jobDefinitions.mapJobDefinitionsToJobIdentifiers(),
+                jobClassLoader);
         SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(jobRequestPoller, 0, jobServerConfiguration.getPollingInterval(), TimeUnit.SECONDS);
         LOGGER.info("Job server started");
         registerShutdownHook();
+    }
+
+    private static ClassLoader getClassLoaderForJobs() {
+        String directory = System.getProperty(JobDefinitions.JOBS_DEFINITIONS_CONFIGURATION_PATH_PARAMETER_NAME);
+        File file = new File(directory);
+        // add root directory to classpath (to load .class files)
+        List<URL> urls = new ArrayList<>();
+        try {
+            URL rootFolderUrl = file.toURI().toURL();
+            urls.add(rootFolderUrl);
+        } catch (MalformedURLException e) {
+            LOGGER.error("Unable to add directory " + file.getAbsolutePath() + " to classpath", e);
+        }
+        // add jar files to classpath
+        File[] jars = file.listFiles((dir, name) -> name.endsWith(".jar"));
+        if (jars != null) {
+            for (File jar : jars) {
+                try {
+                    URL url = jar.toURI().toURL();
+                    urls.add(url);
+                } catch (IOException e) {
+                    LOGGER.warn("Unable to add jar file " + jar.getAbsolutePath() + " to classpath", e);
+                }
+            }
+        }
+        URL[] urlsToLoad = new URL[urls.size()];
+        return new URLClassLoader(urls.toArray(urlsToLoad));
     }
 
     private static JobDefinitions failFastLoadJobDefinitions() {
@@ -60,8 +98,8 @@ public class JobServer {
         return jobDefinitions;
     }
 
-    private static void failFastLoadJobs(JobDefinitions jobDefinitions) {
-        JobDefinitions.Validator validator = new JobDefinitions.Validator();
+    private static void failFastLoadJobs(JobDefinitions jobDefinitions, ClassLoader classLoader) {
+        JobDefinitions.Validator validator = new JobDefinitions.Validator(classLoader);
         for (JobDefinition jobDefinition : jobDefinitions.getJobDefinitions()) {
             try {
                 validator.validate(jobDefinition);
