@@ -1,5 +1,6 @@
 package org.jeasy.jobs.server;
 
+import org.jeasy.jobs.DataSourceConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +11,6 @@ public class JobServerConfiguration {
     static final String WORKERS_POOL_SIZE_PARAMETER_NAME = "easy.jobs.server.config.workers.pool.size";
     static final String WORKERS_NAME_PREFIX_PARAMETER_NAME = "easy.jobs.server.config.workers.name.prefix";
     static final String POLLING_INTERVAL_PARAMETER_NAME = "easy.jobs.server.config.polling.interval";
-    static final String DATABASE_INIT_PARAMETER_NAME = "easy.jobs.server.config.database.init";
 
     private int workersPoolSize = 10; // todo rename to workers pool size
     private int pollingInterval = 30;
@@ -62,7 +62,7 @@ public class JobServerConfiguration {
         // TODO use Easy Props to inject these parameters in a declarative way and get rid of this boilerplate
 
         private void loadDatabaseInitParameter(JobServerConfiguration jobServerConfiguration) {
-            String databaseInitParameter = System.getProperty(JobServerConfiguration.DATABASE_INIT_PARAMETER_NAME);
+            String databaseInitParameter = System.getProperty(DataSourceConfiguration.DATA_SOURCE_CONFIGURATION_INIT);
             if (databaseInitParameter != null) {
                 try {
                     boolean databaseInit = Boolean.parseBoolean(databaseInitParameter);

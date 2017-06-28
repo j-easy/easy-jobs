@@ -12,8 +12,8 @@ import static java.lang.String.format;
 
 public class JobDefinitions {
 
-    static final String JOBS_DEFINITIONS_CONFIGURATION_FILE_PARAMETER_NAME = "easy.jobs.server.jobs.config.file";
-    static final String JOBS_DEFINITIONS_CONFIGURATION_PATH_PARAMETER_NAME = "easy.jobs.server.jobs.config.path";
+    static final String JOBS_DEFINITIONS_CONFIGURATION_FILE_PARAMETER_NAME = "easy.jobs.server.config.jobs.descriptor";
+    static final String JOBS_DEFINITIONS_CONFIGURATION_PATH_PARAMETER_NAME = "easy.jobs.server.config.jobs.directory";
 
     private String sourceFile;
     private List<JobDefinition> jobDefinitions;
