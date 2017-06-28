@@ -6,6 +6,15 @@
         <format>zip</format>
     </formats>
     <fileSets>
+        <!--configuration files-->
+        <fileSet>
+            <directory>src/assembly/conf</directory>
+            <outputDirectory>conf</outputDirectory>
+            <includes>
+                <include>*.properties</include>
+                <include>*.yml</include>
+            </includes>
+        </fileSet>
         <!--jobs-->
         <fileSet>
             <directory>src/assembly/jobs</directory>
@@ -14,7 +23,6 @@
                 <include>*.txt</include>
                 <include>*.jar</include>
                 <include>*.java</include>
-                <include>*.yml</include>
             </includes>
         </fileSet>
         <!--lib-->
