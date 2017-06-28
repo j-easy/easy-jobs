@@ -36,26 +36,26 @@ public class JobRequestController {
     @ResponseBody
     String postJobRequest(@RequestBody String parameters) throws Exception {
         if (parameters == null || parameters.isEmpty()) {
-            return "You must at least provide the jobId for which you want to request an execution";
+            return "You must at least provide the jobId for which you want to request an execution\n";
         }
         Map<String, String> parsedParameters = Utils.parseParameters(parameters);
         String jobId = parsedParameters.get("jobId");
         if (jobId == null) {
-            return "jobId parameter is mandatory";
+            return "jobId parameter is mandatory\n";
         }
         Integer jobIdentifier;
         try {
             jobIdentifier = Integer.parseInt(jobId);
         } catch (NumberFormatException e) {
-            return "jobId parameter must be an integer";
+            return "jobId parameter must be an integer\n";
         }
         if (jobRepository.findById(jobIdentifier) == null) {
-            return "No job registered with id = " + jobId;
+            return "No job registered with id = " + jobId + "\n";
         }
         JobRequest jobRequest = new JobRequest(jobIdentifier, parameters);
         jobRequestRepository.save(jobRequest);
-        LOGGER.info("Submitted a new job request for job " + jobId + " with parameters " + parsedParameters);
-        return "Job request submitted successfully";
+        LOGGER.info("Received a new job request for job " + jobId + " with parameters " + parsedParameters);
+        return "Job request submitted successfully\n";
     }
 
 }
