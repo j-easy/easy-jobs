@@ -15,6 +15,16 @@
                 <include>*.yml</include>
             </includes>
         </fileSet>
+        <!--binary scripts-->
+        <fileSet>
+            <directory>src/assembly/bin</directory>
+            <outputDirectory>bin</outputDirectory>
+            <includes>
+                <include>*.sh</include>
+            </includes>
+            <fileMode>0755</fileMode>
+            <lineEnding>unix</lineEnding>
+        </fileSet>
         <!--jobs-->
         <fileSet>
             <directory>src/assembly/jobs</directory>
