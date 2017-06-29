@@ -163,9 +163,7 @@ INFO: Successfully processed job request with id 1
 
 That's all! You can find more details on how to configure the server in the [wiki](https://github.com/j-easy/easy-jobs/wiki).
 
-You can also [download](https://github.com/j-easy/easy-jobs/issues/12) a pre-configured [insomnia](https://insomnia.rest/) workspace with all endpoints to help you play around with Easy Jobs server through its REST API:
-
-![insomnia](https://user-images.githubusercontent.com/1210553/27677978-cfa6f1f8-5cb3-11e7-9e0f-84160d7fd50e.png)
+You can also download a pre-configured [insomnia](https://github.com/j-easy/easy-jobs/issues/12) or [postman](https://github.com/j-easy/easy-jobs/issues/13) workspace with all endpoints to help you play around with Easy Jobs server through its REST API.
 
 ## Contribution
 
