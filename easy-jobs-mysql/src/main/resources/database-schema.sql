@@ -4,10 +4,16 @@
 drop table if exists job_execution;
 drop table if exists job_request;
 drop table if exists job;
+drop table if exists users; -- user is a keyword
 
 ------------------
 -- create tables
 ------------------
+
+create table users (
+  name varchar(255) primary key,
+  password varchar(1024)
+);
 
 create table job (
   id bigint primary key,

@@ -4,6 +4,7 @@ import org.hibernate.SessionFactory;
 import org.jeasy.jobs.execution.JobExecutionRepository;
 import org.jeasy.jobs.job.JobRepository;
 import org.jeasy.jobs.request.JobRequestRepository;
+import org.jeasy.jobs.user.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanInstantiationException;
@@ -42,6 +43,7 @@ public class ContextConfiguration {
         localSessionFactoryBean.setDataSource(dataSource);
         localSessionFactoryBean.setHibernateProperties(hibernateProperties);
         localSessionFactoryBean.setMappingLocations(
+                new ClassPathResource("user.hbm.xml"),
                 new ClassPathResource("job.hbm.xml"),
                 new ClassPathResource("jobRequest.hbm.xml"),
                 new ClassPathResource("jobExecution.hbm.xml")
@@ -57,6 +59,11 @@ public class ContextConfiguration {
     @Bean
     public HibernateTransactionManager transactionManager() {
         return new HibernateTransactionManager(sessionFactory());
+    }
+
+    @Bean
+    public UserRepository userRepository() {
+        return new UserRepository(sessionFactory());
     }
 
     @Bean
