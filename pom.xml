@@ -13,6 +13,7 @@
         <module>easy-jobs-dist</module>
         <module>easy-jobs-tests</module>
         <module>easy-jobs-server</module>
+        <module>easy-jobs-admin</module>
     </modules>
 
     <packaging>pom</packaging>
