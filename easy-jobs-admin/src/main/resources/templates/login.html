@@ -5,6 +5,17 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-<p>Login</p>
+<p th:text="${error}"></p>
+<form role="form" method="post" action="/login">
+    <fieldset>
+        <div>
+            <input placeholder="Name" id="name" name="name" type="text" autofocus="autofocus"/>
+        </div>
+        <div>
+            <input placeholder="Password" id="password" name="password" type="password" value=""/>
+        </div>
+        <button type="submit">Login</button>
+    </fieldset>
+</form>
 </body>
 </html>
