@@ -1,6 +1,5 @@
 package org.jeasy.jobs;
 
-import org.hibernate.SessionFactory;
 import org.jeasy.jobs.execution.JobExecutionRepository;
 import org.jeasy.jobs.job.JobRepository;
 import org.jeasy.jobs.request.JobRequestRepository;
@@ -52,33 +51,28 @@ public class ContextConfiguration {
     }
 
     @Bean
-    public SessionFactory sessionFactory() {
-        return localSessionFactoryBean().getObject();
-    }
-
-    @Bean
     public HibernateTransactionManager transactionManager() {
-        return new HibernateTransactionManager(sessionFactory());
+        return new HibernateTransactionManager(localSessionFactoryBean().getObject());
     }
 
     @Bean
     public UserRepository userRepository() {
-        return new UserRepository(sessionFactory());
+        return new UserRepository(localSessionFactoryBean().getObject());
     }
 
     @Bean
     public JobRepository jobRepository() {
-        return new JobRepository(sessionFactory());
+        return new JobRepository(localSessionFactoryBean().getObject());
     }
 
     @Bean
     public JobRequestRepository jobRequestRepository() {
-        return new JobRequestRepository(sessionFactory());
+        return new JobRequestRepository(localSessionFactoryBean().getObject());
     }
 
     @Bean
     public JobExecutionRepository jobExecutionRepository() {
-        return new JobExecutionRepository(sessionFactory());
+        return new JobExecutionRepository(localSessionFactoryBean().getObject());
     }
 
     @Bean
