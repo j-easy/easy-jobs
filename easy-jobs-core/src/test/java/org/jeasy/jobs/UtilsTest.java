@@ -22,4 +22,16 @@ public class UtilsTest {
         assertThat(parsedParameters.get("name")).isEqualTo("world");
     }
 
+    @Test
+    public void md5() throws Exception {
+        // given
+        String input = "admin";
+
+        // when
+        String actual = Utils.md5(input);
+
+        // then
+        assertThat(actual).isEqualTo("21232f297a57a5a743894a0e4a801fc3");
+    }
+
 }
