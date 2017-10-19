@@ -1,10 +1,63 @@
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="template">
+
 <head>
     <title>Easy Jobs Admin - Home</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
+
 <body>
-<p>Home</p>
+    <div layout:fragment="container-fluid">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card card-stats">
+                    <div class="card-header" data-background-color="orange">
+                        <i class="material-icons">settings</i>
+                    </div>
+                    <div class="card-content">
+                        <p class="category">Registered jobs</p>
+                        <h3 class="title"><span th:text="${nbJobs}"></span></h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <a href="/jobs">Show all jobs</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card card-stats">
+                    <div class="card-header" data-background-color="green">
+                        <i class="material-icons">play_arrow</i>
+                    </div>
+                    <div class="card-content">
+                        <p class="category">Job executions</p>
+                        <h3 class="title"><span th:text="${nbExecutions}"></span></h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <a href="/executions">Show all executions</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card card-stats">
+                    <div class="card-header" data-background-color="red">
+                        <i class="material-icons">mail_outline</i>
+                    </div>
+                    <div class="card-content">
+                        <p class="category">Job requests</p>
+                        <h3 class="title"><span th:text="${nbRequests}"></span></h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <a href="/requests">Show all requests</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>
