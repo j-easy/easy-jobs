@@ -32,7 +32,7 @@ public class LoginController {
             modelAndView.setViewName("login");
             modelAndView.addObject("error", "Invalid username/password");
         } else {
-            modelAndView.setViewName("home");
+            modelAndView.setViewName("redirect:/home");
             session.setAttribute("user", user);
         }
         return modelAndView;
