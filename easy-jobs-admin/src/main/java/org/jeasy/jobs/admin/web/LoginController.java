@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
-public class LoginController extends AbstractController {
+public class LoginController {
 
     @Autowired
     private UserRepository userRepository;
