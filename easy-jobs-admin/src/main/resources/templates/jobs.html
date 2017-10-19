@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="template">
+
+<head>
+    <title>Easy Jobs Admin - Jobs</title>
+</head>
+
+<body>
+    <div layout:fragment="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header" data-background-color="purple">
+                        <h4 class="title">Registered Jobs</h4>
+                    </div>
+                    <div class="card-content table-responsive">
+                        <table class="table">
+                            <thead class="text-primary">
+                            <th>Id</th>
+                            <th>Name</th>
+                            <!-- <th>Description</th> -->
+                            <th>Action</th>
+                            </thead>
+                            <tbody>
+                            <tr th:each="job : ${jobs}">
+                                <td th:text="${job.id}"></td>
+                                <td th:text="${job.name}"></td>
+                                <!-- <td th:text="${job.description}"></td> -->
+                                <td class="td-actions text-right">
+                                    <button type="button" rel="tooltip" title="Request execution" class="btn btn-primary btn-simple btn-xs">
+                                        <i class="material-icons">play_arrow</i>
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
