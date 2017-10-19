@@ -14,5 +14,5 @@ public abstract class AbstractController {
     @ModelAttribute("title")
     public abstract String title();
 
-    public abstract ModelAndView active(ModelAndView modelAndView);
+    public abstract boolean isActive();
 }
