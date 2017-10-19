@@ -23,25 +23,25 @@
         </div>
         <div class="sidebar-wrapper">
             <ul class="nav">
-                <li>
+                <li th:classappend="${homePage} ? active : ''">
                     <a href="/home">
                         <i class="material-icons">dashboard</i>
                         <p>Dashboard</p>
                     </a>
                 </li>
-                <li>
+                <li th:classappend="${jobsPage} ? active : ''">
                     <a href="/jobs">
                         <i class="material-icons">settings</i>
                         <p>Jobs</p>
                     </a>
                 </li>
-                <li>
+                <li th:classappend="${executionsPage} ? active : ''">
                     <a href="/executions">
                         <i class="material-icons">play_arrow</i>
                         <p>Job executions</p>
                     </a>
                 </li>
-                <li class="active">
+                <li th:classappend="${requestsPage} ? active : ''">
                     <a href="/requests">
                         <i class="material-icons">mail_outline</i>
                         <p>Job requests</p>
