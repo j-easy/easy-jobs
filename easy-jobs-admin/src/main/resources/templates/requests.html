@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="template">
+
+<head>
+    <title>Easy Jobs Admin - Job requests</title>
+</head>
+
+<body>
+    <div layout:fragment="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header" data-background-color="purple">
+                        <h4 class="title">Job requests</h4>
+                    </div>
+                    <div class="card-content table-responsive">
+                        <table class="table">
+                            <thead class="text-primary">
+                            <th>Id</th>
+                            <th>JobId</th>
+                            <th>Status</th>
+                            <th>Creation date</th>
+                            <th>Processing date</th>
+                            <th>Parameters</th>
+                            </thead>
+                            <tbody>
+                            <tr th:each="request : ${requests}">
+                                <td th:text="${request.id}"></td>
+                                <td th:text="${request.jobId}"></td>
+                                <td th:text="${request.status}"></td>
+                                <td th:text="${request.creationDate}"></td>
+                                <td th:text="${request.processingDate}"></td>
+                                <td th:text="${request.parameters}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
