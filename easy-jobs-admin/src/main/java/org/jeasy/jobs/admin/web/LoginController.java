@@ -19,8 +19,18 @@ public class LoginController {
     private UserRepository userRepository;
 
     @RequestMapping(method = RequestMethod.GET, path = "/")
-    public String login() {
-        return "login";
+    public ModelAndView home(ModelAndView modelAndView, HttpSession session) {
+        if (session.getAttribute("user") != null) {
+            modelAndView.setViewName("redirect:/home");
+        } else {
+            modelAndView.setViewName("/login");
+        }
+        return modelAndView;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/login")
+    public ModelAndView login(ModelAndView modelAndView, HttpSession session) {
+        return home(modelAndView, session);
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/login")
@@ -36,6 +46,12 @@ public class LoginController {
             session.setAttribute("user", user);
         }
         return modelAndView;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/login";
     }
 
 }
