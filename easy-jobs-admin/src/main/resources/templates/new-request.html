@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="template">
+
+<head>
+    <title>Easy Jobs Admin - New Job Execution Request</title>
+</head>
+
+<body>
+    <div layout:fragment="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header" data-background-color="purple">
+                        <h4 class="title">Create a new job execution request</h4>
+                    </div>
+                    <div class="card-content">
+                        <form action="/requests/new" method="post">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Job</label>
+                                        <select class="form-control" id="jobId" name="jobId">
+                                            <option th:each="job : ${jobs}" th:value="${job.id}"><span th:text="${job.name}"></span></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Job parameters</label>
+                                        <input type="text" id="jobParameters" name="jobParameters" class="form-control"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary pull-right">Submit</button>
+                            <div class="clearfix"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
