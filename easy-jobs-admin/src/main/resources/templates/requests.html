@@ -23,7 +23,7 @@
                         </h4>
                     </div>
                     <div class="card-content table-responsive">
-                        <table class="table">
+                        <table class="table table-striped" id="job-requests-table">
                             <thead class="text-primary">
                             <th>Id</th>
                             <th>JobId</th>
@@ -48,6 +48,11 @@
             </div>
         </div>
     </div>
+<script layout:fragment="custom-script">
+    $(document).ready(function() {
+        $('#job-requests-table').DataTable();
+    } );
+</script>
 </body>
 
 </html>

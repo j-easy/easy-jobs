@@ -14,7 +14,7 @@
                         <h4 class="title">Job executions</h4>
                     </div>
                     <div class="card-content table-responsive">
-                        <table class="table">
+                        <table class="table table-striped" id="job-executions-table">
                             <thead class="text-primary">
                             <th>Id</th>
                             <th>RequestId</th>
@@ -39,6 +39,11 @@
             </div>
         </div>
     </div>
+<script layout:fragment="custom-script">
+    $(document).ready(function() {
+        $('#job-executions-table').DataTable();
+    } );
+</script>
 </body>
 
 </html>
