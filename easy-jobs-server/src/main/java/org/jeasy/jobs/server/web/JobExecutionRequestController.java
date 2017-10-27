@@ -2,8 +2,8 @@ package org.jeasy.jobs.server.web;
 
 import org.jeasy.jobs.Utils;
 import org.jeasy.jobs.job.JobRepository;
-import org.jeasy.jobs.request.JobRequest;
-import org.jeasy.jobs.request.JobRequestRepository;
+import org.jeasy.jobs.request.JobExecutionRequest;
+import org.jeasy.jobs.request.JobExecutionRequestRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,28 +13,28 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-public class JobRequestController {
+public class JobExecutionRequestController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JobRequestController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JobExecutionRequestController.class);
 
     @Autowired
     private JobRepository jobRepository;
     @Autowired
-    private JobRequestRepository jobRequestRepository;
+    private JobExecutionRequestRepository jobExecutionRequestRepository;
 
     @RequestMapping("/requests/{id}")
-    JobRequest getJobRequest(@PathVariable int id) {
-        return jobRequestRepository.findById(id);
+    JobExecutionRequest getJobExecutionRequest(@PathVariable int id) {
+        return jobExecutionRequestRepository.findJobExecutionRequestById(id);
     }
 
     @RequestMapping(path = "/requests", method = RequestMethod.GET)
-    List<JobRequest> getAllJobRequests() {
-        return jobRequestRepository.findAllJobRequests();
+    List<JobExecutionRequest> getAllJobExecutionRequests() {
+        return jobExecutionRequestRepository.findAllJobExecutionRequests();
     }
 
     @RequestMapping(path = "/requests", method = RequestMethod.POST, consumes = {"application/json"})
     @ResponseBody
-    String postJobRequest(@RequestBody String parameters) throws Exception {
+    String postJobExecutionRequest(@RequestBody String parameters) throws Exception {
         if (parameters == null || parameters.isEmpty()) {
             return "You must at least provide the jobId for which you want to request an execution\n";
         }
@@ -52,9 +52,9 @@ public class JobRequestController {
         if (jobRepository.findById(jobIdentifier) == null) {
             return "No job registered with id = " + jobId + "\n";
         }
-        JobRequest jobRequest = new JobRequest(jobIdentifier, parameters);
-        jobRequestRepository.save(jobRequest);
-        LOGGER.info("Received a new job request for job " + jobId + " with parameters " + parsedParameters);
+        JobExecutionRequest jobExecutionRequest = new JobExecutionRequest(jobIdentifier, parameters);
+        jobExecutionRequestRepository.save(jobExecutionRequest);
+        LOGGER.info("Received a new job execution request for job " + jobId + " with parameters " + parsedParameters);
         return "Job request submitted successfully\n";
     }
 

@@ -2,7 +2,7 @@ package org.jeasy.jobs.admin.web;
 
 import org.jeasy.jobs.execution.JobExecutionRepository;
 import org.jeasy.jobs.job.JobRepository;
-import org.jeasy.jobs.request.JobRequestRepository;
+import org.jeasy.jobs.request.JobExecutionRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,14 +19,14 @@ public class HomeController extends AbstractController {
     private JobExecutionRepository jobExecutionRepository;
 
     @Autowired
-    private JobRequestRepository jobRequestRepository;
+    private JobExecutionRequestRepository jobExecutionRequestRepository;
 
     @RequestMapping("/home")
     public ModelAndView home() {
         ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("nbJobs", jobRepository.findAll().size());
         modelAndView.addObject("nbExecutions", jobExecutionRepository.findAllJobExecutions().size());
-        modelAndView.addObject("nbRequests", jobRequestRepository.findAllJobRequests().size());
+        modelAndView.addObject("nbRequests", jobExecutionRequestRepository.findAllJobExecutionRequests().size());
         return modelAndView;
     }
 

@@ -1,6 +1,6 @@
 package org.jeasy.jobs.request;
 
-public enum JobRequestStatus {
+public enum JobExecutionRequestStatus {
     PENDING,
     SUBMITTED,
     PROCESSED

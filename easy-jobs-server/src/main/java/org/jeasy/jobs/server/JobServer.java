@@ -44,12 +44,12 @@ public class JobServer {
         }
 
         Service service = applicationContext.getBean(Service.class);
-        JobRequestPoller jobRequestPoller = new JobRequestPoller(
+        JobExecutionRequestPoller jobExecutionRequestPoller = new JobExecutionRequestPoller(
                 service,
                 executorService(jobServerConfiguration.getWorkersPoolSize()),
                 jobDefinitions.mapJobDefinitionsToJobIdentifiers(),
                 jobClassLoader);
-        SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(jobRequestPoller, 0, jobServerConfiguration.getPollingInterval(), TimeUnit.SECONDS);
+        SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(jobExecutionRequestPoller, 0, jobServerConfiguration.getPollingInterval(), TimeUnit.SECONDS);
         LOGGER.info("Job server started");
         registerShutdownHook();
     }

@@ -2,7 +2,7 @@
 -- drop all tables
 ------------------
 drop table if exists ej_job_execution;
-drop table if exists ej_job_request;
+drop table if exists ej_job_execution_request;
 drop table if exists ej_job;
 drop table if exists ej_user;
 
@@ -20,7 +20,7 @@ create table ej_job (
   name varchar(255)
 );
 
-create table ej_job_request (
+create table ej_job_execution_request (
   id bigint auto_increment primary key,
   job_id bigint not null,
   parameters varchar(4096),
@@ -41,5 +41,5 @@ create table ej_job_execution (
 ------------------
 -- add constraints
 ------------------
-alter table ej_job_request add foreign key (job_id) references ej_job(id);
-alter table ej_job_execution add foreign key (request_id) references ej_job_request(id);
+alter table ej_job_execution_request add foreign key (job_id) references ej_job(id);
+alter table ej_job_execution add foreign key (request_id) references ej_job_execution_request(id);

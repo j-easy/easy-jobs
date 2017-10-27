@@ -1,8 +1,8 @@
 package org.jeasy.jobs.admin.web;
 
 import org.jeasy.jobs.job.JobRepository;
-import org.jeasy.jobs.request.JobRequest;
-import org.jeasy.jobs.request.JobRequestRepository;
+import org.jeasy.jobs.request.JobExecutionRequest;
+import org.jeasy.jobs.request.JobExecutionRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,18 +15,18 @@ import javax.servlet.http.HttpServletRequest;
 import static java.lang.Integer.parseInt;
 
 @Controller
-public class JobRequestsController extends AbstractController {
+public class JobExecutionRequestsController extends AbstractController {
 
     @Autowired
     private JobRepository jobRepository;
 
     @Autowired
-    private JobRequestRepository jobRequestRepository;
+    private JobExecutionRequestRepository jobExecutionRequestRepository;
 
     @RequestMapping("/requests")
     public ModelAndView requests() {
         ModelAndView modelAndView = new ModelAndView("requests");
-        modelAndView.addObject("requests", jobRequestRepository.findAllJobRequests());
+        modelAndView.addObject("requests", jobExecutionRequestRepository.findAllJobExecutionRequests());
         return modelAndView;
     }
 
@@ -41,7 +41,7 @@ public class JobRequestsController extends AbstractController {
     public ModelAndView createNewJobExecutionRequest(HttpServletRequest request) {
         String jobId = request.getParameter("jobId");
         String jobParameters = request.getParameter("jobParameters");
-        jobRequestRepository.save(new JobRequest(parseInt(jobId), jobParameters));
+        jobExecutionRequestRepository.save(new JobExecutionRequest(parseInt(jobId), jobParameters));
         return requests();
     }
 

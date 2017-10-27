@@ -6,8 +6,8 @@ import org.jeasy.jobs.execution.JobExecutionStatus;
 import org.jeasy.jobs.job.Job;
 import org.jeasy.jobs.job.JobRepository;
 import org.jeasy.jobs.job.JobExitStatus;
-import org.jeasy.jobs.request.JobRequestRepository;
-import org.jeasy.jobs.request.JobRequestStatus;
+import org.jeasy.jobs.request.JobExecutionRequestRepository;
+import org.jeasy.jobs.request.JobExecutionRequestStatus;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -26,7 +26,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.jeasy.jobs.execution.JobExecution.newJobExecution;
-import static org.jeasy.jobs.request.JobRequest.newJobRequest;
+import static org.jeasy.jobs.request.JobExecutionRequest.newJobExecutionRequest;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @org.springframework.test.context.ContextConfiguration(classes = {ContextConfiguration.class})
@@ -37,7 +37,7 @@ public abstract class AbstractJobExecutionRepositoryTest {
     @Autowired
     private JobRepository jobRepository;
     @Autowired
-    private JobRequestRepository jobRequestRepository;
+    private JobExecutionRequestRepository jobExecutionRequestRepository;
     @Autowired
     private JobExecutionRepository jobExecutionRepository;
 
@@ -60,7 +60,7 @@ public abstract class AbstractJobExecutionRepositoryTest {
     public void testJobExecutionPersistence() throws Exception {
         // given
         jobRepository.save(new Job(1, "MyJob"));
-        jobRequestRepository.save(newJobRequest().withJobId(1).withParameters("").withStatus(JobRequestStatus.PENDING).withCreationDate(LocalDateTime.now()));
+        jobExecutionRequestRepository.save(newJobExecutionRequest().withJobId(1).withParameters("").withStatus(JobExecutionRequestStatus.PENDING).withCreationDate(LocalDateTime.now()));
 
         // when
         jobExecutionRepository.save(newJobExecution().withRequestId(1).withJobExecutionStatus(JobExecutionStatus.RUNNING).withStartDate(LocalDateTime.now()));
@@ -75,7 +75,7 @@ public abstract class AbstractJobExecutionRepositoryTest {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime endDate = now.plus(2, ChronoUnit.MINUTES);
         jobRepository.save(new Job(1, "MyJob"));
-        jobRequestRepository.save(newJobRequest().withJobId(1).withParameters("").withStatus(JobRequestStatus.PENDING).withCreationDate(now));
+        jobExecutionRequestRepository.save(newJobExecutionRequest().withJobId(1).withParameters("").withStatus(JobExecutionRequestStatus.PENDING).withCreationDate(now));
         JobExecution jobExecution = newJobExecution().withRequestId(1).withJobExecutionStatus(JobExecutionStatus.RUNNING).withStartDate(now);
         jobExecutionRepository.save(jobExecution);
 
@@ -85,7 +85,7 @@ public abstract class AbstractJobExecutionRepositoryTest {
         jobExecutionRepository.update(jobExecution);
 
         // then
-        JobExecution updatedJobExecution = jobExecutionRepository.findByJobRequestId(1);
+        JobExecution updatedJobExecution = jobExecutionRepository.findByJobExecutionRequestId(1);
         assertThat(updatedJobExecution.getJobExitStatus()).isEqualTo(JobExitStatus.SUCCEEDED);
         assertThat(updatedJobExecution.getEndDate()).isEqualToIgnoringSeconds(endDate); // sometimes this test fails when ignoring only nanoseconds
     }
@@ -95,8 +95,8 @@ public abstract class AbstractJobExecutionRepositoryTest {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime endDate = now.plus(2, ChronoUnit.MINUTES);
         jobRepository.save(new Job(1, "MyJob"));
-        jobRequestRepository.save(newJobRequest().withJobId(1).withParameters("x=1").withStatus(JobRequestStatus.SUBMITTED).withCreationDate(now));
-        jobRequestRepository.save(newJobRequest().withJobId(1).withParameters("x=2").withStatus(JobRequestStatus.PROCESSED).withCreationDate(now).withProcessingDate(endDate));
+        jobExecutionRequestRepository.save(newJobExecutionRequest().withJobId(1).withParameters("x=1").withStatus(JobExecutionRequestStatus.SUBMITTED).withCreationDate(now));
+        jobExecutionRequestRepository.save(newJobExecutionRequest().withJobId(1).withParameters("x=2").withStatus(JobExecutionRequestStatus.PROCESSED).withCreationDate(now).withProcessingDate(endDate));
         jobExecutionRepository.save(newJobExecution().withRequestId(1).withJobExecutionStatus(JobExecutionStatus.RUNNING).withStartDate(now));
         jobExecutionRepository.save(newJobExecution().withRequestId(2).withJobExecutionStatus(JobExecutionStatus.FINISHED).withJobExitStatus(JobExitStatus.SUCCEEDED).withStartDate(now).withEndDate(endDate));
 

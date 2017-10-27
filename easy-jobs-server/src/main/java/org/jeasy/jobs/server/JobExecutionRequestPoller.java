@@ -5,7 +5,7 @@ import org.jeasy.jobs.Utils;
 import org.jeasy.jobs.job.JobDefinition;
 import org.jeasy.jobs.job.JobExitStatus;
 import org.jeasy.jobs.Service;
-import org.jeasy.jobs.request.JobRequest;
+import org.jeasy.jobs.request.JobExecutionRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,16 +15,16 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
-public class JobRequestPoller implements Runnable {
+public class JobExecutionRequestPoller implements Runnable {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JobRequestPoller.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JobExecutionRequestPoller.class);
 
     private Service jobService;
     private ExecutorService executorService;
     private Map<Integer, JobDefinition> jobDefinitions;
     private ClassLoader jobClassLoader;
 
-    public JobRequestPoller(Service jobService, ExecutorService executorService, Map<Integer, JobDefinition> jobDefinitions, ClassLoader jobClassLoader) {
+    public JobExecutionRequestPoller(Service jobService, ExecutorService executorService, Map<Integer, JobDefinition> jobDefinitions, ClassLoader jobClassLoader) {
         this.jobService = jobService;
         this.executorService = executorService;
         this.jobDefinitions = jobDefinitions;
@@ -33,15 +33,15 @@ public class JobRequestPoller implements Runnable {
 
     @Override
     public void run() {
-        List<JobRequest> pendingJobRequests = jobService.findPendingRequests(); // add limit 10 (nb workers) and you have throttling/back pressure for free!
-        if (pendingJobRequests.isEmpty()) {
+        List<JobExecutionRequest> pendingJobExecutionRequests = jobService.findPendingRequests(); // add limit 10 (nb workers) and you have throttling/back pressure for free!
+        if (pendingJobExecutionRequests.isEmpty()) {
             return;
         }
-        LOGGER.info("Found " + pendingJobRequests.size() + " pending job request(s)");
-        for (JobRequest pendingJobRequest : pendingJobRequests) {
-            int requestId = pendingJobRequest.getId();
-            int jobId = pendingJobRequest.getJobId();
-            String parameters = pendingJobRequest.getParameters();
+        LOGGER.info("Found " + pendingJobExecutionRequests.size() + " pending job request(s)");
+        for (JobExecutionRequest pendingJobExecutionRequest : pendingJobExecutionRequests) {
+            int requestId = pendingJobExecutionRequest.getId();
+            int jobId = pendingJobExecutionRequest.getJobId();
+            String parameters = pendingJobExecutionRequest.getParameters();
             if (jobService.findJobById(jobId) == null) { // this is an extra check on the core side, the web controller already filters bad requests upfront
                 LOGGER.warn("Unable to find a job with id " + jobId + ". Ignoring request with id " + requestId);
                 continue;

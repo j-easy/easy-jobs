@@ -5,7 +5,7 @@
 
 <hibernate-mapping package="org.jeasy.jobs.request">
 
-    <class name="JobRequest" table="ej_job_request">
+    <class name="JobExecutionRequest" table="ej_job_execution_request">
         <id name="id" column="id">
                 <generator class="native"/>
         </id>
@@ -13,7 +13,7 @@
         <property name="parameters" type="string"/>
         <property name="status">
             <type name="org.hibernate.type.EnumType">
-                <param name="enumClass">org.jeasy.jobs.request.JobRequestStatus</param>
+                <param name="enumClass">org.jeasy.jobs.request.JobExecutionRequestStatus</param>
             </type>
         </property>
         <property name="creationDate" column="creation_date" type="java.time.LocalDateTime"/>

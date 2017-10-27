@@ -2,7 +2,7 @@ package org.jeasy.jobs;
 
 import org.jeasy.jobs.execution.JobExecutionRepository;
 import org.jeasy.jobs.job.JobRepository;
-import org.jeasy.jobs.request.JobRequestRepository;
+import org.jeasy.jobs.request.JobExecutionRequestRepository;
 import org.jeasy.jobs.user.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +44,7 @@ public class ContextConfiguration {
         localSessionFactoryBean.setMappingLocations(
                 new ClassPathResource("user.hbm.xml"),
                 new ClassPathResource("job.hbm.xml"),
-                new ClassPathResource("jobRequest.hbm.xml"),
+                new ClassPathResource("jobExecutionRequest.hbm.xml"),
                 new ClassPathResource("jobExecution.hbm.xml")
         );
         return localSessionFactoryBean;
@@ -66,8 +66,8 @@ public class ContextConfiguration {
     }
 
     @Bean
-    public JobRequestRepository jobRequestRepository() {
-        return new JobRequestRepository(localSessionFactoryBean().getObject());
+    public JobExecutionRequestRepository jobExecutionRequestRepository() {
+        return new JobExecutionRequestRepository(localSessionFactoryBean().getObject());
     }
 
     @Bean
@@ -77,7 +77,7 @@ public class ContextConfiguration {
 
     @Bean
     public Service service() {
-        return new Service(jobExecutionRepository(), jobRequestRepository(), jobRepository());
+        return new Service(jobExecutionRepository(), jobExecutionRequestRepository(), jobRepository());
     }
 
     @Bean

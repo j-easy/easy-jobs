@@ -18,10 +18,10 @@ public class JobExecutionRepository {
         this.sessionFactory = sessionFactory;
     }
 
-    public JobExecution findByJobRequestId(int jobRequestId) {
+    public JobExecution findByJobExecutionRequestId(int jobExecutionRequestId) {
         Session session = sessionFactory.getCurrentSession();
         Query<JobExecution> query = session.createQuery("from JobExecution where requestId = :requestId ", JobExecution.class);
-        query.setParameter("requestId", jobRequestId);
+        query.setParameter("requestId", jobExecutionRequestId);
         return query.getSingleResult();
     }
 

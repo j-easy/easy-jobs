@@ -6,9 +6,9 @@ import org.jeasy.jobs.execution.JobExecutionStatus;
 import org.jeasy.jobs.job.Job;
 import org.jeasy.jobs.job.JobExitStatus;
 import org.jeasy.jobs.job.JobRepository;
-import org.jeasy.jobs.request.JobRequest;
-import org.jeasy.jobs.request.JobRequestRepository;
-import org.jeasy.jobs.request.JobRequestStatus;
+import org.jeasy.jobs.request.JobExecutionRequest;
+import org.jeasy.jobs.request.JobExecutionRequestRepository;
+import org.jeasy.jobs.request.JobExecutionRequestStatus;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -25,33 +25,33 @@ public class Service {
 
     private JobRepository jobRepository;
     private JobExecutionRepository jobExecutionRepository;
-    private JobRequestRepository jobRequestRepository;
+    private JobExecutionRequestRepository jobExecutionRequestRepository;
 
-    public Service(JobExecutionRepository jobExecutionRepository, JobRequestRepository jobRequestRepository, JobRepository jobRepository) {
+    public Service(JobExecutionRepository jobExecutionRepository, JobExecutionRequestRepository jobExecutionRequestRepository, JobRepository jobRepository) {
         this.jobExecutionRepository = jobExecutionRepository;
-        this.jobRequestRepository = jobRequestRepository;
+        this.jobExecutionRequestRepository = jobExecutionRequestRepository;
         this.jobRepository = jobRepository;
     }
 
     public void saveJobExecutionAndUpdateItsCorrespondingRequest(int requestId) {
         JobExecution jobExecution = newJobExecution().withRequestId(requestId).withJobExecutionStatus(JobExecutionStatus.RUNNING).withStartDate(LocalDateTime.now());
         jobExecutionRepository.save(jobExecution);
-        JobRequest jobRequest = jobRequestRepository.findById(requestId);
-        jobRequest.setStatus(JobRequestStatus.SUBMITTED);
-        jobRequestRepository.update(jobRequest);
+        JobExecutionRequest jobExecutionRequest = jobExecutionRequestRepository.findJobExecutionRequestById(requestId);
+        jobExecutionRequest.setStatus(JobExecutionRequestStatus.SUBMITTED);
+        jobExecutionRequestRepository.update(jobExecutionRequest);
     }
 
     public void updateJobExecutionAndItsCorrespondingRequest(int requestId, JobExitStatus jobExitStatus) {
-        JobExecution jobExecution = jobExecutionRepository.findByJobRequestId(requestId);
+        JobExecution jobExecution = jobExecutionRepository.findByJobExecutionRequestId(requestId);
         jobExecution.setJobExecutionStatus(JobExecutionStatus.FINISHED);
         jobExecution.setJobExitStatus(jobExitStatus);
         jobExecution.setEndDate(LocalDateTime.now());
         jobExecutionRepository.update(jobExecution);
 
-        JobRequest jobRequest = jobRequestRepository.findById(requestId);
-        jobRequest.setStatus(JobRequestStatus.PROCESSED);
-        jobRequest.setProcessingDate(LocalDateTime.now());
-        jobRequestRepository.update(jobRequest);
+        JobExecutionRequest jobExecutionRequest = jobExecutionRequestRepository.findJobExecutionRequestById(requestId);
+        jobExecutionRequest.setStatus(JobExecutionRequestStatus.PROCESSED);
+        jobExecutionRequest.setProcessingDate(LocalDateTime.now());
+        jobExecutionRequestRepository.update(jobExecutionRequest);
     }
 
     @Transactional(readOnly = true)
@@ -60,8 +60,8 @@ public class Service {
     }
 
     @Transactional(readOnly = true)
-    public List<JobRequest> findPendingRequests() {
-        return jobRequestRepository.findJobRequestsByStatus(JobRequestStatus.PENDING);
+    public List<JobExecutionRequest> findPendingRequests() {
+        return jobExecutionRequestRepository.findJobExecutionRequestsByStatus(JobExecutionRequestStatus.PENDING);
     }
 
 }

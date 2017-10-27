@@ -2,27 +2,27 @@ package org.jeasy.jobs.request;
 
 import java.time.LocalDateTime;
 
-public class JobRequest {
+public class JobExecutionRequest {
 
     private int id;
     private int jobId;
     private String parameters;
     // TODO add priotity
-    private JobRequestStatus status;
+    private JobExecutionRequestStatus status;
     private LocalDateTime creationDate;
     private LocalDateTime processingDate;
 
-    public JobRequest() {
+    public JobExecutionRequest() {
     }
 
-    public JobRequest(int jobId, String parameters) {
+    public JobExecutionRequest(int jobId, String parameters) {
         this.jobId = jobId;
         this.parameters = parameters;
-        this.status = JobRequestStatus.PENDING;
+        this.status = JobExecutionRequestStatus.PENDING;
         this.creationDate = LocalDateTime.now();
     }
 
-    public JobRequest(int jobId, String parameters, JobRequestStatus status, LocalDateTime creationDate, LocalDateTime processingDate) {
+    public JobExecutionRequest(int jobId, String parameters, JobExecutionRequestStatus status, LocalDateTime creationDate, LocalDateTime processingDate) {
         this.jobId = jobId;
         this.parameters = parameters;
         this.status = status;
@@ -30,8 +30,8 @@ public class JobRequest {
         this.processingDate = processingDate;
     }
 
-    public static JobRequest newJobRequest() {
-        return new JobRequest();
+    public static JobExecutionRequest newJobExecutionRequest() {
+        return new JobExecutionRequest();
     }
 
     public int getId() {
@@ -46,7 +46,7 @@ public class JobRequest {
         return parameters;
     }
 
-    public JobRequestStatus getStatus() {
+    public JobExecutionRequestStatus getStatus() {
         return status;
     }
 
@@ -70,7 +70,7 @@ public class JobRequest {
         this.parameters = parameters;
     }
 
-    public void setStatus(JobRequestStatus status) {
+    public void setStatus(JobExecutionRequestStatus status) {
         this.status = status;
     }
 
@@ -82,34 +82,34 @@ public class JobRequest {
         this.processingDate = processingDate;
     }
 
-    public JobRequest withJobId(int jobId) {
+    public JobExecutionRequest withJobId(int jobId) {
         this.jobId = jobId;
         return this;
     }
 
-    public JobRequest withParameters(String parameters) {
+    public JobExecutionRequest withParameters(String parameters) {
         this.parameters = parameters;
         return this;
     }
 
-    public JobRequest withStatus(JobRequestStatus status) {
+    public JobExecutionRequest withStatus(JobExecutionRequestStatus status) {
         this.status = status;
         return this;
     }
 
-    public JobRequest withCreationDate(LocalDateTime creationDate) {
+    public JobExecutionRequest withCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
         return this;
     }
 
-    public JobRequest withProcessingDate(LocalDateTime processingDate) {
+    public JobExecutionRequest withProcessingDate(LocalDateTime processingDate) {
         this.processingDate = processingDate;
         return this;
     }
 
     @Override
     public String toString() {
-        return "JobRequest{" +
+        return "JobExecutionRequest{" +
                 "id=" + id +
                 ", jobId=" + jobId +
                 ", parameters='" + parameters + '\'' +
