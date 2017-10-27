@@ -17,7 +17,8 @@ create table ej_user (
 
 create table ej_job (
   id bigint primary key,
-  name varchar(255)
+  name varchar(255),
+  description varchar(4096)
 );
 
 create table ej_job_execution_request (

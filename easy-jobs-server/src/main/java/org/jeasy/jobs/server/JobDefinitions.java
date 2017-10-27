@@ -58,6 +58,7 @@ public class JobDefinitions {
             // todo add sanity checks
             jobDefinition.setId((Integer) map.get("id"));
             jobDefinition.setName((String) map.get("name"));
+            jobDefinition.setDescription((String) map.get("description"));
             jobDefinition.setClazz((String) map.get("class"));
             jobDefinition.setMethod((String) map.get("method"));
             return jobDefinition;

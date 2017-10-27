@@ -37,7 +37,7 @@ public class DatabaseInitializer {
                 jobDefinition.setName(name);
             }
             LOGGER.info("Registering " + jobDefinition);
-            jobRepository.save(new Job(jobDefinition.getId(), name));
+            jobRepository.save(new Job(jobDefinition.getId(), name, jobDefinition.getDescription()));
         }
     }
 }

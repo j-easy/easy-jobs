@@ -53,7 +53,7 @@ public abstract class AbstractJobExecutionRequestRepositoryTest {
 
     public void testJobExecutionRequestPersistence() throws Exception {
         // given
-        jobRepository.save(new Job(1, "MyJob"));
+        jobRepository.save(new Job(1, "MyJob", "my job"));
 
         // when
         jobExecutionRequestRepository.save(newJobExecutionRequest().withJobId(1).withParameters("").withStatus(JobExecutionRequestStatus.PENDING).withCreationDate(LocalDateTime.now()));
@@ -65,7 +65,7 @@ public abstract class AbstractJobExecutionRequestRepositoryTest {
 
     public void testFindJobExecutionRequestsByStatus() throws Exception {
         // given
-        jobRepository.save(new Job(1, "MyJob"));
+        jobRepository.save(new Job(1, "MyJob", "my job"));
         jobExecutionRequestRepository.save(newJobExecutionRequest().withJobId(1).withParameters("").withStatus(JobExecutionRequestStatus.PENDING).withCreationDate(LocalDateTime.now()));
         jobExecutionRequestRepository.save(newJobExecutionRequest().withJobId(1).withParameters("").withStatus(JobExecutionRequestStatus.PENDING).withCreationDate(LocalDateTime.now()));
         jobExecutionRequestRepository.save(newJobExecutionRequest().withJobId(1).withParameters("").withStatus(JobExecutionRequestStatus.SUBMITTED).withCreationDate(LocalDateTime.now()));
@@ -84,7 +84,7 @@ public abstract class AbstractJobExecutionRequestRepositoryTest {
 
     public void testFindAllJobExecutionRequests() throws Exception {
         // given
-        jobRepository.save(new Job(1, "MyJob"));
+        jobRepository.save(new Job(1, "MyJob", "my job"));
         jobExecutionRequestRepository.save(newJobExecutionRequest().withJobId(1).withParameters("x=1").withStatus(JobExecutionRequestStatus.PENDING).withCreationDate(LocalDateTime.now()));
         jobExecutionRequestRepository.save(newJobExecutionRequest().withJobId(1).withParameters("x=2").withStatus(JobExecutionRequestStatus.PENDING).withCreationDate(LocalDateTime.now()));
 
@@ -97,7 +97,7 @@ public abstract class AbstractJobExecutionRequestRepositoryTest {
 
     public void testUpdateJobExecutionRequest() throws Exception {
         // given
-        jobRepository.save(new Job(1, "MyJob"));
+        jobRepository.save(new Job(1, "MyJob", "my job"));
         JobExecutionRequest jobExecutionRequest = newJobExecutionRequest().withJobId(1).withStatus(JobExecutionRequestStatus.PENDING);
         jobExecutionRequestRepository.save(jobExecutionRequest);
 

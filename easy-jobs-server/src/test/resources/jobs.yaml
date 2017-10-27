@@ -1,10 +1,12 @@
 ---
 id: 1
-name: my first job
+name: MyFirstJob
+description: my first job
 class: org.mycompany.jobs.MyFirstJob
 method: doWork
 ---
 id: 2
-name: my second job
+name: MySecondJob
+description: my second job
 class: org.mycompany.jobs.MySecondJob
 method: doWork

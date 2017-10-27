@@ -45,7 +45,7 @@ public abstract class AbstractJobRepositoryTest {
 
     public void testJobPersistence() throws Exception {
         // given
-        Job job = new Job(1, "MyJob");
+        Job job = new Job(1, "MyJob", "my job");
 
         // when
         jobRepository.save(job);
@@ -57,8 +57,8 @@ public abstract class AbstractJobRepositoryTest {
 
     public void testFindAllJobs() throws Exception {
         // given
-        Job job1 = new Job(1, "MyFirstJob");
-        Job job2 = new Job(2, "MySecondJob");
+        Job job1 = new Job(1, "MyFirstJob", "my first job");
+        Job job2 = new Job(2, "MySecondJob", "my second job");
         jobRepository.save(job1);
         jobRepository.save(job2);
 
@@ -71,7 +71,7 @@ public abstract class AbstractJobRepositoryTest {
 
     public void testFindByJobId() throws Exception {
         // given
-        Job job = new Job(1, "MyJob");
+        Job job = new Job(1, "MyJob", "my job");
         jobRepository.save(job);
 
         // when
@@ -81,5 +81,6 @@ public abstract class AbstractJobRepositoryTest {
         assertThat(actual).isNotNull();
         assertThat(actual.getId()).isEqualTo(1);
         assertThat(actual.getName()).isEqualTo("MyJob");
+        assertThat(actual.getDescription()).isEqualTo("my job");
     }
 }

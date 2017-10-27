@@ -59,7 +59,7 @@ public abstract class AbstractJobExecutionRepositoryTest {
 
     public void testJobExecutionPersistence() throws Exception {
         // given
-        jobRepository.save(new Job(1, "MyJob"));
+        jobRepository.save(new Job(1, "MyJob", "my job"));
         jobExecutionRequestRepository.save(newJobExecutionRequest().withJobId(1).withParameters("").withStatus(JobExecutionRequestStatus.PENDING).withCreationDate(LocalDateTime.now()));
 
         // when
@@ -74,7 +74,7 @@ public abstract class AbstractJobExecutionRepositoryTest {
         // given
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime endDate = now.plus(2, ChronoUnit.MINUTES);
-        jobRepository.save(new Job(1, "MyJob"));
+        jobRepository.save(new Job(1, "MyJob", "my job"));
         jobExecutionRequestRepository.save(newJobExecutionRequest().withJobId(1).withParameters("").withStatus(JobExecutionRequestStatus.PENDING).withCreationDate(now));
         JobExecution jobExecution = newJobExecution().withRequestId(1).withJobExecutionStatus(JobExecutionStatus.RUNNING).withStartDate(now);
         jobExecutionRepository.save(jobExecution);
@@ -94,7 +94,7 @@ public abstract class AbstractJobExecutionRepositoryTest {
         // given
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime endDate = now.plus(2, ChronoUnit.MINUTES);
-        jobRepository.save(new Job(1, "MyJob"));
+        jobRepository.save(new Job(1, "MyJob", "my job"));
         jobExecutionRequestRepository.save(newJobExecutionRequest().withJobId(1).withParameters("x=1").withStatus(JobExecutionRequestStatus.SUBMITTED).withCreationDate(now));
         jobExecutionRequestRepository.save(newJobExecutionRequest().withJobId(1).withParameters("x=2").withStatus(JobExecutionRequestStatus.PROCESSED).withCreationDate(now).withProcessingDate(endDate));
         jobExecutionRepository.save(newJobExecution().withRequestId(1).withJobExecutionStatus(JobExecutionStatus.RUNNING).withStartDate(now));

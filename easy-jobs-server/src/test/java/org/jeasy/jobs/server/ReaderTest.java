@@ -28,13 +28,15 @@ public class ReaderTest {
 
         JobDefinition jobDefinition = actual.get(0);
         assertThat(jobDefinition.getId()).isEqualTo(1);
-        assertThat(jobDefinition.getName()).isEqualTo("my first job");
+        assertThat(jobDefinition.getName()).isEqualTo("MyFirstJob");
+        assertThat(jobDefinition.getDescription()).isEqualTo("my first job");
         assertThat(jobDefinition.getClazz()).isEqualTo("org.mycompany.jobs.MyFirstJob");
         assertThat(jobDefinition.getMethod()).isEqualTo("doWork");
 
         jobDefinition = actual.get(1);
         assertThat(jobDefinition.getId()).isEqualTo(2);
-        assertThat(jobDefinition.getName()).isEqualTo("my second job");
+        assertThat(jobDefinition.getName()).isEqualTo("MySecondJob");
+        assertThat(jobDefinition.getDescription()).isEqualTo("my second job");
         assertThat(jobDefinition.getClazz()).isEqualTo("org.mycompany.jobs.MySecondJob");
         assertThat(jobDefinition.getMethod()).isEqualTo("doWork");
     }
@@ -54,7 +56,8 @@ public class ReaderTest {
 
         JobDefinition jobDefinition = actual.get(0);
         assertThat(jobDefinition.getId()).isEqualTo(1);
-        assertThat(jobDefinition.getName()).isEqualTo("my first job");
+        assertThat(jobDefinition.getName()).isEqualTo("MyFirstJob");
+        assertThat(jobDefinition.getDescription()).isEqualTo("my first job");
         assertThat(jobDefinition.getClazz()).isEqualTo("org.mycompany.jobs.MyFirstJob");
         assertThat(jobDefinition.getMethod()).isEqualTo("doWork");
     }
