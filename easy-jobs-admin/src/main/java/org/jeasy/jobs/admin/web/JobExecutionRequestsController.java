@@ -1,5 +1,6 @@
 package org.jeasy.jobs.admin.web;
 
+import org.jeasy.jobs.job.Job;
 import org.jeasy.jobs.job.JobRepository;
 import org.jeasy.jobs.request.JobExecutionRequest;
 import org.jeasy.jobs.request.JobExecutionRequestRepository;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.List;
 
 import static java.lang.Integer.parseInt;
 
@@ -33,7 +36,12 @@ public class JobExecutionRequestsController extends AbstractController {
     @RequestMapping(path = "/requests/new", method = RequestMethod.GET)
     public ModelAndView newJobExecutionRequestForm() {
         ModelAndView modelAndView = new ModelAndView("new-request");
-        modelAndView.addObject("jobs", jobRepository.findAll());
+        List<Job> jobs = jobRepository.findAll();
+        if (!jobs.isEmpty()) {
+            modelAndView.addObject("jobs", jobs);
+        } else {
+            modelAndView.addObject("disabled", true);
+        }
         return modelAndView;
     }
 
