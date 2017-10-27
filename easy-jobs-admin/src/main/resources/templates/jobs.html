@@ -18,14 +18,14 @@
                             <thead class="text-primary">
                                 <th>Id</th>
                                 <th>Name</th>
-                                <!-- <th>Description</th> -->
+                                 <th>Description</th>
                                 <th>Action</th>
                             </thead>
                             <tbody>
                                 <tr th:each="job : ${jobs}">
                                     <td th:text="${job.id}"></td>
                                     <td th:text="${job.name}"></td>
-                                    <!-- <td th:text="${job.description}"></td> -->
+                                     <td th:text="${job.description}"></td>
                                     <td class="td-actions text-right">
                                         <a rel="tooltip" title="Request execution" href="/requests/new" class="btn btn-primary btn-simple btn-xs">
                                             <i class="material-icons">play_arrow</i>
