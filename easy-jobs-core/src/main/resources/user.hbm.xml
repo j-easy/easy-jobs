@@ -5,7 +5,7 @@
 
 <hibernate-mapping package="org.jeasy.jobs.user">
 
-    <class name="User" table="users">
+    <class name="User" table="ej_user">
         <id name="name" column="name">
             <generator class="assigned"/>
         </id>

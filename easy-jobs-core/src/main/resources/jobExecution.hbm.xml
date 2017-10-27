@@ -5,7 +5,7 @@
 
 <hibernate-mapping package="org.jeasy.jobs.execution">
 
-    <class name="JobExecution" table="job_execution">
+    <class name="JobExecution" table="ej_job_execution">
         <id name="id" column="id">
             <generator class="native"/>
         </id>

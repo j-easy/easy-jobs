@@ -59,7 +59,7 @@ public abstract class AbstractJobRequestRepositoryTest {
         jobRequestRepository.save(newJobRequest().withJobId(1).withParameters("").withStatus(JobRequestStatus.PENDING).withCreationDate(LocalDateTime.now()));
 
         // then
-        Integer nbJobRequests = jdbcTemplate.queryForObject("select count(*) from job_request", Integer.class);
+        Integer nbJobRequests = jdbcTemplate.queryForObject("select count(*) from ej_job_request", Integer.class);
         assertThat(nbJobRequests).isEqualTo(1);
     }
 

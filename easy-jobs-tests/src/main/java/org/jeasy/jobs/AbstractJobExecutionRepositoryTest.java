@@ -66,7 +66,7 @@ public abstract class AbstractJobExecutionRepositoryTest {
         jobExecutionRepository.save(newJobExecution().withRequestId(1).withJobExecutionStatus(JobExecutionStatus.RUNNING).withStartDate(LocalDateTime.now()));
 
         // then
-        Integer nbJobExecutions = jdbcTemplate.queryForObject("select count(*) from job_execution", Integer.class);
+        Integer nbJobExecutions = jdbcTemplate.queryForObject("select count(*) from ej_job_execution", Integer.class);
         assertThat(nbJobExecutions).isEqualTo(1);
     }
 

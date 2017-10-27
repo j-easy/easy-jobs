@@ -1,26 +1,26 @@
 ------------------
 -- drop all tables
 ------------------
-drop table if exists job_execution;
-drop table if exists job_request;
-drop table if exists job;
-drop table if exists users; -- user is a keyword
+drop table if exists ej_job_execution;
+drop table if exists ej_job_request;
+drop table if exists ej_job;
+drop table if exists ej_user;
 
 ------------------
 -- create tables
 ------------------
 
-create table users (
+create table ej_user (
   name varchar(255) primary key,
   password varchar(1024)
 );
 
-create table job (
+create table ej_job (
   id bigint primary key,
   name varchar(255)
 );
 
-create table job_request (
+create table ej_job_request (
   id bigint auto_increment primary key,
   job_id bigint not null,
   parameters varchar(4096),
@@ -29,7 +29,7 @@ create table job_request (
   processing_date datetime
 );
 
-create table job_execution (
+create table ej_job_execution (
   id bigint auto_increment primary key,
   request_id bigint not null,
   status varchar(255),
@@ -41,5 +41,5 @@ create table job_execution (
 ------------------
 -- add constraints
 ------------------
-alter table job_request add foreign key (job_id) references job(id);
-alter table job_execution add foreign key (request_id) references job_request(id);
+alter table ej_job_request add foreign key (job_id) references ej_job(id);
+alter table ej_job_execution add foreign key (request_id) references ej_job_request(id);

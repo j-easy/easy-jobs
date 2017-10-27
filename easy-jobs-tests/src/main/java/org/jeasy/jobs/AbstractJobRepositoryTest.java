@@ -51,7 +51,7 @@ public abstract class AbstractJobRepositoryTest {
         jobRepository.save(job);
 
         // then
-        Integer nbJobs = jdbcTemplate.queryForObject("select count(*) from job", Integer.class);
+        Integer nbJobs = jdbcTemplate.queryForObject("select count(*) from ej_job", Integer.class);
         assertThat(nbJobs).isEqualTo(1);
     }
 
