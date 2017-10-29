@@ -8,9 +8,9 @@
 <body>
     <div layout:fragment="container-fluid">
         <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="card card-stats">
-                    <div class="card-header" data-background-color="orange">
+                    <div class="card-header" data-background-color="blue">
                         <i class="material-icons">settings</i>
                     </div>
                     <div class="card-content">
@@ -24,40 +24,137 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="card card-stats">
                     <div class="card-header" data-background-color="green">
                         <i class="material-icons">play_arrow</i>
                     </div>
                     <div class="card-content">
-                        <p class="category">Job executions</p>
-                        <h3 class="title"><span th:text="${nbExecutions}"></span></h3>
+                        <p class="category">Running executions</p>
+                        <h3 class="title"><span th:text="${nbRunningExecutions}"></span></h3>
                     </div>
                     <div class="card-footer">
                         <div class="stats">
-                            <a href="/executions">Show all executions</a>
+                            <a href="/executions">Show all job executions</a>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="card card-stats">
                     <div class="card-header" data-background-color="red">
-                        <i class="material-icons">mail_outline</i>
+                        <i class="material-icons">report_problem</i>
                     </div>
                     <div class="card-content">
-                        <p class="category">Job requests</p>
-                        <h3 class="title"><span th:text="${nbRequests}"></span></h3>
+                        <p class="category">Failed executions</p>
+                        <h3 class="title"><span th:text="${pcFailedExecutions}"></span>%</h3>
                     </div>
                     <div class="card-footer">
                         <div class="stats">
-                            <a href="/requests">Show all requests</a>
+                            <a href="/executions">Show all job executions</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="card card-stats">
+                    <div class="card-header" data-background-color="orange">
+                        <i class="material-icons">mail_outline</i>
+                    </div>
+                    <div class="card-content">
+                        <p class="category">Pending requests</p>
+                        <h3 class="title"><span th:text="${nbPendingRequests}"></span></h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <a href="/requests">Show all job execution requests</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header card-chart" data-background-color="blue">
+                        <div class="ct-chart" id="jobExecutionsChart"></div>
+                    </div>
+                    <div class="card-content">
+                        <h4 class="title">Job executions by status</h4>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons">access_time</i> For the last 3 days
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header card-chart" data-background-color="red">
+                        <div class="ct-chart" id="jobExecutionRequestsChart"></div>
+                    </div>
+                    <div class="card-content">
+                        <h4 class="title">Job execution requests number</h4>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons">access_time</i> For the last 12 hours
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="ej-data" class="hidden">
+            <span class="pending-requests" th:text="${nbPendingRequests}"></span>
+            <span class="submitted-requests" th:text="${nbSubmittedRequests}"></span>
+            <span class="processed-requests" th:text="${nbProcessedRequests}"></span>
+            <span class="last-twelve-hours" th:text="${lastTwelveHours}"></span>
+            <span class="nb-requests-for-last-twelve-hours" th:text="${nbRequestsForLastTwelveHours}"></span>
+            <span class="last-three-days" th:text="${lastThreeDays}"></span>
+            <span class="failed-executions-count" th:text="${failedExecutions}"></span>
+            <span class="finished-executions-count" th:text="${finishedExecutions}"></span>
+        </div>
     </div>
+
+<script layout:fragment="custom-script">
+    $(document).ready(function() {
+
+        var lastThreeDays = $('#ej-data span.last-three-days').text().trim().split(" ");
+        var failedExecutionsCount = $('#ej-data span.failed-executions-count').text().trim().split(" ");
+        var finishedExecutionsCount = $('#ej-data span.finished-executions-count').text().trim().split(" ");
+
+        new Chartist.Bar('#jobExecutionsChart', {
+          labels: lastThreeDays,
+          series: [
+            finishedExecutionsCount,
+            failedExecutionsCount
+          ]
+        }, {
+            seriesBarDistance: 30,
+        }).on('draw', function(data) {
+          if(data.type === 'bar') {
+            data.element.attr({
+              style: 'stroke-width: 20px'
+            });
+          }
+        });
+
+        var lastTwelveHours = $('#ej-data span.last-twelve-hours').text().trim().split(" ");
+        var nbRequestsForLastTwelveHours = $('#ej-data span.nb-requests-for-last-twelve-hours').text().trim().split(" ");
+        new Chartist.Line('#jobExecutionRequestsChart', {
+          labels: lastTwelveHours,
+          series: [
+                nbRequestsForLastTwelveHours
+                ]
+        }, {
+          low: 0,
+          showArea: true,
+          showLabel: true
+        });
+
+    });
+</script>
 </body>
 
 </html>
