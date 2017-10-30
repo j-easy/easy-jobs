@@ -1,14 +1,16 @@
 package org.jeasy.jobs.admin.web;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.servlet.ModelAndView;
 
 public abstract class AbstractController {
 
+    @Value("${application.version}")
+    private String applicationVersion;
+
     @ModelAttribute("version")
     public String version() {
-        // TODO get current version
-        return "0.3-SNAPSHOT";
+        return applicationVersion;
     }
 
     @ModelAttribute("title")
