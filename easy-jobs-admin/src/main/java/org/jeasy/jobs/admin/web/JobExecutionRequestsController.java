@@ -55,7 +55,7 @@ public class JobExecutionRequestsController extends AbstractController {
 
     @ModelAttribute("title")
     public String title() {
-        return "Job requests";
+        return "Job execution requests";
     }
 
     @ModelAttribute("requestsPageActive")
