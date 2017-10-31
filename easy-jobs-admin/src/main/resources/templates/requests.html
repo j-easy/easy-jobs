@@ -14,7 +14,7 @@
                         <h4 class="title">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <span>Job requests</span>
+                                    <span>Job execution requests</span>
                                 </div>
                                 <div class="col-md-6">
                                     <a href="/requests/new" title="create a new job execution request" class="pull-right">New job execution request</a>
@@ -23,7 +23,7 @@
                         </h4>
                     </div>
                     <div class="card-content table-responsive">
-                        <table class="table table-striped ej-table-fixed" id="job-requests-table">
+                        <table class="table table-striped ej-table-fixed" id="job-execution-requests-table">
                             <thead class="text-primary">
                             <th>Id</th>
                             <th>JobId</th>
@@ -50,7 +50,7 @@
     </div>
 <script layout:fragment="custom-script">
     $(document).ready(function() {
-        $('#job-requests-table').DataTable();
+        $('#job-execution-requests-table').DataTable();
     } );
 </script>
 </body>
