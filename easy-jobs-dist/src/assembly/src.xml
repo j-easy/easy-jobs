@@ -27,6 +27,10 @@
         </fileSet>
         <!--lib-->
         <fileSet>
+            <directory>../easy-jobs-admin/target/dependency</directory>
+            <outputDirectory>lib</outputDirectory>
+        </fileSet>
+        <fileSet>
             <directory>../easy-jobs-server/target/dependency</directory>
             <outputDirectory>lib</outputDirectory>
         </fileSet>
@@ -41,6 +45,10 @@
         </fileSet>
     </fileSets>
     <files>
+        <file>
+            <source>../easy-jobs-admin/target/easy-jobs-admin-${project.version}.jar</source>
+            <outputDirectory>lib</outputDirectory>
+        </file>
         <file>
             <source>../easy-jobs-server/target/easy-jobs-server-${project.version}.jar</source>
             <outputDirectory>lib</outputDirectory>
