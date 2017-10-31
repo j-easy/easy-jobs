@@ -106,14 +106,11 @@
             </div>
         </div>
         <div id="ej-data" class="hidden">
-            <span class="pending-requests" th:text="${nbPendingRequests}"></span>
-            <span class="submitted-requests" th:text="${nbSubmittedRequests}"></span>
-            <span class="processed-requests" th:text="${nbProcessedRequests}"></span>
             <span class="last-twelve-hours" th:text="${lastTwelveHours}"></span>
             <span class="nb-requests-for-last-twelve-hours" th:text="${nbRequestsForLastTwelveHours}"></span>
             <span class="last-three-days" th:text="${lastThreeDays}"></span>
             <span class="failed-executions-count" th:text="${failedExecutions}"></span>
-            <span class="finished-executions-count" th:text="${finishedExecutions}"></span>
+            <span class="succeeded-executions-count" th:text="${succeededExecutions}"></span>
         </div>
     </div>
 
@@ -122,12 +119,12 @@
 
         var lastThreeDays = $('#ej-data span.last-three-days').text().trim().split(" ");
         var failedExecutionsCount = $('#ej-data span.failed-executions-count').text().trim().split(" ");
-        var finishedExecutionsCount = $('#ej-data span.finished-executions-count').text().trim().split(" ");
+        var succeededExecutionsCount = $('#ej-data span.succeeded-executions-count').text().trim().split(" ");
 
         new Chartist.Bar('#jobExecutionsChart', {
           labels: lastThreeDays,
           series: [
-            finishedExecutionsCount,
+            succeededExecutionsCount,
             failedExecutionsCount
           ]
         }, {
@@ -150,7 +147,11 @@
         }, {
           low: 0,
           showArea: true,
-          showLabel: true
+          showLabel: true,
+          lineSmooth: Chartist.Interpolation.simple({
+            divisor: 2,
+            fillHoles: false
+          })
         });
 
     });
