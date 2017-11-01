@@ -21,9 +21,9 @@ public class LoginController {
     @RequestMapping(method = RequestMethod.GET, path = "/")
     public ModelAndView home(ModelAndView modelAndView, HttpSession session) {
         if (session.getAttribute("user") != null) {
-            modelAndView.setViewName("redirect:/home");
+            modelAndView.setViewName("redirect:home");
         } else {
-            modelAndView.setViewName("/login");
+            modelAndView.setViewName("login");
         }
         return modelAndView;
     }
@@ -42,7 +42,7 @@ public class LoginController {
             modelAndView.setViewName("login");
             modelAndView.addObject("error", "Invalid username/password");
         } else {
-            modelAndView.setViewName("redirect:/home");
+            modelAndView.setViewName("redirect:home");
             session.setAttribute("user", user);
         }
         return modelAndView;
@@ -51,7 +51,7 @@ public class LoginController {
     @RequestMapping(method = RequestMethod.GET, path = "/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/login";
+        return "redirect:login";
     }
 
 }
