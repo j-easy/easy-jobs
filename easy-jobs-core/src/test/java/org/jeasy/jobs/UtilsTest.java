@@ -23,6 +23,18 @@ public class UtilsTest {
     }
 
     @Test
+    public void parseEmptyParameters() throws Exception {
+        // given
+        String parameters = "";
+
+        // when
+        Map<String, String> parsedParameters = Utils.parseParameters(parameters);
+
+        // then
+        assertThat(parsedParameters).isNotNull();
+    }
+
+    @Test
     public void md5() throws Exception {
         // given
         String input = "admin";

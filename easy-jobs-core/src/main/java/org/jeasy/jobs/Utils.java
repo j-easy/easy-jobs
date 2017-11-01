@@ -14,6 +14,9 @@ public class Utils {
     private static ObjectMapper objectMapper = new ObjectMapper();
 
     public static Map<String, String> parseParameters(String parameters) throws Exception {
+        if (parameters == null || parameters.trim().isEmpty()) {
+            return new HashMap<>();
+        }
         return objectMapper.readValue(parameters, HashMap.class);
     }
 
