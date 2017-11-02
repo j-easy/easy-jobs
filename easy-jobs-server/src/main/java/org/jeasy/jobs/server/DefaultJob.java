@@ -27,13 +27,13 @@ class DefaultJob implements Callable<JobExitStatus> {
 
     public final JobExitStatus call() {
         try {
-            LOGGER.info("Processing job request with id " + requestId);
+            LOGGER.info("Processing job execution request with id " + requestId);
             method.invoke(target);
             service.updateJobExecutionAndItsCorrespondingRequest(requestId, JobExitStatus.SUCCEEDED);
-            LOGGER.info("Successfully processed job request with id " + requestId);
+            LOGGER.info("Successfully processed job execution request with id " + requestId);
             return JobExitStatus.SUCCEEDED;
         } catch (Exception e) {
-            LOGGER.error("Processing of request with id " + requestId + " has failed", e);
+            LOGGER.error("Processing of job execution request with id " + requestId + " has failed", e);
             service.updateJobExecutionAndItsCorrespondingRequest(requestId, JobExitStatus.FAILED);
             return JobExitStatus.FAILED;
         }

@@ -55,7 +55,7 @@ public class JobExecutionRequestController {
         JobExecutionRequest jobExecutionRequest = new JobExecutionRequest(jobIdentifier, parameters);
         jobExecutionRequestRepository.save(jobExecutionRequest);
         LOGGER.info("Received a new job execution request for job " + jobId + " with parameters " + parsedParameters);
-        return "Job request submitted successfully\n";
+        return "Job execution request submitted successfully\n";
     }
 
 }

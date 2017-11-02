@@ -38,7 +38,7 @@ public class JobExecutionRequestPoller implements Runnable {
         if (pendingJobExecutionRequests.isEmpty()) {
             return;
         }
-        LOGGER.info("Found " + pendingJobExecutionRequests.size() + " pending job request(s)");
+        LOGGER.info("Found " + pendingJobExecutionRequests.size() + " pending job execution request(s)");
         for (JobExecutionRequest pendingJobExecutionRequest : pendingJobExecutionRequests) {
             int requestId = pendingJobExecutionRequest.getId();
             int jobId = pendingJobExecutionRequest.getJobId();
