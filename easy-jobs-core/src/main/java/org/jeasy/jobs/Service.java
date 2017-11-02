@@ -54,6 +54,14 @@ public class Service {
         jobExecutionRequestRepository.update(jobExecutionRequest);
     }
 
+    public void updateJobExecutionRequestStatus(int requestId, JobExecutionRequestStatus jobExecutionRequestStatus) {
+        JobExecutionRequest jobExecutionRequest = jobExecutionRequestRepository.findJobExecutionRequestById(requestId);
+        if (jobExecutionRequest != null) {
+            jobExecutionRequest.setStatus(jobExecutionRequestStatus);
+            jobExecutionRequestRepository.update(jobExecutionRequest);
+        }
+    }
+
     @Transactional(readOnly = true)
     public Job findJobById(int jobId) {
         return jobRepository.findById(jobId);

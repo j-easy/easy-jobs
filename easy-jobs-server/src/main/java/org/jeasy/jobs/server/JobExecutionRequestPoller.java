@@ -6,6 +6,7 @@ import org.jeasy.jobs.job.JobDefinition;
 import org.jeasy.jobs.job.JobExitStatus;
 import org.jeasy.jobs.Service;
 import org.jeasy.jobs.request.JobExecutionRequest;
+import org.jeasy.jobs.request.JobExecutionRequestStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,6 +57,7 @@ public class JobExecutionRequestPoller implements Runnable {
                 LOGGER.info("Submitted a new job for request n° " + requestId);
             } catch (Exception e) {
                 LOGGER.error("Unable to create a new job for request n° " + requestId, e);
+                jobService.updateJobExecutionRequestStatus(requestId, JobExecutionRequestStatus.ERRORED);
             }
         }
     }
