@@ -27,23 +27,23 @@ Easy Jobs is a simple job server for Java. It allows you to define jobs and requ
 
 # How does it work?
 
-Easy Jobs stores meta-data of jobs in a relational database. Three tables are used: `job`, `job_request` and `job_execution`.
-The job server polls the `job_request` table regularly looking for pending job requests.
-When a job request comes in, the job server creates a job instance of the requested job and execute it:
+Easy Jobs stores meta-data of jobs in a relational database. Three tables are used: `job`, `job_execution` and `job_execution_request`.
+The job server polls the `job_execution_request` table regularly looking for pending job execution requests.
+When a job execution request comes in, the job server creates a job instance of the requested job and execute it:
 
 <p align="center">
     <img src="https://raw.githubusercontent.com/wiki/j-easy/easy-jobs/images/easy-jobs.png" width="80%">
 </p>
 
 The job server uses a pool of worker threads to execute jobs.
-Job requests are submitted through a restful API.
+Job execution requests are submitted through a restful API.
 
 # How to use it ?
 
 [Download](https://github.com/j-easy/easy-jobs/releases) the latest release and unzip it. You should get a directory with the following content:
 
 ```shell
-$>cd easy-jobs-dist-0.2
+$>cd easy-jobs-dist-0.3
 $>tree -d
 ├── conf
 ├── drivers
@@ -75,7 +75,7 @@ java -cp "drivers/h2/*;lib/*" ^
  org.jeasy.jobs.server.JobServer
 ```
 
-That's it! The job server should be up and running waiting for you to submit job requests on `localhost:8080/requests`. We will see how to submit job requests in a minute.
+That's it! The job server should be up and running waiting for you to submit job execution requests on `localhost:8080/requests`. We will see how to submit job execution requests in a minute.
 
 In the previous command, we used H2 database which is fine for testing but not recommended for production. You can use another [supported database](https://github.com/j-easy/easy-jobs/wiki/database-support) if you want.
 
@@ -152,18 +152,51 @@ $>curl localhost:8080/executions
 Great! the job has been executed and finished successfully. You should have seen this in the server's log:
 
 ```
-INFO: Received a new job request for job 1 with parameters {jobId=1, name=world}
-INFO: Found 1 pending job request(s)
+INFO: Received a new job execution request for job 1 with parameters {jobId=1, name=world}
+INFO: Found 1 pending job execution request(s)
 INFO: Creating a new job for request n° 1 with parameters [{"jobId":"1", "name":"world"}]
 INFO: Submitted a new job for request n° 1
-INFO: Processing job request with id 1
+INFO: Processing job execution request with id 1
 Hello world
-INFO: Successfully processed job request with id 1
+INFO: Successfully processed job execution request with id 1
 ```
 
 That's all! You can find more details on how to configure the server in the [wiki](https://github.com/j-easy/easy-jobs/wiki).
 
 You can also download a pre-configured [insomnia](https://github.com/j-easy/easy-jobs/issues/12) or [postman](https://github.com/j-easy/easy-jobs/issues/13) workspace with all endpoints to help you play around with Easy Jobs server through its REST API.
+
+## Admin Web Interface
+
+Easy Jobs comes with an administration web interface:
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/wiki/j-easy/easy-jobs/images/easy-jobs-admin.png" width="80%">
+</p>
+
+This interface gives you some insights on a running job server and allows you to submit job execution requests. To run the application, use the following command:
+
+```
+java -cp "drivers/h2/*:lib/*" \
+ -Deasy.jobs.database.config.file=$(pwd)/conf/database.properties \
+ -Deasy.jobs.server.config.jobs.directory=$(pwd)/jobs \
+ -Deasy.jobs.server.config.jobs.descriptor=$(pwd)/conf/jobs.yml \
+ -Dserver.port=9000 \
+ org.jeasy.jobs.admin.Application
+```
+
+On windows, you can use the following command:
+
+```
+java -cp "drivers/h2/*;lib/*" ^
+ -Deasy.jobs.database.config.file=%cd%\conf\database.properties ^
+ -Deasy.jobs.server.config.jobs.directory=%cd%\jobs ^
+ -Deasy.jobs.server.config.jobs.descriptor=%cd%\conf\jobs.yml ^
+ -Dserver.port=9000 ^
+ org.jeasy.jobs.admin.Application
+```
+
+For demonstration purpose, you can login to the application using `admin/admin` credentials.
+Make sure the server and the admin interface are running on different ports. In this example, the server is running on port `8080` (by default) and the admin interface on port `9000`.
 
 ## Contribution
 
