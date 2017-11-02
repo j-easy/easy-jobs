@@ -121,7 +121,9 @@ class DashboardStatistics {
     }
 
     public String getFormattedLastTwelveHours() {
-        return join(getLastTwelveHours().stream().map(LocalDateTime::getHour).collect(toList()), "h ");
+        String delimiter = "h ";
+        String lastTwelveHours = join(getLastTwelveHours().stream().map(LocalDateTime::getHour).collect(toList()), delimiter);
+        return lastTwelveHours + delimiter;
     }
 
     public String getFormattedReceivedRequestsForTheLastTwelveHours() {
