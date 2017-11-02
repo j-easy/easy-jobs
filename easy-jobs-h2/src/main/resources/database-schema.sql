@@ -44,3 +44,8 @@ create table ej_job_execution (
 ------------------
 alter table ej_job_execution_request add foreign key (job_id) references ej_job(id);
 alter table ej_job_execution add foreign key (request_id) references ej_job_execution_request(id);
+
+----------------------------
+-- add admin user (for demo)
+----------------------------
+insert into ej_user values ('admin', '21232f297a57a5a743894a0e4a801fc3'); -- admin/admin

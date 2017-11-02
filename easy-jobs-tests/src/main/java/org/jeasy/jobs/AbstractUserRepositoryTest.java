@@ -41,15 +41,15 @@ public abstract class AbstractUserRepositoryTest {
 
     public void testGetUserByNameAndPassword() throws Exception {
         // given
-        // user admin/admin in db via test-data.sql
+        // user root/root in db via test-data.sql
 
         // when
-        User user = userRepository.getByNameAndPassword("admin", "21232f297a57a5a743894a0e4a801fc3");
+        User user = userRepository.getByNameAndPassword("root", "63a9f0ea7bb98050796b649e85481845");
 
         // then
         assertThat(user).isNotNull();
-        assertThat(user.getName()).isEqualTo("admin");
-        assertThat(user.getPassword()).isEqualTo("21232f297a57a5a743894a0e4a801fc3");
+        assertThat(user.getName()).isEqualTo("root");
+        assertThat(user.getPassword()).isEqualTo("63a9f0ea7bb98050796b649e85481845");
     }
 
 }
