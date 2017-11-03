@@ -1,5 +1,6 @@
 ---
 id: 1
 name: hello world job
+description: A job that says 'hello' to the given name
 class: HelloWorldJob
 method: doWork
