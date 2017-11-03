@@ -21,11 +21,11 @@
 * 29/06/2017: Version 0.2 is released with some bug fixes and few enhancements. See all changes in details [here](https://github.com/j-easy/easy-jobs/releases).
 * 22/06/2017: Version 0.1 is out! See what this first version brings to the table [here](https://github.com/j-easy/easy-jobs/releases).
 
-# What is Easy Jobs?
+## What is Easy Jobs?
 
 Easy Jobs is a simple job server for Java. It allows you to define jobs and request their executions through a restful API.
 
-# How does it work?
+## How does it work?
 
 Easy Jobs stores meta-data of jobs in a relational database. Three tables are used: `job`, `job_execution` and `job_execution_request`.
 The job server polls the `job_execution_request` table regularly looking for pending job execution requests.
@@ -38,7 +38,7 @@ When a job execution request comes in, the job server creates a job instance of 
 The job server uses a pool of worker threads to execute jobs.
 Job execution requests are submitted through a restful API.
 
-# How to use it ?
+## How to use it ?
 
 [Download](https://github.com/j-easy/easy-jobs/releases) the latest release and unzip it. You should get a directory with the following content:
 
@@ -75,8 +75,12 @@ java -cp "drivers/h2/*;lib/*" ^
  org.jeasy.jobs.server.JobServer
 ```
 
-That's it! The job server should be up and running waiting for you to submit job execution requests on `localhost:8080/requests`. We will see how to submit job execution requests in a minute.
+That's it! The job server should be up and running waiting for you to submit job execution requests.
+To submit a job execution request, you can use either the [REST API](https://github.com/j-easy/easy-jobs#rest-api) or the [Admin Web Interface](https://github.com/j-easy/easy-jobs#admin-web-interface).
 
+## REST API
+
+By default, the job server will be started on `localhost:8080`. You can change the port as well as other parameter as described in the [wiki](https://github.com/j-easy/easy-jobs/wiki/server-parameters).
 In the previous command, we used H2 database which is fine for testing but not recommended for production. You can use another [supported database](https://github.com/j-easy/easy-jobs/wiki/database-support) if you want.
 
 The distribution comes with a sample job called `HelloWorldJob` located in the `jobs` directory. Here is its source code:
@@ -113,12 +117,13 @@ $>curl localhost:8080/jobs
 [
  {
   "id": 1,
-  "name": "Hello World Job"
+  "name": "Hello World Job",
+  "description" : "description: A job that says 'hello' to the given name"
  }
 ]
 ```
 
-Cool, the job server has successfully loaded the job. Now, we can submit a job execution request:
+The job server has successfully loaded the job. Now, we can submit a job execution request:
 
 ```shell
 $>curl \
@@ -170,10 +175,11 @@ You can also download a pre-configured [insomnia](https://github.com/j-easy/easy
 Easy Jobs comes with an administration web interface:
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/wiki/j-easy/easy-jobs/images/easy-jobs-admin.png" width="80%">
+    <img src="https://raw.githubusercontent.com/wiki/j-easy/easy-jobs/images/easy-jobs-admin.png" width="90%">
 </p>
 
-This interface gives you some insights on a running job server and allows you to submit job execution requests. To run the application, use the following command:
+This interface gives you some insights on a running job server and allows you to submit job execution requests.
+To run the application, use the following command:
 
 ```
 java -cp "drivers/h2/*:lib/*" \
