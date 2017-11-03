@@ -56,6 +56,11 @@ public class JobServer {
 
     private static ClassLoader getClassLoaderForJobs() {
         String directory = System.getProperty(JobDefinitions.JOBS_DEFINITIONS_CONFIGURATION_PATH_PARAMETER_NAME);
+        if (directory == null) {
+            LOGGER.error("No jobs directory specified. Jobs directory is mandatory to load job definitions. " +
+                    "Please provide a JVM property -D" + JobDefinitions.JOBS_DEFINITIONS_CONFIGURATION_PATH_PARAMETER_NAME + "=/path/to/jobs/directory");
+            System.exit(1);
+        }
         File file = new File(directory);
         // add root directory to classpath (to load .class files)
         List<URL> urls = new ArrayList<>();
@@ -85,7 +90,7 @@ public class JobServer {
         JobDefinitions jobDefinitions = null;
         String configurationPath = System.getProperty(JobDefinitions.JOBS_DEFINITIONS_CONFIGURATION_FILE_PARAMETER_NAME);
         if (configurationPath == null) {
-            LOGGER.error("No jobs configuration file specified. Jobs configuration file is mandatory to load job definitions." +
+            LOGGER.error("No jobs configuration file specified. Jobs configuration file is mandatory to load job definitions. " +
                     "Please provide a JVM property -D" + JobDefinitions.JOBS_DEFINITIONS_CONFIGURATION_FILE_PARAMETER_NAME + "=/path/to/jobs/configuration/file");
             System.exit(1);
         }
