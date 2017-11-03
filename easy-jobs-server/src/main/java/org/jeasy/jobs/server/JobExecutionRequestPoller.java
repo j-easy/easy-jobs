@@ -57,7 +57,7 @@ public class JobExecutionRequestPoller implements Runnable {
                 LOGGER.info("Submitted a new job for request n° " + requestId);
             } catch (Exception e) {
                 LOGGER.error("Unable to create a new job for request n° " + requestId, e);
-                jobService.updateJobExecutionRequestStatus(requestId, JobExecutionRequestStatus.ERRORED);
+                jobService.updateJobExecutionRequestStatus(requestId, JobExecutionRequestStatus.REJECTED);
             }
         }
     }

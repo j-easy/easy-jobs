@@ -4,5 +4,5 @@ public enum JobExecutionRequestStatus {
     PENDING,
     SUBMITTED,
     PROCESSED,
-    ERRORED
+    REJECTED
 }
