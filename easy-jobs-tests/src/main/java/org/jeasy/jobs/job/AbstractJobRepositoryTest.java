@@ -1,7 +1,7 @@
-package org.jeasy.jobs;
+package org.jeasy.jobs.job;
 
-import org.jeasy.jobs.job.Job;
-import org.jeasy.jobs.job.JobRepository;
+import org.jeasy.jobs.ContextConfiguration;
+import org.jeasy.jobs.DataSourceConfiguration;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;

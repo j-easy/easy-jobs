@@ -1,4 +1,4 @@
-package org.jeasy.jobs;
+package org.jeasy.jobs.user;
 
 import org.junit.Test;
 

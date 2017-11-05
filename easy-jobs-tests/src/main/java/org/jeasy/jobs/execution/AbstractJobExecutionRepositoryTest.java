@@ -1,8 +1,7 @@
-package org.jeasy.jobs;
+package org.jeasy.jobs.execution;
 
-import org.jeasy.jobs.execution.JobExecution;
-import org.jeasy.jobs.execution.JobExecutionRepository;
-import org.jeasy.jobs.execution.JobExecutionStatus;
+import org.jeasy.jobs.ContextConfiguration;
+import org.jeasy.jobs.DataSourceConfiguration;
 import org.jeasy.jobs.job.Job;
 import org.jeasy.jobs.job.JobRepository;
 import org.jeasy.jobs.job.JobExitStatus;

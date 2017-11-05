@@ -1,6 +1,6 @@
-package org.jeasy.jobs;
+package org.jeasy.jobs.job;
 
-public class JobExecutionRequestRepositoryTest {
+public class JobRepositoryTest {
 
     /*
      * The core module is database agnostic. Testing a repository here makes no sense.

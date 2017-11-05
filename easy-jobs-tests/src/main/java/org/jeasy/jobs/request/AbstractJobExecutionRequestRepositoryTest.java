@@ -1,10 +1,9 @@
-package org.jeasy.jobs;
+package org.jeasy.jobs.request;
 
+import org.jeasy.jobs.ContextConfiguration;
+import org.jeasy.jobs.DataSourceConfiguration;
 import org.jeasy.jobs.job.Job;
 import org.jeasy.jobs.job.JobRepository;
-import org.jeasy.jobs.request.JobExecutionRequest;
-import org.jeasy.jobs.request.JobExecutionRequestRepository;
-import org.jeasy.jobs.request.JobExecutionRequestStatus;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;

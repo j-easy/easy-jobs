@@ -1,21 +1,21 @@
-package org.jeasy.jobs;
+package org.jeasy.jobs.execution;
 
 import org.junit.Test;
 
 public class JobExecutionRepositoryTest extends AbstractJobExecutionRepositoryTest {
 
     @Test
-    public void testJobExecutionPersistenceInH2() throws Exception {
+    public void testJobExecutionPersistenceInMySQL() throws Exception {
         super.testJobExecutionPersistence();
     }
 
     @Test
-    public void testJobExecutionUpdateInH2() throws Exception {
+    public void testJobExecutionUpdateInMySQL() throws Exception {
         super.testJobExecutionUpdate();
     }
 
     @Test
-    public void testFindAllJobExecutionsFromH2() throws Exception {
+    public void testFindAllJobExecutionsFromMySQL() throws Exception {
         super.testFindAllJobExecutions();
     }
 }

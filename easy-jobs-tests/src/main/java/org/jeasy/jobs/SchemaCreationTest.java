@@ -36,7 +36,7 @@ public abstract class SchemaCreationTest {
             databasePopulator.execute(dataSource);
         } catch (Exception e) {
             e.printStackTrace();
-            fail("Unable to run sql script against mysql database");
+            fail("Unable to run sql script against selected database");
         }
 
         // then
