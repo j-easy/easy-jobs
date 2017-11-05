@@ -9,7 +9,7 @@
 
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](http://opensource.org/licenses/MIT)
 [![Downloads](https://img.shields.io/github/downloads/j-easy/easy-jobs/total.svg)]()
-[![Release](https://img.shields.io/badge/release-v0.2-green.svg)](https://github.com/j-easy/easy-jobs/releases)
+[![Release](https://img.shields.io/badge/release-v0.3-green.svg)](https://github.com/j-easy/easy-jobs/releases)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/j-easy/easy-batch)
 
 </div>
@@ -18,12 +18,13 @@
 
 ## Latest news
 
+* 05/11/2017: Version 0.3 is out with a new [administration web interface](https://github.com/j-easy/easy-jobs#admin-web-interface). See all changes in details [here](https://github.com/j-easy/easy-jobs/releases).
 * 29/06/2017: Version 0.2 is released with some bug fixes and few enhancements. See all changes in details [here](https://github.com/j-easy/easy-jobs/releases).
 * 22/06/2017: Version 0.1 is out! See what this first version brings to the table [here](https://github.com/j-easy/easy-jobs/releases).
 
 ## What is Easy Jobs?
 
-Easy Jobs is a simple job server for Java. It allows you to define jobs and request their executions through a restful API.
+Easy Jobs is a simple job server for Java. It allows you to define jobs and request their executions through a RESTful API.
 
 ## How does it work?
 
@@ -36,7 +37,7 @@ When a job execution request comes in, the job server creates a job instance of 
 </p>
 
 The job server uses a pool of worker threads to execute jobs.
-Job execution requests are submitted through a restful API.
+Job execution requests are submitted through a RESTful API.
 
 ## How to use it ?
 
