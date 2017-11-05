@@ -184,8 +184,6 @@ To run the application, use the following command:
 ```
 java -cp "drivers/h2/*:lib/*" \
  -Deasy.jobs.database.config.file=$(pwd)/conf/database.properties \
- -Deasy.jobs.server.config.jobs.directory=$(pwd)/jobs \
- -Deasy.jobs.server.config.jobs.descriptor=$(pwd)/conf/jobs.yml \
  -Dserver.port=9000 \
  org.jeasy.jobs.admin.Application
 ```
@@ -195,8 +193,6 @@ On windows, you can use the following command:
 ```
 java -cp "drivers/h2/*;lib/*" ^
  -Deasy.jobs.database.config.file=%cd%\conf\database.properties ^
- -Deasy.jobs.server.config.jobs.directory=%cd%\jobs ^
- -Deasy.jobs.server.config.jobs.descriptor=%cd%\conf\jobs.yml ^
  -Dserver.port=9000 ^
  org.jeasy.jobs.admin.Application
 ```
