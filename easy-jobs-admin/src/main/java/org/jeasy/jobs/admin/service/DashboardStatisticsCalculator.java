@@ -1,4 +1,4 @@
-package org.jeasy.jobs.admin.web;
+package org.jeasy.jobs.admin.service;
 
 import org.jeasy.jobs.execution.JobExecution;
 import org.jeasy.jobs.execution.JobExecutionRepository;
@@ -19,22 +19,20 @@ import java.util.List;
 import java.util.function.Predicate;
 
 @Component
-class DashboardStatisticsCalculator {
+public class DashboardStatisticsCalculator {
 
-    @Autowired
     private JobRepository jobRepository;
-
-    @Autowired
     private JobExecutionRepository jobExecutionRepository;
-
-    @Autowired
     private JobExecutionRequestRepository jobExecutionRequestRepository;
 
-    DashboardStatistics calculateStatistics() {
+    @Autowired
+    public DashboardStatisticsCalculator(JobRepository jobRepository, JobExecutionRepository jobExecutionRepository, JobExecutionRequestRepository jobExecutionRequestRepository) {
+        this.jobRepository = jobRepository;
+        this.jobExecutionRepository = jobExecutionRepository;
+        this.jobExecutionRequestRepository = jobExecutionRequestRepository;
+    }
 
-        // FIXME optimize queries for stats?
-        // if stats are calculated on the db level => less code but lot of queries to the db
-        // if stats are calculated on the app level => more code but only one query to the db
+    public DashboardStatistics calculateStatistics() {
 
         DashboardStatistics statistics = new DashboardStatistics();
 

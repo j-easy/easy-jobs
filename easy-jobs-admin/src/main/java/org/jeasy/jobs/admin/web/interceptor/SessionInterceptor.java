@@ -1,4 +1,4 @@
-package org.jeasy.jobs.admin.web;
+package org.jeasy.jobs.admin.web.interceptor;
 
 import org.jeasy.jobs.user.User;
 import org.springframework.stereotype.Component;

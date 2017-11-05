@@ -1,4 +1,4 @@
-package org.jeasy.jobs.admin.web;
+package org.jeasy.jobs.admin.web.controller;
 
 import org.jeasy.jobs.Utils;
 import org.jeasy.jobs.user.User;

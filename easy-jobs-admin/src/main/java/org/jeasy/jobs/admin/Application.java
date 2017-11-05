@@ -1,7 +1,7 @@
 package org.jeasy.jobs.admin;
 
 import org.jeasy.jobs.ContextConfiguration;
-import org.jeasy.jobs.admin.web.WebContextConfiguration;
+import org.jeasy.jobs.admin.web.config.WebContextConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

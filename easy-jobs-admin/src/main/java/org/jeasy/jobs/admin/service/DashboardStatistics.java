@@ -1,4 +1,4 @@
-package org.jeasy.jobs.admin.web;
+package org.jeasy.jobs.admin.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -7,7 +7,7 @@ import java.util.List;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
-class DashboardStatistics {
+public class DashboardStatistics {
 
     private int registeredJobs;
     private int runningExecutions;

@@ -1,5 +1,6 @@
-package org.jeasy.jobs.admin.web;
+package org.jeasy.jobs.admin.web.config;
 
+import org.jeasy.jobs.admin.web.interceptor.SessionInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
