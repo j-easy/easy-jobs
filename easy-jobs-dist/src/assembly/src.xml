@@ -28,11 +28,11 @@
         <!--lib-->
         <fileSet>
             <directory>../easy-jobs-admin/target/dependency</directory>
-            <outputDirectory>lib</outputDirectory>
+            <outputDirectory>lib/admin</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>../easy-jobs-server/target/dependency</directory>
-            <outputDirectory>lib</outputDirectory>
+            <outputDirectory>lib/server</outputDirectory>
         </fileSet>
         <!--drivers-->
         <fileSet>
@@ -47,11 +47,11 @@
     <files>
         <file>
             <source>../easy-jobs-admin/target/easy-jobs-admin-${project.version}.jar</source>
-            <outputDirectory>lib</outputDirectory>
+            <outputDirectory>lib/admin</outputDirectory>
         </file>
         <file>
             <source>../easy-jobs-server/target/easy-jobs-server-${project.version}.jar</source>
-            <outputDirectory>lib</outputDirectory>
+            <outputDirectory>lib/server</outputDirectory>
         </file>
         <file>
             <source>../easy-jobs-h2/target/easy-jobs-h2-${project.version}.jar</source>

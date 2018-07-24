@@ -18,6 +18,7 @@
 
 ## Latest news
 
+* 24/07/2018: Version 0.4 is out to fix a small issue with the startup of the admin UI.
 * 05/11/2017: Version 0.3 is out with a new [administration web interface](https://github.com/j-easy/easy-jobs#admin-web-interface). See all changes in details [here](https://github.com/j-easy/easy-jobs/releases).
 * 29/06/2017: Version 0.2 is released with some bug fixes and few enhancements. See all changes in details [here](https://github.com/j-easy/easy-jobs/releases).
 * 22/06/2017: Version 0.1 is out! See what this first version brings to the table [here](https://github.com/j-easy/easy-jobs/releases).
@@ -57,7 +58,7 @@ $>tree -d
 Run the job server with the following command:
 
 ```
-java -cp "drivers/h2/*:lib/*" \
+java -cp "drivers/h2/*:lib/server/*" \
  -Deasy.jobs.database.config.file=$(pwd)/conf/database.properties \
  -Deasy.jobs.database.config.init=true \
  -Deasy.jobs.server.config.jobs.directory=$(pwd)/jobs \
@@ -68,7 +69,7 @@ java -cp "drivers/h2/*:lib/*" \
 If you are on windows, use the following command:
 
 ```
-java -cp "drivers/h2/*;lib/*" ^
+java -cp "drivers/h2/*;lib/server/*" ^
  -Deasy.jobs.database.config.file=%cd%\conf\database.properties ^
  -Deasy.jobs.database.config.init=true ^
  -Deasy.jobs.server.config.jobs.directory=%cd%\jobs ^
@@ -183,7 +184,7 @@ This interface gives you some insights on a running job server and allows you to
 To run the application, use the following command:
 
 ```
-java -cp "drivers/h2/*:lib/*" \
+java -cp "drivers/h2/*:lib/admin/*" \
  -Deasy.jobs.database.config.file=$(pwd)/conf/database.properties \
  -Dserver.port=9000 \
  org.jeasy.jobs.admin.Application
@@ -192,7 +193,7 @@ java -cp "drivers/h2/*:lib/*" \
 On windows, you can use the following command:
 
 ```
-java -cp "drivers/h2/*;lib/*" ^
+java -cp "drivers/h2/*;lib/admin/*" ^
  -Deasy.jobs.database.config.file=%cd%\conf\database.properties ^
  -Dserver.port=9000 ^
  org.jeasy.jobs.admin.Application
