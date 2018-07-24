@@ -9,7 +9,7 @@
 
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](http://opensource.org/licenses/MIT)
 [![Downloads](https://img.shields.io/github/downloads/j-easy/easy-jobs/total.svg)]()
-[![Release](https://img.shields.io/badge/release-v0.3-green.svg)](https://github.com/j-easy/easy-jobs/releases)
+[![Release](https://img.shields.io/badge/release-v0.4-green.svg)](https://github.com/j-easy/easy-jobs/releases)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/j-easy/easy-batch)
 
 </div>
@@ -45,7 +45,7 @@ Job execution requests are submitted through a RESTful API.
 [Download](https://github.com/j-easy/easy-jobs/releases) the latest release and unzip it. You should get a directory with the following content:
 
 ```shell
-$>cd easy-jobs-dist-0.3
+$>cd easy-jobs-dist-0.4
 $>tree -d
 ├── conf
 ├── drivers
@@ -53,6 +53,8 @@ $>tree -d
 │   └── mysql
 ├── jobs
 └── lib
+    ├── admin
+    └── server
 ```
 
 Run the job server with the following command:
@@ -223,7 +225,7 @@ Easy Jobs is released under the terms of the MIT license:
 ```
 The MIT License (MIT)
 
-Copyright (c) 2017 Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
+Copyright (c) 2018 Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
