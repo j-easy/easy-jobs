@@ -31,7 +31,7 @@ Easy Jobs is a simple job server for Java. It allows you to define jobs and requ
 
 Easy Jobs stores meta-data of jobs in a relational database. Three tables are used: `job`, `job_execution` and `job_execution_request`.
 The job server polls the `job_execution_request` table regularly looking for pending job execution requests.
-When a job execution request comes in, the job server creates a job instance of the requested job and execute it:
+When a job execution request comes in, the job server creates a job instance of the requested job and executes it:
 
 <p align="center">
     <img src="https://raw.githubusercontent.com/wiki/j-easy/easy-jobs/images/easy-jobs.png" width="80%">
