@@ -10,7 +10,7 @@
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](http://opensource.org/licenses/MIT)
 [![Downloads](https://img.shields.io/github/downloads/j-easy/easy-jobs/total.svg)]()
 [![Release](https://img.shields.io/badge/release-v0.4-green.svg)](https://github.com/j-easy/easy-jobs/releases)
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/j-easy/easy-batch)
+[![Project status](https://img.shields.io/badge/Project%20status-PoC-orange.svg)](https://img.shields.io/badge/Project%20status-PoC-orange.svg)
 
 </div>
 
@@ -210,8 +210,6 @@ You are welcome to contribute to the project with pull requests on GitHub.
 
 If you find a bug or want to request a feature, please use the [issue tracker](https://github.com/j-easy/easy-jobs/issues).
 
-For any further question, you can use the [gitter channel](https://gitter.im/j-easy/easy-jobs).
-
 ## Awesome contributors
 
 * [nabilov](https://github.com/nabilov)
@@ -225,7 +223,7 @@ Easy Jobs is released under the terms of the MIT license:
 ```
 The MIT License (MIT)
 
-Copyright (c) 2018 Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
+Copyright (c) 2020 Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
