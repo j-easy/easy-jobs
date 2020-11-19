@@ -39,6 +39,7 @@ When a job execution request comes in, the job server creates a job instance of 
 
 The job server uses a pool of worker threads to execute jobs.
 Job execution requests are submitted through a RESTful API.
+For more details about these design choices, please refer to the [technical notes](https://github.com/j-easy/easy-jobs/wiki/technical-notes).
 
 ## How to use it ?
 
